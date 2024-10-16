@@ -1,6 +1,6 @@
 # dataverse-marketplace
 
-For MVP:br/>
+For MVP:<br/><br/>
 • Focus just on external tools<br/>
 • Specifically remote external tools<br/>
 • This encompasses the vast majority of external tools currently in production<br/>
