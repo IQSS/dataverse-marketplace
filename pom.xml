@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-parent</artifactId>
+		<version>3.3.4</version>
+		<relativePath /> <!-- lookup parent from repository -->
+	</parent>
+	<groupId>edu.harvard.iq</groupId>
+	<artifactId>dataverse-marketplace</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<name>dataverse-marketplace</name>
+	<description>Dataverse-Marketplace</description>
+	<properties>
+		<java.version>21</java.version>
+		<flyway.version>10.19.0</flyway.version>
+	</properties>
+	<dependencies>
+
+		<!-- Spring MVC -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-web</artifactId>
+		</dependency>
+        <!-- Spring Data JPA -->
+		<dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-jpa</artifactId>
+        </dependency>
+		<!-- Spring security -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-security</artifactId>
+		</dependency>
+		<!-- Spring Dev Tools -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-devtools</artifactId>
+			<scope>runtime</scope>
+			<optional>true</optional>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-tomcat</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		<!-- Spring Test -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+		
+
+		<!-- Spring OPenAPI-->
+		<dependency>
+			<groupId>org.springdoc</groupId>
+			<artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+			<version>2.6.0</version>
+		</dependency>
+		
+
+		<!-- PostgreSQL database -->
+		<dependency>
+			<groupId>org.postgresql</groupId>
+			<artifactId>postgresql</artifactId>
+			<version>42.7.4</version>
+		</dependency>
+
+		<!-- Flyway -->
+		<dependency>
+            <groupId>org.flywaydb</groupId>
+			<artifactId>flyway-database-postgresql</artifactId>
+            <version>${flyway.version}</version>
+        </dependency>
+
+		<dependency>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter</artifactId>
+			<version>5.11.3</version>
+			<scope>test</scope>
+		</dependency>
+
+
+	</dependencies>
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+			</plugin>
+			<plugin>
+				<groupId>org.jacoco</groupId>
+				<artifactId>jacoco-maven-plugin</artifactId>
+				<version>0.8.12</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>prepare-agent</goal>
+						</goals>
+					</execution>
+					<execution>
+						<id>report</id>
+						<phase>test</phase>
+						<goals>
+							<goal>report</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+
+	<profiles>
+		<profile>
+			<id>ct</id>
+			<properties>
+				<skipUnitTests>true</skipUnitTests>
+				<skipIntegrationTests>true</skipIntegrationTests>
+				<packaging.type>docker-build</packaging.type>
+				<app.image.tag>unstable</app.image.tag>
+				<POSTGRES_VERSION>17</POSTGRES_VERSION>
+				<POSTGRESS_DB>dv_mkt_pg</POSTGRESS_DB>
+				<POSTGRESS_USER>admin</POSTGRESS_USER>
+				<POSTGRESS_PASSWORD>admin</POSTGRESS_PASSWORD>
+			</properties>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>io.fabric8</groupId>
+						<artifactId>docker-maven-plugin</artifactId>
+    					<version>0.45.1</version>
+						<extensions>true</extensions>
+						<configuration>
+							<pushRegistry>localhost:5000</pushRegistry>
+							<containerNamePattern>%n</containerNamePattern>
+							<images>
+								<image>
+									<external>
+                                        <type>compose</type>
+                                        <basedir>${project.basedir}</basedir>
+                                        <composeFile>docker-compose-dev.yaml</composeFile>
+                                    </external>
+								</image>
+								<image>
+									<alias>dv_mkt</alias>
+									<name>dv_mkt:${project.version}</name>
+									<build>
+										<from>eclipse-temurin:21-jdk-alpine</from>
+										<assemblies>
+											<assembly>
+												<mode>dir</mode>
+												<descriptorRef>artifact</descriptorRef>
+											</assembly>
+										</assemblies>
+										<entryPoint>
+											<exec>
+												<arg>java</arg>
+												<arg>-jar</arg>
+												<arg>maven/${project.artifactId}-${project.version}.jar</arg>
+											</exec>
+										</entryPoint>
+										<env>
+											<SPRING_DATASOURCE_URL>jdbc:postgresql://dv_mkt_postgres:5432/${POSTGRESS_DB}</SPRING_DATASOURCE_URL>
+											<SPRING_DATASOURCE_USERNAME>${POSTGRESS_USER}</SPRING_DATASOURCE_USERNAME>
+											<SPRING_DATASOURCE_PASSWORD>${POSTGRESS_PASSWORD}</SPRING_DATASOURCE_PASSWORD>
+										</env>
+									</build>
+									<run>
+										<dependsOn>
+											<container>dv_mkt_postgres</container>
+										</dependsOn>
+										<volumes>
+											<bind>
+												<volume>
+													./docker-dev-volumes/base/data:/var/lib/base/data</volume>
+											</bind>
+										</volumes>
+										<network>
+											<mode>bridge</mode>
+											<name>dv-mkt-network</name>
+										</network>
+										<ports>
+											<port>8080:8080</port>
+										</ports>
+										<links>
+											<link>dv_mkt_postgres:dv_mkt_postgres</link>
+										</links>
+									</run>
+								</image>
+							</images>
+						</configuration>
+					</plugin>
+					<plugin>
+						<groupId>org.flywaydb</groupId>
+						<artifactId>flyway-maven-plugin</artifactId>
+						<version>${flyway.version}</version>
+						<configuration>
+							<user>${POSTGRESS_USER}</user>
+							<password>${POSTGRESS_USER}</password>
+							<schemas>
+								<schema>${POSTGRESS_DB}</schema>
+							</schemas>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
+</project>
