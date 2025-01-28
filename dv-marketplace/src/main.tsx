@@ -1,6 +1,6 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
-import { Link, Outlet, RouterProvider, createHashRouter } from 'react-router-dom';
+import { Outlet, RouterProvider, createHashRouter } from 'react-router-dom';
 import { ErrorBoundary } from "react-error-boundary";
 import {Container, Nav, Navbar} from "react-bootstrap";
 
