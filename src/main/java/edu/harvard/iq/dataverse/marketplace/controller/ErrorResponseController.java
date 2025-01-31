@@ -10,6 +10,7 @@ import edu.harvard.iq.dataverse.marketplace.payload.ServerMessageResponse;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.core.AuthenticationException;
 
 @RestControllerAdvice
 public class ErrorResponseController {
@@ -31,6 +32,12 @@ public class ErrorResponseController {
     @ExceptionHandler(HttpClientErrorException.Unauthorized.class)
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
     public ServerMessageResponse unauthorizedResponse(Exception e) {
+        return new ServerMessageResponse(HttpStatus.UNAUTHORIZED, e);
+    }
+
+    @ExceptionHandler(AuthenticationException.class)
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    public ServerMessageResponse noRoleResponse(Exception e) {
         return new ServerMessageResponse(HttpStatus.UNAUTHORIZED, e);
     }
 

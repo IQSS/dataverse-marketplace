@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 
 import jakarta.validation.Valid;
 
+import org.apache.catalina.connector.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,7 +18,9 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -28,6 +31,8 @@ import edu.harvard.iq.dataverse.marketplace.openapi.annotations.AuthAPIDocs;
 import edu.harvard.iq.dataverse.marketplace.payload.ServerMessageResponse;
 import edu.harvard.iq.dataverse.marketplace.payload.auth.JwtResponse;
 import edu.harvard.iq.dataverse.marketplace.payload.auth.LoginRequest;
+import edu.harvard.iq.dataverse.marketplace.payload.auth.RoleAssignRequest;
+import edu.harvard.iq.dataverse.marketplace.payload.auth.RoleAssignResponse;
 import edu.harvard.iq.dataverse.marketplace.payload.auth.RoleCreationRequest;
 import edu.harvard.iq.dataverse.marketplace.payload.auth.RoleCreationResponse;
 import edu.harvard.iq.dataverse.marketplace.payload.auth.SignupRequest;
@@ -35,6 +40,9 @@ import edu.harvard.iq.dataverse.marketplace.repository.RoleRepo;
 import edu.harvard.iq.dataverse.marketplace.repository.UserRepo;
 import edu.harvard.iq.dataverse.marketplace.security.UserDetailsImpl;
 import edu.harvard.iq.dataverse.marketplace.security.jwt.JwtUtils;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
 
 /**
  * This class is used to authenticate users and register new users.
@@ -68,6 +76,7 @@ public class AuthController {
                         loginRequest.getPassword()));
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
+        
         String jwt = jwtUtils.generateJwtToken(authentication);
 
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
@@ -118,6 +127,7 @@ public class AuthController {
     }
 
     @PostMapping("/role")
+    @PreAuthorize("hasAuthority('ADMIN')")
     @AuthAPIDocs.RoleCreationRequest
     public ResponseEntity<?> createRole(@Valid @RequestBody RoleCreationRequest roleCreationRequest) {
         
@@ -132,5 +142,33 @@ public class AuthController {
         roleRepository.save(role);
         return ResponseEntity.ok(new RoleCreationResponse(role));
     }
+
+    @PostMapping("/role/assign")
+    public ResponseEntity<?> assignRole(@Valid @RequestBody RoleAssignRequest roleAssignRequest) {
+        //TODO IMPLEMENT
+        return ResponseEntity.ok(new RoleAssignResponse());
+    }
+
+    @DeleteMapping("/role/assign")
+    public ResponseEntity<?> removeRole(@RequestParam String username, @RequestParam String roleName) {
+        //TODO IMPLEMENT
+        return ResponseEntity.ok(new RoleAssignResponse());
+    }
+
+    @PutMapping("/password/update")
+    public ResponseEntity<?> changePassword() {
+        //TODO IMPLEMENT
+        return ResponseEntity.ok(new RoleAssignResponse());
+    }
+
+    @GetMapping("/roles")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public ResponseEntity<?> getRoles() {
+
+        Set<Role> roles = new HashSet<>();
+        roleRepository.findAll().forEach(roles::add);
+        return ResponseEntity.ok(roles);
+    }
+
 
 }
