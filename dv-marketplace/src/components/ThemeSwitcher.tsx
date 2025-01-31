@@ -1,11 +1,17 @@
 import { useState } from "react";
 import { Dropdown } from "react-bootstrap";
 
+
+
+type Theme = 'auto' | 'light' | 'dark';
+
 const ThemeSwitcher = () => {
 
     const [theme, setTheme] = useState('auto');
   
-    const handleThemeChange = (newTheme) => {
+    
+
+    const handleThemeChange = (newTheme: Theme) => {
         setTheme(newTheme);
         document.documentElement.setAttribute('data-bs-theme', newTheme);
     };

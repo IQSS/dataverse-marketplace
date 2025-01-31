@@ -1,10 +1,7 @@
 import { useState, useEffect } from 'react'
-// import reactLogo from '../assets/react.svg'
-// import viteLogo from '/vite.svg'
 
-import '../assets/css/App.css'
 
-function App() {
+function Install() {
   const [data, setData] = useState('');
   const [responseMessage, setResponseMessage] = useState('');
 
@@ -51,4 +48,4 @@ function App() {
   )
 }
 
-export default App
+export default Install;

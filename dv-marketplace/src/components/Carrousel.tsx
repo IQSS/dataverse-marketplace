@@ -1,42 +1,28 @@
-import { useState } from 'react';
 import Carousel from 'react-bootstrap/Carousel';
-// import ExampleCarouselImage from 'components/ExampleCarouselImage';
+import CarouselImage from './CarouselImage';
 
 
-function ControlledCarousel() {
 
-    const [index, setIndex] = useState(0);
 
-    interface HandleSelectProps {
-        selectedIndex: number;
-        e: Record<string, unknown>;
-    }
-
-    const handleSelect = ({ selectedIndex }: HandleSelectProps) => {
-        setIndex(selectedIndex);
-    };
-
+function CarouselFadeExample() {
   return (
-    <Carousel className='max-w-[40%] m-10' activeIndex={index} onSelect={handleSelect}>
+    <Carousel fade>
       <Carousel.Item>
-        {/* <ExampleCarouselImage text="Second slide" /> */}
-        <img src="./public/ss.png" alt="Vite logo" />
+        <CarouselImage text="First slide" />
         <Carousel.Caption>
           <h3>First slide label</h3>
           <p>Nulla vitae elit libero, a pharetra augue mollis interdum.</p>
         </Carousel.Caption>
       </Carousel.Item>
       <Carousel.Item>
-        {/* <ExampleCarouselImage text="Second slide" /> */}
-        <img src="./public/ss.png" alt="Vite logo" />
+        <CarouselImage text="Second slide" />
         <Carousel.Caption>
           <h3>Second slide label</h3>
           <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
         </Carousel.Caption>
       </Carousel.Item>
       <Carousel.Item>
-        {/* <ExampleCarouselImage text="Third slide" /> */}
-        <img src="./public/ss.png" alt="Vite logo" />
+        <CarouselImage text="Third slide" />
         <Carousel.Caption>
           <h3>Third slide label</h3>
           <p>
@@ -48,4 +34,4 @@ function ControlledCarousel() {
   );
 }
 
-export default ControlledCarousel;
+export default CarouselFadeExample;

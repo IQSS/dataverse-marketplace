@@ -2,16 +2,28 @@ import ControlledCarousel from "./Carrousel";
 import ExternalToolCard from "./ExternalToolCard";
 
 function Marketplace () {
-    return (
-        <div className='flex flex-col justify-center items-center'>
-            <ControlledCarousel />
-            <div className='grid grid-cols-4 gap-4'>
-                        <ExternalToolCard />
-                        <ExternalToolCard />
-                        <ExternalToolCard />
-                        <ExternalToolCard />
-            </div>
+    return (<>
+        <ControlledCarousel/>
+        <div id="mkt_container" className='container d-flex flex-column align-items-center'>
+                <div className="p-4">
+                    
+                </div>
+                <div className='d-flex flex-wrap gap-4'>
+                    <ExternalToolCard />
+                    <ExternalToolCard />
+                    <ExternalToolCard />
+                    <ExternalToolCard />
+                    <ExternalToolCard />
+                    <ExternalToolCard />
+                    <ExternalToolCard />
+                    <ExternalToolCard />
+                    <ExternalToolCard />
+                    <ExternalToolCard />
+                    <ExternalToolCard />
+                    <ExternalToolCard />
+                </div>
         </div>
+        </>
     );
 }
 

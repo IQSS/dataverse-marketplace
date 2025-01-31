@@ -1,11 +1,10 @@
-import Button from 'react-bootstrap/Button';
 import Card from 'react-bootstrap/Card';
 import { Link } from 'react-router-dom';
 
 function ExternalToolCard() {
   return (
     <Card style={{ width: '18rem' }}>
-      <Card.Img variant="top" src="ss.png" />
+      <Card.Img variant="top" src="./assets/img/ss.png" />
       <Card.Body>
         <Card.Title>AskTheData
         </Card.Title>
