@@ -1,22 +1,30 @@
-package edu.harvard.iq.dataverse.marketplace.payload;
+package edu.harvard.iq.dataverse.marketplace.payload.auth;
 
 import java.util.Set;
+
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.*;
 
+@Schema(description = "A representation of the signup request")
 public class SignupRequest {
+
   @NotBlank
   @Size(min = 3, max = 20)
+  @Schema(description = "The username of the user to be signed up.", example = "username")
   private String username;
 
   @NotBlank
   @Size(max = 50)
   @Email
+  @Schema(description = "The email of the user to be signed up.", example = "user@dataverse.org")
   private String email;
 
+  @Schema(description = "The roles of the user to be signed up.", example = "[\"ADMIN\"]")
   private Set<String> role;
 
   @NotBlank
   @Size(min = 6, max = 40)
+  @Schema(description = "The password of the user to be signed up.", example = "password")
   private String password;
 
   public String getUsername() {

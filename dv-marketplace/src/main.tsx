@@ -10,6 +10,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import Install from './components/Install.tsx';
 import Marketplace from './components/Marketplace.tsx';
 import Navigation from './components/Navigation.tsx';
+import UserContextProvider from './components/context/UserContextProvider.tsx';
 
 function ErrorFallback({ error, resetErrorBoundary }: { error: Error; resetErrorBoundary: () => void }) {
   return <ErrorView error={error} resetErrorBoundary={resetErrorBoundary} />;
@@ -20,10 +21,12 @@ const PageIndex = () => {
   return (
       
   <>
-    <Navigation />
-    <ErrorBoundary FallbackComponent={ErrorFallback}>
-      <Outlet />
-    </ErrorBoundary>
+    <UserContextProvider>
+      <Navigation />
+      <ErrorBoundary FallbackComponent={ErrorFallback}>
+        <Outlet />
+      </ErrorBoundary>
+    </UserContextProvider>
   </>
   );
 };

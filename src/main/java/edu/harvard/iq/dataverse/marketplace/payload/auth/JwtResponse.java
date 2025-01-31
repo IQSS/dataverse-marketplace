@@ -1,13 +1,34 @@
-package edu.harvard.iq.dataverse.marketplace.payload;
+package edu.harvard.iq.dataverse.marketplace.payload.auth;
 
 import java.util.List;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+
+@Schema(description = "A representation of the JWT response")
 public class JwtResponse {
+
+  @Schema(description = "The bearer token.", 
+          example = "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsImV4cCI6MTYyMzUwNjQwOCwiaWF0IjoxNjIzNDk5MjA4fQ.7Z")
   private String token;
+
+  @Schema(description = "The token type.", 
+          example = "Bearer")
   private String type = "Bearer";
+
+  @Schema(description = "The user id of the authenticated user.", 
+          example = "0")
   private Long id;
+
+  @Schema(description = "The username of the authenticated user.", 
+          example = "username")
   private String username;
+
+  @Schema(description = "The email of the authenticated user.", 
+          example = "user@dataverse.org")
   private String email;
+
+  @Schema(description = "The roles of the authenticated user", 
+          example = "[\"ADMIN\"]")
   private List<String> roles;
 
   public JwtResponse(String accessToken, Long id, String username, String email, List<String> roles) {

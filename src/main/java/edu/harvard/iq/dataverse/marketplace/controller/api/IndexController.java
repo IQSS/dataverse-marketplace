@@ -2,6 +2,9 @@ package edu.harvard.iq.dataverse.marketplace.controller.api;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import io.swagger.v3.oas.annotations.Hidden;
+
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 
@@ -11,15 +14,15 @@ import org.springframework.web.bind.annotation.GetMapping;
 public class IndexController {
 
     @GetMapping()
+    @Hidden
     public String index() {
-        System.out.println("Hello World!");
         return "Hello World!";
     }
 
     @GetMapping("/admin")
     @PreAuthorize("hasAuthority('ADMIN')")
+    @Hidden
     public String admin() {
-        System.out.println("Hello World!");
         return "Hello Admin!";
     }
 
