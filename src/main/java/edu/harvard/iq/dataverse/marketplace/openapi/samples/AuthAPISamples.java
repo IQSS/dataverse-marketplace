@@ -29,6 +29,19 @@ public abstract class AuthAPISamples {
         }
         """;
 
+    public static final String ROLE_CREATION_REQUEST = """
+        {
+            "roleName": "ADMIN"
+        }
+        """;
+    
+    public static final String ROLE_CREATION_RESPONSE = """
+        {
+            "roleName": "ADMIN",
+            "roleId": 0
+        }
+        """;
+
 }
 
 

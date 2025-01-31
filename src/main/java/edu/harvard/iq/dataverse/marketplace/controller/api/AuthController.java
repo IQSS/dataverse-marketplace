@@ -22,11 +22,14 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import edu.harvard.iq.dataverse.marketplace.model.Role;
 import edu.harvard.iq.dataverse.marketplace.model.User;
 import edu.harvard.iq.dataverse.marketplace.openapi.annotations.AuthAPIDocs;
 import edu.harvard.iq.dataverse.marketplace.payload.ServerMessageResponse;
 import edu.harvard.iq.dataverse.marketplace.payload.auth.JwtResponse;
 import edu.harvard.iq.dataverse.marketplace.payload.auth.LoginRequest;
+import edu.harvard.iq.dataverse.marketplace.payload.auth.RoleCreationRequest;
+import edu.harvard.iq.dataverse.marketplace.payload.auth.RoleCreationResponse;
 import edu.harvard.iq.dataverse.marketplace.payload.auth.SignupRequest;
 import edu.harvard.iq.dataverse.marketplace.repository.RoleRepo;
 import edu.harvard.iq.dataverse.marketplace.repository.UserRepo;
@@ -82,7 +85,7 @@ public class AuthController {
     @PostMapping("/signup")
     @PreAuthorize("hasAuthority('ADMIN')")
     @AuthAPIDocs.Signup
-    public ResponseEntity<?> registerUser(@RequestBody SignupRequest signUpRequest) {
+    public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest signUpRequest) {
 
         ServerMessageResponse messageResponse = null;
 
@@ -113,4 +116,21 @@ public class AuthController {
 
         return ResponseEntity.ok(messageResponse);
     }
+
+    @PostMapping("/role")
+    @AuthAPIDocs.RoleCreationRequest
+    public ResponseEntity<?> createRole(@Valid @RequestBody RoleCreationRequest roleCreationRequest) {
+        
+        if(roleRepository.existsByName(roleCreationRequest.getRoleName().toUpperCase())) {
+            return ResponseEntity.badRequest().body(new ServerMessageResponse(HttpStatus.BAD_REQUEST,
+                    "Role already exists.",
+                    "Error during the creation of the role, a role with this name already exist."));
+        }
+        
+        Role role = new Role();
+        role.setName(roleCreationRequest.getRoleName().toUpperCase());
+        roleRepository.save(role);
+        return ResponseEntity.ok(new RoleCreationResponse(role));
+    }
+
 }

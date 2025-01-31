@@ -7,6 +7,7 @@ import java.lang.annotation.Target;
 
 import edu.harvard.iq.dataverse.marketplace.payload.ServerMessageResponse;
 import edu.harvard.iq.dataverse.marketplace.payload.auth.JwtResponse;
+import edu.harvard.iq.dataverse.marketplace.payload.auth.RoleCreationResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
@@ -23,7 +24,7 @@ public @interface AuthAPIDocs {
 
     @Target({ElementType.METHOD})    
     @Retention(RetentionPolicy.RUNTIME)
-    @Tag(name = "auth", description = "Dataverse Marketplace Authentication API")
+    @Tag(name = "auth", description = "Authentication endpoint")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", 
                         description = "User successfully logged in",
@@ -57,7 +58,7 @@ public @interface AuthAPIDocs {
 
     @Target({ElementType.METHOD})    
     @Retention(RetentionPolicy.RUNTIME)
-    @Tag(name = "auth", description = "Dataverse Marketplace User creation API")
+    @Tag(name = "auth", description = "User creation endpoint")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", 
                         description = "User successfully signed up",
@@ -75,11 +76,10 @@ public @interface AuthAPIDocs {
                         schema = @Schema(implementation = ServerMessageResponse.class),
                         examples = @ExampleObject(GenericBusinessSamples.SERVER_RESPONSE_401))),
         @ApiResponse(responseCode = "500", 
-                        description = "Internal Server Error during user SIGNUP",
+                        description = "Internal Server Error during user signup",
                         content = @Content(mediaType = "application/json",
                         schema = @Schema(implementation = ServerMessageResponse.class),
                         examples = @ExampleObject(GenericBusinessSamples.SERVER_RESPONSE_500)))                        
-
     })
     @Operation(summary = "Creates a new user.",
                 description = "This endpoint creates a new user in the system with no authorities attached.")
@@ -89,5 +89,40 @@ public @interface AuthAPIDocs {
                 schema = @Schema(implementation = edu.harvard.iq.dataverse.marketplace.payload.auth.SignupRequest.class),
                 examples = @ExampleObject(AuthAPISamples.SIGNUP_REQUEST)))
     public @interface Signup {}
+
+    @Target({ElementType.METHOD})    
+    @Retention(RetentionPolicy.RUNTIME)
+    @Tag(name = "auth", description = "Role creation endpoint")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", 
+                        description = "Role successfully created",
+                        content = @Content(mediaType = "application/json",
+                        schema = @Schema(implementation = RoleCreationResponse.class),
+                        examples = @ExampleObject(AuthAPISamples.ROLE_CREATION_RESPONSE))),
+        @ApiResponse(responseCode = "400", 
+                        description = "Bad request on role creation",
+                        content = @Content(mediaType = "application/json",
+                        schema = @Schema(implementation = ServerMessageResponse.class),
+                        examples = @ExampleObject(GenericBusinessSamples.SERVER_RESPONSE_400))),
+        @ApiResponse(responseCode = "401", 
+                        description = "Access Denied for role creation",
+                        content = @Content(mediaType = "application/json",
+                        schema = @Schema(implementation = ServerMessageResponse.class),
+                        examples = @ExampleObject(GenericBusinessSamples.SERVER_RESPONSE_401))),
+        @ApiResponse(responseCode = "500", 
+                        description = "Internal Server Error during role creation",
+                        content = @Content(mediaType = "application/json",
+                        schema = @Schema(implementation = ServerMessageResponse.class),
+                        examples = @ExampleObject(GenericBusinessSamples.SERVER_RESPONSE_500)))                        
+    })
+    @Operation(summary = "Creates a new role.",
+                description = "This endpoint creates a new role in the system.")
+    @RequestBody(description = "The role creation request", 
+                required = true, 
+                content = @Content(mediaType = "application/json",
+                schema = @Schema(implementation = edu.harvard.iq.dataverse.marketplace.payload.auth.RoleCreationRequest.class),
+                examples = @ExampleObject(AuthAPISamples.ROLE_CREATION_REQUEST)))
+    public @interface RoleCreationRequest{}
+
 
 }

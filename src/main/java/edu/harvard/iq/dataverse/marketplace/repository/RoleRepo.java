@@ -8,4 +8,5 @@ import edu.harvard.iq.dataverse.marketplace.model.Role;
 @Repository
 public interface RoleRepo extends JpaRepository<Role, Long> {
     Optional<Role> findByName(String name);
+    Boolean existsByName(String name);
 }

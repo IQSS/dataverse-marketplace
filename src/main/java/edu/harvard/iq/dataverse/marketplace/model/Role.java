@@ -18,16 +18,16 @@ public class Role {
         name = "role_id_seq", 
         sequenceName = "role_id_seq", 
         allocationSize = 1)
-    private Long id;
+    private Integer id;
 
     @Column(name="role_name")
     private String name;
 
-    public Long getId() {
+    public Integer getId() {
         return this.id;
     }
 
-    public void setId(Long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
