@@ -43,8 +43,6 @@ public class AuthEntryPointJwt implements AuthenticationEntryPoint{
 
             response.setContentType(MediaType.APPLICATION_JSON_VALUE);
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            
-
 
             Map<String, Object> body = new LinkedHashMap<>();
             String timestamp = ZonedDateTime.now().format(DateTimeFormatter.ISO_OFFSET_DATE_TIME);
