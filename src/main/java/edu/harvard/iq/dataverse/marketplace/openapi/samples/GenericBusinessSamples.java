@@ -8,7 +8,7 @@ public abstract class GenericBusinessSamples {
             "code": 400,
             "status": "Not Found",
             "message": "No static resource api/unknown.",
-            "stackTrace": "org.springframework.web.servlet.resource.ResourceHttpRequestHandler.handleRequest(ResourceHttpRequestHandler.java:585)"
+            "details": "Details on SERVER_RESPONSE_400"
         }
         """;
     
@@ -18,7 +18,7 @@ public abstract class GenericBusinessSamples {
             "code": 500,
             "status": "Internal Server Error",
             "message": "Not implemented",
-            "stackTrace": "edu.harvard.iq.dataverse_hub.controller.api.InstallationController.getInstallationsAPIController(InstallationController.java:54)"
+            "details": "Details on SERVER_RESPONSE_500"
         }
         """;
 
@@ -28,7 +28,7 @@ public abstract class GenericBusinessSamples {
             "code": 401,
             "status": "Unauthorized",
             "message": "Bad credentials",
-            "stackTrace": "org.springframework.security.authentication.dao.AbstractUserDetailsAuthenticationProvider.authenticate(AbstractUserDetailsAuthenticationProvider.java:141)"
+            "details": "Details on SERVER_RESPONSE_401"
         }
         """;
 

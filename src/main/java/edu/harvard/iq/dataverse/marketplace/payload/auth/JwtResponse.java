@@ -7,79 +7,73 @@ import io.swagger.v3.oas.annotations.media.Schema;
 @Schema(description = "A representation of the JWT response")
 public class JwtResponse {
 
-  @Schema(description = "The bearer token.", 
-          example = "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsImV4cCI6MTYyMzUwNjQwOCwiaWF0IjoxNjIzNDk5MjA4fQ.7Z")
-  private String token;
+    @Schema(description = "The bearer token.", example = "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsImV4cCI6MTYyMzUwNjQwOCwiaWF0IjoxNjIzNDk5MjA4fQ.7Z")
+    private String token;
 
-  @Schema(description = "The token type.", 
-          example = "Bearer")
-  private String type = "Bearer";
+    @Schema(description = "The token type.", example = "Bearer")
+    private String type = "Bearer";
 
-  @Schema(description = "The user id of the authenticated user.", 
-          example = "0")
-  private Long id;
+    @Schema(description = "The user id of the authenticated user.", example = "0")
+    private Long id;
 
-  @Schema(description = "The username of the authenticated user.", 
-          example = "username")
-  private String username;
+    @Schema(description = "The username of the authenticated user.", example = "username")
+    private String username;
 
-  @Schema(description = "The email of the authenticated user.", 
-          example = "user@dataverse.org")
-  private String email;
+    @Schema(description = "The email of the authenticated user.", example = "user@dataverse.org")
+    private String email;
 
-  @Schema(description = "The roles of the authenticated user", 
-          example = "[\"ADMIN\"]")
-  private List<String> roles;
+    @Schema(description = "The roles of the authenticated user", example = "[\"ADMIN\"]")
+    private List<String> roles;
 
-  public JwtResponse(String accessToken, Long id, String username, String email, List<String> roles) {
-    this.token = accessToken;
-    this.id = id;
-    this.username = username;
-    this.email = email;
-    this.roles = roles;
-  }
+    public JwtResponse(String accessToken, Long id, String username, String email, List<String> roles) {
+        this.token = accessToken;
+        this.id = id;
+        this.username = username;
+        this.email = email;
+        this.roles = roles;
+    }
 
-  public String getAccessToken() {
-    return token;
-  }
+    public String getAccessToken() {
+        return token;
+    }
 
-  public void setAccessToken(String accessToken) {
-    this.token = accessToken;
-  }
+    public void setAccessToken(String accessToken) {
+        this.token = accessToken;
+    }
 
-  public String getTokenType() {
-    return type;
-  }
+    public String getTokenType() {
+        return type;
+    }
 
-  public void setTokenType(String tokenType) {
-    this.type = tokenType;
-  }
+    public void setTokenType(String tokenType) {
+        this.type = tokenType;
+    }
 
-  public Long getId() {
-    return id;
-  }
+    public Long getId() {
+        return id;
+    }
 
-  public void setId(Long id) {
-    this.id = id;
-  }
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-  public String getEmail() {
-    return email;
-  }
+    public String getEmail() {
+        return email;
+    }
 
-  public void setEmail(String email) {
-    this.email = email;
-  }
+    public void setEmail(String email) {
+        this.email = email;
+    }
 
-  public String getUsername() {
-    return username;
-  }
+    public String getUsername() {
+        return username;
+    }
 
-  public void setUsername(String username) {
-    this.username = username;
-  }
+    public void setUsername(String username) {
+        this.username = username;
+    }
 
-  public List<String> getRoles() {
-    return roles;
-  }
+    public List<String> getRoles() {
+        return roles;
+    }
 }

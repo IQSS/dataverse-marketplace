@@ -20,6 +20,15 @@ public abstract class AuthAPISamples {
             "password": "password"
         }
         """;
+
+    public static final String SIGNUP_REQUEST = """
+        {
+            "username": "username",
+            "email":"email@dataverse.org.com",
+            "password":"123456"
+        }
+        """;
+
 }
 
 

@@ -14,11 +14,7 @@ import org.springframework.security.authentication.BadCredentialsException;
 @RestControllerAdvice
 public class ErrorResponseController {
     
-    @ExceptionHandler(Exception.class)
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public ServerMessageResponse errorResponse(Exception e) {
-        return new ServerMessageResponse(HttpStatus.INTERNAL_SERVER_ERROR, e);
-    }
+    
     
     @ExceptionHandler(NoResourceFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
@@ -42,6 +38,12 @@ public class ErrorResponseController {
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
     public ServerMessageResponse badCredentialsResponse(Exception e) {
         return new ServerMessageResponse(HttpStatus.UNAUTHORIZED, e);
+    }
+
+    @ExceptionHandler(NullPointerException.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public ServerMessageResponse errorResponse(Exception e) {
+        return new ServerMessageResponse(HttpStatus.INTERNAL_SERVER_ERROR, e);
     }
 
 

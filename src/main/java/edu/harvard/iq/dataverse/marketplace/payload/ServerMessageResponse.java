@@ -25,14 +25,22 @@ public class ServerMessageResponse {
 
     @Schema(description = "Stack trace", 
             example = "edu.harvard.iq.dataverse.marketplace.controller.api.IndexController.test(IndexController.java:42)")
-    private String stackTrace;
+    private String details;
+
+    public ServerMessageResponse(HttpStatus status, String message, String details) {
+        this.timestamp = new Date();
+        this.code = status.value();
+        this.status = status.getReasonPhrase();
+        this.message = message;
+        this.details = details;
+    }
 
     public ServerMessageResponse(HttpStatus status, Exception e) {
         this.timestamp = new Date();
         this.code = status.value();
         this.status = status.getReasonPhrase();
         this.message = e.getMessage();
-        this.stackTrace = e.getStackTrace()[0].toString();
+        this.details = e.getStackTrace()[0].toString();
     }
 
     public Date getTimestamp() {
@@ -67,12 +75,12 @@ public class ServerMessageResponse {
         this.message = message;
     }
 
-    public String getStackTrace() {
-        return this.stackTrace;
+    public String getDetails() {
+        return this.details;
     }
 
-    public void setStackTrace(String stackTrace) {
-        this.stackTrace = stackTrace;
+    public void setDetails(String details) {
+        this.details = details;
     }
 
     @Override
@@ -82,7 +90,7 @@ public class ServerMessageResponse {
             ", code='" + getCode() + "'" +
             ", status='" + getStatus() + "'" +
             ", message='" + getMessage() + "'" +
-            ", stackTrace='" + getStackTrace() + "'" +
+            ", details='" + getDetails() + "'"+
             "}";
     }
         

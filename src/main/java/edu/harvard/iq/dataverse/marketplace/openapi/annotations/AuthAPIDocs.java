@@ -55,4 +55,39 @@ public @interface AuthAPIDocs {
                 examples = @ExampleObject(AuthAPISamples.LOGIN_REQUEST)))
     public @interface Login {}
 
+    @Target({ElementType.METHOD})    
+    @Retention(RetentionPolicy.RUNTIME)
+    @Tag(name = "auth", description = "Dataverse Marketplace User creation API")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", 
+                        description = "User successfully signed up",
+                        content = @Content(mediaType = "application/json",
+                        schema = @Schema(implementation = JwtResponse.class),
+                        examples = @ExampleObject(AuthAPISamples.JWT))),
+        @ApiResponse(responseCode = "400", 
+                        description = "Bad request on user signup",
+                        content = @Content(mediaType = "application/json",
+                        schema = @Schema(implementation = ServerMessageResponse.class),
+                        examples = @ExampleObject(GenericBusinessSamples.SERVER_RESPONSE_400))),
+        @ApiResponse(responseCode = "401", 
+                        description = "Access Denied for user signup",
+                        content = @Content(mediaType = "application/json",
+                        schema = @Schema(implementation = ServerMessageResponse.class),
+                        examples = @ExampleObject(GenericBusinessSamples.SERVER_RESPONSE_401))),
+        @ApiResponse(responseCode = "500", 
+                        description = "Internal Server Error during user SIGNUP",
+                        content = @Content(mediaType = "application/json",
+                        schema = @Schema(implementation = ServerMessageResponse.class),
+                        examples = @ExampleObject(GenericBusinessSamples.SERVER_RESPONSE_500)))                        
+
+    })
+    @Operation(summary = "Creates a new user.",
+                description = "This endpoint creates a new user in the system with no authorities attached.")
+    @RequestBody(description = "The signup request", 
+                required = true, 
+                content = @Content(mediaType = "application/json",
+                schema = @Schema(implementation = edu.harvard.iq.dataverse.marketplace.payload.auth.SignupRequest.class),
+                examples = @ExampleObject(AuthAPISamples.SIGNUP_REQUEST)))
+    public @interface Signup {}
+
 }
