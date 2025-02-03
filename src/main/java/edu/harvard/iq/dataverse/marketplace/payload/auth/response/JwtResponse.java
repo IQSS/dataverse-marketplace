@@ -1,4 +1,4 @@
-package edu.harvard.iq.dataverse.marketplace.payload.auth;
+package edu.harvard.iq.dataverse.marketplace.payload.auth.response;
 
 import java.util.List;
 

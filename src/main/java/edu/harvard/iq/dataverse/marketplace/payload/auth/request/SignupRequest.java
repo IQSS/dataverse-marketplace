@@ -1,4 +1,4 @@
-package edu.harvard.iq.dataverse.marketplace.payload.auth;
+package edu.harvard.iq.dataverse.marketplace.payload.auth.request;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.*;

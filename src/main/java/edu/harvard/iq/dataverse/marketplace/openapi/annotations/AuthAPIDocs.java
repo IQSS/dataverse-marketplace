@@ -6,8 +6,9 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 import edu.harvard.iq.dataverse.marketplace.payload.ServerMessageResponse;
-import edu.harvard.iq.dataverse.marketplace.payload.auth.JwtResponse;
-import edu.harvard.iq.dataverse.marketplace.payload.auth.RoleCreationResponse;
+import edu.harvard.iq.dataverse.marketplace.payload.auth.RoleDTO;
+import edu.harvard.iq.dataverse.marketplace.payload.auth.response.JwtResponse;
+import edu.harvard.iq.dataverse.marketplace.payload.auth.response.RoleCreationResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
@@ -18,6 +19,7 @@ import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import edu.harvard.iq.dataverse.marketplace.model.Role;
 import edu.harvard.iq.dataverse.marketplace.openapi.samples.AuthAPISamples;
 import edu.harvard.iq.dataverse.marketplace.openapi.samples.GenericBusinessSamples;
 
@@ -53,7 +55,7 @@ public @interface AuthAPIDocs {
     @RequestBody(description = "The login request", 
                 required = true, 
                 content = @Content(mediaType = "application/json",
-                schema = @Schema(implementation = edu.harvard.iq.dataverse.marketplace.payload.auth.LoginRequest.class),
+                schema = @Schema(implementation = edu.harvard.iq.dataverse.marketplace.payload.auth.request.LoginRequest.class),
                 examples = @ExampleObject(AuthAPISamples.LOGIN_REQUEST)))
     public @interface Login {}
 
@@ -87,7 +89,7 @@ public @interface AuthAPIDocs {
     @RequestBody(description = "The signup request", 
                 required = true, 
                 content = @Content(mediaType = "application/json",
-                schema = @Schema(implementation = edu.harvard.iq.dataverse.marketplace.payload.auth.SignupRequest.class),
+                schema = @Schema(implementation = edu.harvard.iq.dataverse.marketplace.payload.auth.request.SignupRequest.class),
                 examples = @ExampleObject(AuthAPISamples.SIGNUP_REQUEST)))
     public @interface Signup {}
 
@@ -121,7 +123,7 @@ public @interface AuthAPIDocs {
     @RequestBody(description = "The role creation request", 
                 required = true, 
                 content = @Content(mediaType = "application/json",
-                schema = @Schema(implementation = edu.harvard.iq.dataverse.marketplace.payload.auth.RoleCreationRequest.class),
+                schema = @Schema(implementation = edu.harvard.iq.dataverse.marketplace.payload.auth.request.RoleCreationRequest.class),
                 examples = @ExampleObject(AuthAPISamples.ROLE_CREATION_REQUEST)))
     public @interface RoleCreationRequest{}
 
@@ -201,7 +203,7 @@ public @interface AuthAPIDocs {
                 required = true,
                 in = ParameterIn.PATH,
                 schema = @Schema(type = "integer"))
-    public @interface DeleteRole{}
+    public @interface RemoveRole{}
 
     @Target({ElementType.METHOD})    
     @Retention(RetentionPolicy.RUNTIME)
@@ -234,7 +236,37 @@ public @interface AuthAPIDocs {
                 description = "The new password to be set", 
                 required = true, 
                 in = ParameterIn.HEADER, 
-                schema = @Schema(type = "string"))
+                schema = @Schema(type = "string"),
+                example = "newpassword")
     public @interface ChangePassword{}
+
+    @Target({ElementType.METHOD})    
+    @Retention(RetentionPolicy.RUNTIME)
+    @Tag(name = "Security")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", 
+                        description = "Role list successfully retrieved",
+                        content = @Content(mediaType = "application/json",
+                        schema = @Schema(implementation = RoleDTO[].class),
+                        examples = @ExampleObject(AuthAPISamples.ROLES))),
+        @ApiResponse(responseCode = "400", 
+                        description = "Bad request on role list retrieval",
+                        content = @Content(mediaType = "application/json",
+                        schema = @Schema(implementation = ServerMessageResponse.class),
+                        examples = @ExampleObject(GenericBusinessSamples.SERVER_MESSAGE_RESPONSE))),
+        @ApiResponse(responseCode = "401", 
+                        description = "Access Denied for role list retrieval",
+                        content = @Content(mediaType = "application/json",
+                        schema = @Schema(implementation = ServerMessageResponse.class),
+                        examples = @ExampleObject(GenericBusinessSamples.SERVER_MESSAGE_RESPONSE))),
+        @ApiResponse(responseCode = "500", 
+                        description = "Internal Server Error during role list retrieval",
+                        content = @Content(mediaType = "application/json",
+                        schema = @Schema(implementation = ServerMessageResponse.class),
+                        examples = @ExampleObject(GenericBusinessSamples.SERVER_MESSAGE_RESPONSE)))                        
+    })
+    @Operation(summary = "Retrieves the list of roles.",
+                description = "This endpoint retrieves the list of roles in the system.")    
+    public @interface GetRoles{}
 
 }

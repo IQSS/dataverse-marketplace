@@ -1,4 +1,4 @@
-package edu.harvard.iq.dataverse.marketplace.payload.auth;
+package edu.harvard.iq.dataverse.marketplace.payload.auth.response;
 
 import edu.harvard.iq.dataverse.marketplace.model.Role;
 import io.swagger.v3.oas.annotations.media.Schema;

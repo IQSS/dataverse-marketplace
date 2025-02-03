@@ -42,6 +42,19 @@ public abstract class AuthAPISamples {
         }
         """;
 
+    public static final String ROLES = """
+        [
+            {
+                "id": 2,
+                "name": "USER"
+            },
+            {
+                "id": 1,
+                "name": "ADMIN"
+            }
+        ]
+        """;
+
 }
 
 
