@@ -8,7 +8,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 public class JwtResponse {
 
     @Schema(description = "The bearer token.", example = "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsImV4cCI6MTYyMzUwNjQwOCwiaWF0IjoxNjIzNDk5MjA4fQ.7Z")
-    private String token;
+    private String accessToken;
 
     @Schema(description = "The token type.", example = "Bearer")
     private String type = "Bearer";
@@ -26,7 +26,7 @@ public class JwtResponse {
     private List<String> roles;
 
     public JwtResponse(String accessToken, Long id, String username, String email, List<String> roles) {
-        this.token = accessToken;
+        this.accessToken = accessToken;
         this.id = id;
         this.username = username;
         this.email = email;
@@ -34,18 +34,18 @@ public class JwtResponse {
     }
 
     public String getAccessToken() {
-        return token;
+        return accessToken;
     }
 
     public void setAccessToken(String accessToken) {
-        this.token = accessToken;
+        this.accessToken = accessToken;
     }
 
-    public String getTokenType() {
+    public String getType() {
         return type;
     }
 
-    public void setTokenType(String tokenType) {
+    public void setType(String tokenType) {
         this.type = tokenType;
     }
 

@@ -6,6 +6,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import jakarta.validation.Valid;
+import jakarta.websocket.server.PathParam;
 
 import org.apache.catalina.connector.Response;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +32,6 @@ import edu.harvard.iq.dataverse.marketplace.openapi.annotations.AuthAPIDocs;
 import edu.harvard.iq.dataverse.marketplace.payload.ServerMessageResponse;
 import edu.harvard.iq.dataverse.marketplace.payload.auth.JwtResponse;
 import edu.harvard.iq.dataverse.marketplace.payload.auth.LoginRequest;
-import edu.harvard.iq.dataverse.marketplace.payload.auth.RoleAssignRequest;
 import edu.harvard.iq.dataverse.marketplace.payload.auth.RoleAssignResponse;
 import edu.harvard.iq.dataverse.marketplace.payload.auth.RoleCreationRequest;
 import edu.harvard.iq.dataverse.marketplace.payload.auth.RoleCreationResponse;
@@ -40,8 +40,10 @@ import edu.harvard.iq.dataverse.marketplace.repository.RoleRepo;
 import edu.harvard.iq.dataverse.marketplace.repository.UserRepo;
 import edu.harvard.iq.dataverse.marketplace.security.UserDetailsImpl;
 import edu.harvard.iq.dataverse.marketplace.security.jwt.JwtUtils;
+import io.swagger.v3.oas.annotations.Hidden;
+
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.PathVariable;
 
 
 /**
@@ -143,24 +145,99 @@ public class AuthController {
         return ResponseEntity.ok(new RoleCreationResponse(role));
     }
 
-    @PostMapping("/role/assign")
-    public ResponseEntity<?> assignRole(@Valid @RequestBody RoleAssignRequest roleAssignRequest) {
-        //TODO IMPLEMENT
-        return ResponseEntity.ok(new RoleAssignResponse());
+    @PreAuthorize("hasAuthority('ADMIN')")
+    @PostMapping("/role/{roleId}/user/{userId}")
+    @AuthAPIDocs.AssignRole
+    public ResponseEntity<?> assignRole(@PathVariable("roleId") Integer roleId, @PathVariable("userId") Long userId) {
+        
+        try {
+
+            Role role = roleRepository.findById(roleId).orElse(null);
+            User user = userRepository.findById(userId).orElse(null);
+
+            if(user.getRoles().contains(role)) {
+                return ResponseEntity.badRequest().body(
+                    new ServerMessageResponse(HttpStatus.BAD_REQUEST,
+                        "Role already assigned.",
+                        "Error during the assignment of the role, the user already has this role.")
+                );
+            }
+            user.getRoles().add(role);
+            userRepository.save(user);
+
+            ServerMessageResponse messageResponse = new ServerMessageResponse(HttpStatus.OK,
+                    "User role was successfully assigned.",
+                    String.format("The user %s was successfully removed the role %s.", user.getUsername(), role.getName()));
+            
+            return ResponseEntity.ok(messageResponse);
+            
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().body(
+                new ServerMessageResponse(HttpStatus.INTERNAL_SERVER_ERROR,
+                    e.getClass().getName(),
+                    e.getStackTrace()[0].toString())
+            );
+        }        
+        
     }
 
-    @DeleteMapping("/role/assign")
-    public ResponseEntity<?> removeRole(@RequestParam String username, @RequestParam String roleName) {
-        //TODO IMPLEMENT
-        return ResponseEntity.ok(new RoleAssignResponse());
+    @PreAuthorize("hasAuthority('ADMIN')")
+    @DeleteMapping("/role/{roleId}/user/{userId}")
+    @AuthAPIDocs.AssignRole
+    public ResponseEntity<?> removeRole(@PathVariable("roleId") Integer roleId, @PathVariable("userId") Long userId) {
+
+        try {
+
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            UserDetailsImpl loggedInUser = (UserDetailsImpl) authentication.getPrincipal();
+            Role role = roleRepository.findById(roleId).orElse(null);
+
+            if (loggedInUser.getId().equals(userId) && role.getName().equals("ADMIN")) {
+                return ResponseEntity.badRequest().body(
+                    new ServerMessageResponse(HttpStatus.BAD_REQUEST,
+                        "Cannot remove role ADMIN from self.",
+                        "Error during the removal of the role ADMIN, a user cannot remove a role ADMIN from themselves.")
+                );
+            }
+            
+            User user = userRepository.findById(userId).orElse(null);
+
+            if(!user.getRoles().contains(role)) {
+                return ResponseEntity.badRequest().body(
+                    new ServerMessageResponse(HttpStatus.BAD_REQUEST,
+                        "Role not assigned.",
+                        "Error during the removal of the role, the user does not have this role.")
+                );
+            }
+            user.getRoles().remove(role);
+            userRepository.save(user);
+
+            ServerMessageResponse messageResponse = new ServerMessageResponse(HttpStatus.OK,
+                    "User role was successfully removed.",
+                    String.format("The user %s was successfully removed the role %s.", user.getUsername(), role.getName()));
+            
+            return ResponseEntity.ok(messageResponse);
+            
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().body(
+                new ServerMessageResponse(HttpStatus.INTERNAL_SERVER_ERROR,
+                    e.getClass().getName(),
+                    e.getStackTrace()[0].toString())
+            );
+        }
     }
 
+    @PreAuthorize("hasAuthority('ADMIN')")
     @PutMapping("/password/update")
+    //@AuthAPIDocs.ChangePassword
     public ResponseEntity<?> changePassword() {
-        //TODO IMPLEMENT
+        
+
+
         return ResponseEntity.ok(new RoleAssignResponse());
     }
 
+    @Hidden
     @GetMapping("/roles")
     @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<?> getRoles() {

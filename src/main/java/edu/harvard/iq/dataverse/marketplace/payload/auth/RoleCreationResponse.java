@@ -11,11 +11,13 @@ public class RoleCreationResponse {
 
     @NotBlank
     @Size(min = 3, max = 20)    
-    @Schema(description = "The name of the role succesfully created.", example = "ADMIN")    
+    @Schema(description = "The name of the role succesfully created.", 
+            example = "ADMIN")    
     String roleName;
 
     @NotNull
-    @Schema(description = "The id of the role succesfully created.")
+    @Schema(description = "The id of the role succesfully created.", 
+            example = "1")
     Integer roleId;
 
     public RoleCreationResponse(Role role) {

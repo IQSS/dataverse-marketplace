@@ -9,6 +9,8 @@ import edu.harvard.iq.dataverse.marketplace.payload.ServerMessageResponse;
 import edu.harvard.iq.dataverse.marketplace.payload.auth.JwtResponse;
 import edu.harvard.iq.dataverse.marketplace.payload.auth.RoleCreationResponse;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -16,7 +18,6 @@ import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
-
 import edu.harvard.iq.dataverse.marketplace.openapi.samples.AuthAPISamples;
 import edu.harvard.iq.dataverse.marketplace.openapi.samples.GenericBusinessSamples;
 
@@ -24,7 +25,7 @@ public @interface AuthAPIDocs {
 
     @Target({ElementType.METHOD})    
     @Retention(RetentionPolicy.RUNTIME)
-    @Tag(name = "auth", description = "Authentication endpoint")
+    @Tag(name = "Authentication")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", 
                         description = "User successfully logged in",
@@ -35,17 +36,17 @@ public @interface AuthAPIDocs {
                         description = "Bad request on user login",
                         content = @Content(mediaType = "application/json",
                         schema = @Schema(implementation = ServerMessageResponse.class),
-                        examples = @ExampleObject(GenericBusinessSamples.SERVER_RESPONSE_400))),
+                        examples = @ExampleObject(GenericBusinessSamples.SERVER_MESSAGE_RESPONSE))),
         @ApiResponse(responseCode = "401", 
                         description = "Bad credentials on user login",
                         content = @Content(mediaType = "application/json",
                         schema = @Schema(implementation = ServerMessageResponse.class),
-                        examples = @ExampleObject(GenericBusinessSamples.SERVER_RESPONSE_401))),
+                        examples = @ExampleObject(GenericBusinessSamples.SERVER_MESSAGE_RESPONSE))),
         @ApiResponse(responseCode = "500", 
                         description = "Internal Server Error during user login",
                         content = @Content(mediaType = "application/json",
                         schema = @Schema(implementation = ServerMessageResponse.class),
-                        examples = @ExampleObject(GenericBusinessSamples.SERVER_RESPONSE_500)))
+                        examples = @ExampleObject(GenericBusinessSamples.SERVER_MESSAGE_RESPONSE)))
     })
     @Operation(summary = "Logs in a user and returns a JWT token",
                 description = "This endpoint logs in a user and returns a JWT token to be used in subsequent requests.")
@@ -58,7 +59,7 @@ public @interface AuthAPIDocs {
 
     @Target({ElementType.METHOD})    
     @Retention(RetentionPolicy.RUNTIME)
-    @Tag(name = "auth", description = "User creation endpoint")
+    @Tag(name = "Authentication")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", 
                         description = "User successfully signed up",
@@ -69,17 +70,17 @@ public @interface AuthAPIDocs {
                         description = "Bad request on user signup",
                         content = @Content(mediaType = "application/json",
                         schema = @Schema(implementation = ServerMessageResponse.class),
-                        examples = @ExampleObject(GenericBusinessSamples.SERVER_RESPONSE_400))),
+                        examples = @ExampleObject(GenericBusinessSamples.SERVER_MESSAGE_RESPONSE))),
         @ApiResponse(responseCode = "401", 
                         description = "Access Denied for user signup",
                         content = @Content(mediaType = "application/json",
                         schema = @Schema(implementation = ServerMessageResponse.class),
-                        examples = @ExampleObject(GenericBusinessSamples.SERVER_RESPONSE_401))),
+                        examples = @ExampleObject(GenericBusinessSamples.SERVER_MESSAGE_RESPONSE))),
         @ApiResponse(responseCode = "500", 
                         description = "Internal Server Error during user signup",
                         content = @Content(mediaType = "application/json",
                         schema = @Schema(implementation = ServerMessageResponse.class),
-                        examples = @ExampleObject(GenericBusinessSamples.SERVER_RESPONSE_500)))                        
+                        examples = @ExampleObject(GenericBusinessSamples.SERVER_MESSAGE_RESPONSE)))                        
     })
     @Operation(summary = "Creates a new user.",
                 description = "This endpoint creates a new user in the system with no authorities attached.")
@@ -92,7 +93,7 @@ public @interface AuthAPIDocs {
 
     @Target({ElementType.METHOD})    
     @Retention(RetentionPolicy.RUNTIME)
-    @Tag(name = "auth", description = "Role creation endpoint")
+    @Tag(name = "Security")    
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", 
                         description = "Role successfully created",
@@ -103,17 +104,17 @@ public @interface AuthAPIDocs {
                         description = "Bad request on role creation",
                         content = @Content(mediaType = "application/json",
                         schema = @Schema(implementation = ServerMessageResponse.class),
-                        examples = @ExampleObject(GenericBusinessSamples.SERVER_RESPONSE_400))),
+                        examples = @ExampleObject(GenericBusinessSamples.SERVER_MESSAGE_RESPONSE))),
         @ApiResponse(responseCode = "401", 
                         description = "Access Denied for role creation",
                         content = @Content(mediaType = "application/json",
                         schema = @Schema(implementation = ServerMessageResponse.class),
-                        examples = @ExampleObject(GenericBusinessSamples.SERVER_RESPONSE_401))),
+                        examples = @ExampleObject(GenericBusinessSamples.SERVER_MESSAGE_RESPONSE))),
         @ApiResponse(responseCode = "500", 
                         description = "Internal Server Error during role creation",
                         content = @Content(mediaType = "application/json",
                         schema = @Schema(implementation = ServerMessageResponse.class),
-                        examples = @ExampleObject(GenericBusinessSamples.SERVER_RESPONSE_500)))                        
+                        examples = @ExampleObject(GenericBusinessSamples.SERVER_MESSAGE_RESPONSE)))                        
     })
     @Operation(summary = "Creates a new role.",
                 description = "This endpoint creates a new role in the system.")
@@ -123,6 +124,84 @@ public @interface AuthAPIDocs {
                 schema = @Schema(implementation = edu.harvard.iq.dataverse.marketplace.payload.auth.RoleCreationRequest.class),
                 examples = @ExampleObject(AuthAPISamples.ROLE_CREATION_REQUEST)))
     public @interface RoleCreationRequest{}
+
+    @Target({ElementType.METHOD})    
+    @Retention(RetentionPolicy.RUNTIME)
+    @Tag(name = "Security")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", 
+                        description = "Role successfully assigned",
+                        content = @Content(mediaType = "application/json",
+                        schema = @Schema(implementation = ServerMessageResponse.class),
+                        examples = @ExampleObject(GenericBusinessSamples.SERVER_MESSAGE_RESPONSE))),
+        @ApiResponse(responseCode = "400", 
+                        description = "Bad request on role assignment",
+                        content = @Content(mediaType = "application/json",
+                        schema = @Schema(implementation = ServerMessageResponse.class),
+                        examples = @ExampleObject(GenericBusinessSamples.SERVER_MESSAGE_RESPONSE))),
+        @ApiResponse(responseCode = "401", 
+                        description = "Access Denied for role assignment",
+                        content = @Content(mediaType = "application/json",
+                        schema = @Schema(implementation = ServerMessageResponse.class),
+                        examples = @ExampleObject(GenericBusinessSamples.SERVER_MESSAGE_RESPONSE))),
+        @ApiResponse(responseCode = "500", 
+                        description = "Internal Server Error during role assignment",
+                        content = @Content(mediaType = "application/json",
+                        schema = @Schema(implementation = ServerMessageResponse.class),
+                        examples = @ExampleObject(GenericBusinessSamples.SERVER_MESSAGE_RESPONSE)))                        
+    })
+    @Operation(summary = "Assigns a role.",
+                description = "This endpoint assigns a role to a user.")
+    @Parameter(name = "userId", 
+                description = "The user id to assign the role to", 
+                required = true, 
+                in = ParameterIn.PATH, 
+                schema = @Schema(type = "integer", format = "int64"))
+    @Parameter(name = "roleId",
+                description = "The role id to assign to the user.",
+                required = true,
+                in = ParameterIn.PATH,
+                schema = @Schema(type = "integer"))
+    public @interface AssignRole{}
+
+    @Target({ElementType.METHOD})    
+    @Retention(RetentionPolicy.RUNTIME)
+    @Tag(name = "Security")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", 
+                        description = "Role successfully removed",
+                        content = @Content(mediaType = "application/json",
+                        schema = @Schema(implementation = ServerMessageResponse.class),
+                        examples = @ExampleObject(GenericBusinessSamples.SERVER_MESSAGE_RESPONSE))),
+        @ApiResponse(responseCode = "400", 
+                        description = "Bad request on role removal",
+                        content = @Content(mediaType = "application/json",
+                        schema = @Schema(implementation = ServerMessageResponse.class),
+                        examples = @ExampleObject(GenericBusinessSamples.SERVER_MESSAGE_RESPONSE))),
+        @ApiResponse(responseCode = "401", 
+                        description = "Access Denied for role removal",
+                        content = @Content(mediaType = "application/json",
+                        schema = @Schema(implementation = ServerMessageResponse.class),
+                        examples = @ExampleObject(GenericBusinessSamples.SERVER_MESSAGE_RESPONSE))),
+        @ApiResponse(responseCode = "500", 
+                        description = "Internal Server Error during role removal",
+                        content = @Content(mediaType = "application/json",
+                        schema = @Schema(implementation = ServerMessageResponse.class),
+                        examples = @ExampleObject(GenericBusinessSamples.SERVER_MESSAGE_RESPONSE)))                        
+    })
+    @Operation(summary = "Removes a role.",
+                description = "This endpoint removes a role from an user.")
+    @Parameter(name = "userId", 
+                description = "The user id to remove the role from", 
+                required = true, 
+                in = ParameterIn.PATH, 
+                schema = @Schema(type = "integer", format = "int64"))
+    @Parameter(name = "roleId",
+                description = "The role id to be removed from the user",
+                required = true,
+                in = ParameterIn.PATH,
+                schema = @Schema(type = "integer"))
+    public @interface DeleteRole{}
 
 
 }

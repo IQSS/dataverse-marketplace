@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
 import io.swagger.v3.oas.annotations.info.Contact;
 import io.swagger.v3.oas.annotations.info.Info;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.info.License;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.security.SecurityScheme;
@@ -17,7 +18,12 @@ import io.swagger.v3.oas.annotations.security.SecuritySchemes;
         license = @License(name = "Apache 2.0", url = "http://www.apache.org/licenses/LICENSE-2.0"),
         contact = @Contact(name = "Dataverse Marketplace", email = "support@dataverse.harvard.edu", url = "https://dataverse.org")        
     ),
-    security = @SecurityRequirement(name = "bearerAuth")
+    security = @SecurityRequirement(name = "bearerAuth"),
+    tags = {
+        @Tag(name = "Authentication", description = "User authentication and authorization"),
+        @Tag(name = "Security", description = "User and security management"),
+        
+    }
 )
 @SecuritySchemes({   
     @SecurityScheme(

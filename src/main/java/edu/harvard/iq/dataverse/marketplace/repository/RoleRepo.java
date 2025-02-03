@@ -6,7 +6,7 @@ import org.springframework.stereotype.Repository;
 import edu.harvard.iq.dataverse.marketplace.model.Role;
 
 @Repository
-public interface RoleRepo extends JpaRepository<Role, Long> {
+public interface RoleRepo extends JpaRepository<Role, Integer> {
     Optional<Role> findByName(String name);
     Boolean existsByName(String name);
 }
