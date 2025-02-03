@@ -6,9 +6,6 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import jakarta.validation.Valid;
-import jakarta.websocket.server.PathParam;
-
-import org.apache.catalina.connector.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,6 +20,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -30,12 +28,12 @@ import edu.harvard.iq.dataverse.marketplace.model.Role;
 import edu.harvard.iq.dataverse.marketplace.model.User;
 import edu.harvard.iq.dataverse.marketplace.openapi.annotations.AuthAPIDocs;
 import edu.harvard.iq.dataverse.marketplace.payload.ServerMessageResponse;
-import edu.harvard.iq.dataverse.marketplace.payload.auth.JwtResponse;
-import edu.harvard.iq.dataverse.marketplace.payload.auth.LoginRequest;
-import edu.harvard.iq.dataverse.marketplace.payload.auth.RoleAssignResponse;
-import edu.harvard.iq.dataverse.marketplace.payload.auth.RoleCreationRequest;
-import edu.harvard.iq.dataverse.marketplace.payload.auth.RoleCreationResponse;
-import edu.harvard.iq.dataverse.marketplace.payload.auth.SignupRequest;
+import edu.harvard.iq.dataverse.marketplace.payload.auth.RoleDTO;
+import edu.harvard.iq.dataverse.marketplace.payload.auth.request.LoginRequest;
+import edu.harvard.iq.dataverse.marketplace.payload.auth.request.RoleCreationRequest;
+import edu.harvard.iq.dataverse.marketplace.payload.auth.request.SignupRequest;
+import edu.harvard.iq.dataverse.marketplace.payload.auth.response.JwtResponse;
+import edu.harvard.iq.dataverse.marketplace.payload.auth.response.RoleCreationResponse;
 import edu.harvard.iq.dataverse.marketplace.repository.RoleRepo;
 import edu.harvard.iq.dataverse.marketplace.repository.UserRepo;
 import edu.harvard.iq.dataverse.marketplace.security.UserDetailsImpl;
@@ -183,7 +181,7 @@ public class AuthController {
 
     @PreAuthorize("hasAuthority('ADMIN')")
     @DeleteMapping("/role/{roleId}/user/{userId}")
-    @AuthAPIDocs.AssignRole
+    @AuthAPIDocs.RemoveRole
     public ResponseEntity<?> removeRole(@PathVariable("roleId") Integer roleId, @PathVariable("userId") Long userId) {
 
         try {
@@ -229,22 +227,33 @@ public class AuthController {
 
     @PreAuthorize("hasAuthority('ADMIN')")
     @PutMapping("/password/update")
-    //@AuthAPIDocs.ChangePassword
-    public ResponseEntity<?> changePassword() {
+    @AuthAPIDocs.ChangePassword
+    public ResponseEntity<?> changePassword(@RequestHeader("password") String password) {
         
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        UserDetailsImpl loggedInUser = (UserDetailsImpl) authentication.getPrincipal();
+        User user = userRepository.findById(loggedInUser.getId()).orElse(null);
+        user.setPassword(encoder.encode(password));
+        userRepository.save(user);
 
-
-        return ResponseEntity.ok(new RoleAssignResponse());
+        return ResponseEntity.ok(new ServerMessageResponse(HttpStatus.OK,
+                "Password updated successfully.",
+                "The password was successfully updated."));
     }
-
-    @Hidden
+    
     @GetMapping("/roles")
     @PreAuthorize("hasAuthority('ADMIN')")
+    @AuthAPIDocs.GetRoles
     public ResponseEntity<?> getRoles() {
 
-        Set<Role> roles = new HashSet<>();
-        roleRepository.findAll().forEach(roles::add);
-        return ResponseEntity.ok(roles);
+        Set<RoleDTO> rolesDTO = new HashSet<>();
+        List<Role> roles = roleRepository.findAll();
+
+        for (Role role : roles) {
+            rolesDTO.add(new RoleDTO(role));
+        }
+
+        return ResponseEntity.ok(rolesDTO);
     }
 
 

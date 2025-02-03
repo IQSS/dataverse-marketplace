@@ -203,5 +203,38 @@ public @interface AuthAPIDocs {
                 schema = @Schema(type = "integer"))
     public @interface DeleteRole{}
 
+    @Target({ElementType.METHOD})    
+    @Retention(RetentionPolicy.RUNTIME)
+    @Tag(name = "Security")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", 
+                        description = "Password successfully updated",
+                        content = @Content(mediaType = "application/json",
+                        schema = @Schema(implementation = ServerMessageResponse.class),
+                        examples = @ExampleObject(GenericBusinessSamples.SERVER_MESSAGE_RESPONSE))),
+        @ApiResponse(responseCode = "400", 
+                        description = "Bad request on password update",
+                        content = @Content(mediaType = "application/json",
+                        schema = @Schema(implementation = ServerMessageResponse.class),
+                        examples = @ExampleObject(GenericBusinessSamples.SERVER_MESSAGE_RESPONSE))),
+        @ApiResponse(responseCode = "401", 
+                        description = "Access Denied for password update",
+                        content = @Content(mediaType = "application/json",
+                        schema = @Schema(implementation = ServerMessageResponse.class),
+                        examples = @ExampleObject(GenericBusinessSamples.SERVER_MESSAGE_RESPONSE))),
+        @ApiResponse(responseCode = "500", 
+                        description = "Internal Server Error during password update",
+                        content = @Content(mediaType = "application/json",
+                        schema = @Schema(implementation = ServerMessageResponse.class),
+                        examples = @ExampleObject(GenericBusinessSamples.SERVER_MESSAGE_RESPONSE)))                        
+    })
+    @Operation(summary = "Changes the password of a user.",
+                description = "This endpoint changes the password of a user.")
+    @Parameter(name = "password", 
+                description = "The new password to be set", 
+                required = true, 
+                in = ParameterIn.HEADER, 
+                schema = @Schema(type = "string"))
+    public @interface ChangePassword{}
 
 }
