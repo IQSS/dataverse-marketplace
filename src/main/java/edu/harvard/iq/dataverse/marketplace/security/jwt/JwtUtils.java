@@ -3,6 +3,8 @@ package edu.harvard.iq.dataverse.marketplace.security.jwt;
 import java.security.Key;
 import java.util.Date;
 
+import javax.crypto.SecretKey;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -45,9 +47,7 @@ public class JwtUtils {
             .subject((userPrincipal.getUsername()))
             .issuedAt(new Date())
             .expiration(new Date((new Date()).getTime() + jwtExpirationMs))
-            //.signWith(key(), Jwts.SIG.RS256)
-            .signWith(key(), SignatureAlgorithm.HS256)
-            //.signWith(key(), Jwts.SIG.RS256)
+            .signWith(key(), Jwts.SIG.HS256)
             .compact();
     }
 
@@ -55,7 +55,7 @@ public class JwtUtils {
      * This method is used to get key for JWT token.
      * @return
      */
-    private Key key() {
+    private SecretKey key() {
         return Keys.hmacShaKeyFor(Decoders.BASE64.decode(jwtSecret));
     }
     
@@ -67,9 +67,9 @@ public class JwtUtils {
      */
     public String getUserNameFromJwtToken(String token) {
         return Jwts.parser()
-            .setSigningKey(key())
+            .verifyWith(key())
             .build()
-            .parseClaimsJws(token).getBody().getSubject();
+            .parseSignedClaims(token).getPayload().getSubject();
     }
 
     /**
@@ -79,7 +79,7 @@ public class JwtUtils {
      */
     public boolean validateJwtToken(String authToken) {
         try {
-            Jwts.parser().setSigningKey(key()).build().parse(authToken);
+            Jwts.parser().verifyWith(key()).build().parse(authToken);
             return true;
         } catch (MalformedJwtException e) {
             logger.error("Invalid JWT token: {}", e.getMessage());
