@@ -38,7 +38,6 @@ import edu.harvard.iq.dataverse.marketplace.repository.RoleRepo;
 import edu.harvard.iq.dataverse.marketplace.repository.UserRepo;
 import edu.harvard.iq.dataverse.marketplace.security.UserDetailsImpl;
 import edu.harvard.iq.dataverse.marketplace.security.jwt.JwtUtils;
-import io.swagger.v3.oas.annotations.Hidden;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -255,6 +254,8 @@ public class AuthController {
 
         return ResponseEntity.ok(rolesDTO);
     }
+
+    
 
 
 }
