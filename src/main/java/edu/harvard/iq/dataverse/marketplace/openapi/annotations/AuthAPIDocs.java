@@ -191,7 +191,7 @@ public @interface AuthAPIDocs {
                         schema = @Schema(implementation = ServerMessageResponse.class),
                         examples = @ExampleObject(GenericBusinessSamples.SERVER_MESSAGE_RESPONSE)))                        
     })
-    @Operation(summary = "Removes a role.",
+    @Operation(summary = "Removes a role from the user.",
                 description = "This endpoint removes a role from an user.")
     @Parameter(name = "userId", 
                 description = "The user id to remove the role from", 

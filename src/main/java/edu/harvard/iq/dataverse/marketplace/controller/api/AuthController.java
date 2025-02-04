@@ -224,7 +224,6 @@ public class AuthController {
         }
     }
 
-    @PreAuthorize("hasAuthority('ADMIN')")
     @PutMapping("/password/update")
     @AuthAPIDocs.ChangePassword
     public ResponseEntity<?> changePassword(@RequestHeader("password") String password) {
