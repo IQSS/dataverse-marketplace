@@ -19,7 +19,6 @@ import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import edu.harvard.iq.dataverse.marketplace.model.Role;
 import edu.harvard.iq.dataverse.marketplace.openapi.samples.AuthAPISamples;
 import edu.harvard.iq.dataverse.marketplace.openapi.samples.GenericBusinessSamples;
 
@@ -230,8 +229,8 @@ public @interface AuthAPIDocs {
                         schema = @Schema(implementation = ServerMessageResponse.class),
                         examples = @ExampleObject(GenericBusinessSamples.SERVER_MESSAGE_RESPONSE)))                        
     })
-    @Operation(summary = "Changes the password of a user.",
-                description = "This endpoint changes the password of a user.")
+    @Operation(summary = "Changes the password of the user.",
+                description = "This endpoint changes the password of the user, a user can only change it's own password.")
     @Parameter(name = "password", 
                 description = "The new password to be set", 
                 required = true, 
