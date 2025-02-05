@@ -164,7 +164,7 @@ public class AuthController {
 
             ServerMessageResponse messageResponse = new ServerMessageResponse(HttpStatus.OK,
                     "User role was successfully assigned.",
-                    String.format("The user %s was successfully removed the role %s.", user.getUsername(), role.getName()));
+                    String.format("The user %s was successfully added the role %s.", user.getUsername(), role.getName()));
             
             return ResponseEntity.ok(messageResponse);
             
