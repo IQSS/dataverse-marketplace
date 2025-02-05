@@ -1,5 +1,18 @@
 # dataverse-marketplace
 
+# Requirements
+
+- Docker
+- Java 21
+
+# Instructions
+
+```
+    make run
+```
+
+*Note: The first time the application launches the dv_mkt container will crash, please restart the container manually or you can run the command `make boot` to start the development mode.*
+
 For MVP:<br/><br/>
 • Focus just on external tools<br/>
 • Specifically remote external tools<br/>
