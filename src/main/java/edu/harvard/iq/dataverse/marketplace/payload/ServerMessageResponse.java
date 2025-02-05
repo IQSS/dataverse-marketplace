@@ -43,6 +43,9 @@ public class ServerMessageResponse {
         this.details = e.getStackTrace()[0].toString();
     }
 
+    public ServerMessageResponse() {
+    }
+
     public Date getTimestamp() {
         return this.timestamp;
     }

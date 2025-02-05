@@ -1,21 +1,27 @@
 package edu.harvard.iq.dataverse.marketplace;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
-import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
+import edu.harvard.iq.dataverse.marketplace.model.Role;
 import edu.harvard.iq.dataverse.marketplace.payload.ServerMessageResponse;
 import edu.harvard.iq.dataverse.marketplace.payload.auth.request.LoginRequest;
 import edu.harvard.iq.dataverse.marketplace.payload.auth.request.RoleCreationRequest;
@@ -35,6 +41,14 @@ public class LoginAndAuthTest {
 
     /**
      * Test for login, authentication and user management.
+     * 
+     * On this test:
+     * 
+     * /api/auth/login
+     * /api/auth/signup
+     * /api/auth/password/update
+     * /api/auth/roles
+     * /api/auth/role
      * 
      */
     @Test
@@ -81,12 +95,6 @@ public class LoginAndAuthTest {
             HttpEntity<ServerMessageResponse> updatePass = new HttpEntity<>(testuserHeaders);
             restTemplate.exchange(serverUrl + "/auth/password/update", HttpMethod.PUT, updatePass, String.class);
         });
-        //Test of new password
-        assertDoesNotThrow(() -> {
-            testLogin("testuser" + randomNumber, "newpassword");
-        }); 
-
-        //Test of roles access
         
         //Test for unauthorized access of roles, logged user not admin
         assertThrows(HttpClientErrorException.Unauthorized.class, () -> {
@@ -110,7 +118,7 @@ public class LoginAndAuthTest {
         RoleCreationRequest testNewRole = new RoleCreationRequest();
         testNewRole.setRoleName("TST" + randomNumber);
         
-        //Test for unauthorized access of roles, logged user not admin
+        //Test for unauthorized creation of role, logged user not admin
         assertThrows(HttpClientErrorException.Unauthorized.class, () -> {
             
             HttpEntity<RoleCreationRequest> request = new HttpEntity<>(testNewRole, testuserHeaders);
@@ -119,7 +127,7 @@ public class LoginAndAuthTest {
             assertNotNull(roleCreationResponse);
         });
 
-        //Test for unauthorized access of roles, not logged user
+        //Test for unauthorized creation of role, not logged user
         assertThrows(HttpClientErrorException.class, () -> {
             HttpEntity<String> request = new HttpEntity<>(testuserHeaders);
             ResponseEntity<ServerMessageResponse> roleCreationResponse =
@@ -127,13 +135,51 @@ public class LoginAndAuthTest {
             assertNotNull(roleCreationResponse);
         });
 
-        // Test for authorized access of roles
+        // Test for authorized creation of role
         assertDoesNotThrow(() -> {
             HttpEntity<RoleCreationRequest> request = new HttpEntity<>(testNewRole, adminHeaders);
             ResponseEntity<RoleCreationResponse> roleCreationResponse = 
                 restTemplate.postForEntity(serverUrl + "/auth/role", request, RoleCreationResponse.class);
             assertNotNull(roleCreationResponse);
         });
+
+
+        //Test of new password and role assignement
+        assertDoesNotThrow(() -> {
+            
+            JwtResponse testUserLoginNewPass =
+                testLogin("testuser" + randomNumber, "newpassword");
+            List<String> testUserRoles = testUserLoginNewPass.getRoles();
+
+            HttpEntity<String> adminRequest = new HttpEntity<>(adminHeaders);
+            ResponseEntity<Role[]> systemRoles
+                = restTemplate.exchange(serverUrl + "/auth/roles", HttpMethod.GET, adminRequest, Role[].class);
+            
+            assertTrue(systemRoles.getBody().length > testUserRoles.size());
+
+            List<Role> systemRoleList = Arrays.asList(systemRoles.getBody());
+
+            List<Role> rolesNotAssignedToTestUser = systemRoleList.stream()
+                                                .filter(role -> !testUserRoles.contains(role.getName()))
+                                                .collect(Collectors.toList());
+
+            assertNotNull(rolesNotAssignedToTestUser);
+            assertTrue(rolesNotAssignedToTestUser.size() > 0);
+
+            String roleAssignmentRequest = serverUrl + 
+                                            "/auth/role/" + 
+                                            rolesNotAssignedToTestUser.get(0).getId() +
+                                            "/user/" + 
+                                            testUserLoginNewPass.getId();
+            
+            ResponseEntity<ServerMessageResponse> roleCreationResponse =
+                restTemplate.postForEntity(roleAssignmentRequest, 
+                    adminRequest, ServerMessageResponse.class);
+
+            assertNotNull(roleCreationResponse);
+            assertEquals(roleCreationResponse.getBody().getCode(), HttpStatus.OK.value());
+            
+        }); 
 
         
     }
