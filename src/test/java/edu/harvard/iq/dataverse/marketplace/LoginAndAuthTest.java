@@ -1,33 +1,17 @@
 package edu.harvard.iq.dataverse.marketplace;
 
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
-import java.util.Arrays;
-import java.util.List;
+import static org.junit.jupiter.api.Assertions.*;
+import java.util.*;
 import java.util.stream.Collectors;
-
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.client.HttpClientErrorException;
-import org.springframework.web.client.RestTemplate;
-
+import org.springframework.http.*;
+import org.springframework.web.client.*;
 import edu.harvard.iq.dataverse.marketplace.model.Role;
-import edu.harvard.iq.dataverse.marketplace.payload.ServerMessageResponse;
-import edu.harvard.iq.dataverse.marketplace.payload.auth.request.LoginRequest;
-import edu.harvard.iq.dataverse.marketplace.payload.auth.request.RoleCreationRequest;
-import edu.harvard.iq.dataverse.marketplace.payload.auth.request.SignupRequest;
-import edu.harvard.iq.dataverse.marketplace.payload.auth.response.JwtResponse;
-import edu.harvard.iq.dataverse.marketplace.payload.auth.response.RoleCreationResponse;
+import edu.harvard.iq.dataverse.marketplace.payload.*;
+import edu.harvard.iq.dataverse.marketplace.payload.auth.request.*;
+import edu.harvard.iq.dataverse.marketplace.payload.auth.response.*;
 
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -49,13 +33,14 @@ public class LoginAndAuthTest {
      * /api/auth/password/update
      * /api/auth/roles
      * /api/auth/role
+     * /api/auth/role/{roleId}/user/{userId}
+     * 
      * 
      */
     @Test
     public void testLogin() {
 
         serverUrl = "http://localhost:" + port + "/api"; 
-        //RestTemplate restTemplate = new RestTemplateBuilder().rootUri(serverUrl).build();
 
         JwtResponse adminLogin = testLogin("admin", "admin");
         assertNotNull(adminLogin);
@@ -177,6 +162,7 @@ public class LoginAndAuthTest {
                     adminRequest, ServerMessageResponse.class);
 
             assertNotNull(roleCreationResponse);
+            
             assertEquals(roleCreationResponse.getBody().getCode(), HttpStatus.OK.value());
             
         }); 

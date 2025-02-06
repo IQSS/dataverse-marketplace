@@ -20,6 +20,7 @@ import edu.harvard.iq.dataverse.marketplace.payload.auth.UserDTO;
 import edu.harvard.iq.dataverse.marketplace.repository.UserRepo;
 import edu.harvard.iq.dataverse.marketplace.security.ApplicationRoles;
 
+
 @RestController
 @RequestMapping("/api/user")
 public class UsersController {
