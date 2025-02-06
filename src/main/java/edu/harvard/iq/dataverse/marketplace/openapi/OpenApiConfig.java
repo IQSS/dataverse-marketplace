@@ -16,7 +16,7 @@ import io.swagger.v3.oas.annotations.security.SecuritySchemes;
         version = "1.0", 
         description = "API for Dataverse Marketplace",
         license = @License(name = "Apache 2.0", url = "http://www.apache.org/licenses/LICENSE-2.0"),
-        contact = @Contact(name = "Dataverse Marketplace", email = "support@dataverse.harvard.edu", url = "https://dataverse.org")        
+        contact = @Contact(name = "Dataverse Marketplace", email = "support@dataverse.org", url = "https://dataverse.org")        
     ),
     security = @SecurityRequirement(name = "bearerAuth"),
     tags = {
