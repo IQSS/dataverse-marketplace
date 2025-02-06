@@ -8,7 +8,7 @@
 # Instructions
 
 ```
-    make run
+make run
 ```
 
 *Note: The first time the application launches the dv_mkt container will crash, please restart the container manually or you can run the command `make boot` to start the development mode.*
