@@ -6,8 +6,6 @@
 # separate terms of service, privacy policy, and support
 # documentation.
 
-name: Java CI with Maven
-
 on:
   push:
     branches: [ "main" ]
@@ -37,7 +35,7 @@ jobs:
         distribution: 'temurin'
         cache: maven
 
-    # Ensure PostgreSQL service is running
+    # Wait for PostgreSQL to start
     - name: Wait for PostgreSQL to start
       run: |
         for i in {1..30}; do
@@ -48,6 +46,13 @@ jobs:
           echo "Waiting for PostgreSQL..."
           sleep 1
         done
+
+    # Ensure PostgreSQL is configured to accept TCP/IP connections
+    - name: Configure PostgreSQL for TCP/IP connections
+      run: |
+        echo "listen_addresses = '*'" >> /var/lib/postgresql/data/postgresql.conf
+        echo "host all all 0.0.0.0/0 md5" >> /var/lib/postgresql/data/pg_hba.conf
+        sudo service postgresql restart
 
     # Check PostgreSQL service status
     - name: Check PostgreSQL service status
