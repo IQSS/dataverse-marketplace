@@ -1,5 +1,7 @@
 package edu.harvard.iq.dataverse.marketplace.openapi.annotations;
 
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -21,6 +23,24 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import edu.harvard.iq.dataverse.marketplace.openapi.samples.AuthAPISamples;
 import edu.harvard.iq.dataverse.marketplace.openapi.samples.GenericBusinessSamples;
+=======
+=======
+>>>>>>> Stashed changes
+import java.lang.annotation.*;
+import edu.harvard.iq.dataverse.marketplace.payload.*;
+import edu.harvard.iq.dataverse.marketplace.payload.auth.*;
+import edu.harvard.iq.dataverse.marketplace.payload.auth.response.*;
+import io.swagger.v3.oas.annotations.*;
+import io.swagger.v3.oas.annotations.enums.*;
+import io.swagger.v3.oas.annotations.media.*;
+import io.swagger.v3.oas.annotations.parameters.*;
+import io.swagger.v3.oas.annotations.responses.*;
+import io.swagger.v3.oas.annotations.tags.*;
+import edu.harvard.iq.dataverse.marketplace.openapi.samples.*;
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
 
 public @interface AuthAPIDocs {
 
@@ -267,5 +287,68 @@ public @interface AuthAPIDocs {
     @Operation(summary = "Retrieves the list of roles.",
                 description = "This endpoint retrieves the list of roles in the system.")    
     public @interface GetRoles{}
+
+    @Target({ElementType.METHOD})    
+    @Retention(RetentionPolicy.RUNTIME)
+    @Tag(name = "Users")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", 
+                        description = "User list successfully retrieved",
+                        content = @Content(mediaType = "application/json",
+                        schema = @Schema(implementation = UserDTO[].class),
+                        examples = @ExampleObject(AuthAPISamples.USERS))),
+        @ApiResponse(responseCode = "400", 
+                        description = "Bad request on user list retrieval",
+                        content = @Content(mediaType = "application/json",
+                        schema = @Schema(implementation = ServerMessageResponse.class),
+                        examples = @ExampleObject(GenericBusinessSamples.SERVER_MESSAGE_RESPONSE))),
+        @ApiResponse(responseCode = "401", 
+                        description = "Access Denied for user list retrieval",
+                        content = @Content(mediaType = "application/json",
+                        schema = @Schema(implementation = ServerMessageResponse.class),
+                        examples = @ExampleObject(GenericBusinessSamples.SERVER_MESSAGE_RESPONSE))),
+        @ApiResponse(responseCode = "500", 
+                        description = "Internal Server Error during user list retrieval",
+                        content = @Content(mediaType = "application/json",
+                        schema = @Schema(implementation = ServerMessageResponse.class),
+                        examples = @ExampleObject(GenericBusinessSamples.SERVER_MESSAGE_RESPONSE)))                        
+    })
+    @Operation(summary = "Retrieves the list of users.",
+                description = "This endpoint retrieves the list of users in the system.")    
+    public @interface GetUsers{}
+
+    @Target({ElementType.METHOD})    
+    @Retention(RetentionPolicy.RUNTIME)
+    @Tag(name = "Users")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", 
+                        description = "User successfully retrieved",
+                        content = @Content(mediaType = "application/json",
+                        schema = @Schema(implementation = UserDTO.class),
+                        examples = @ExampleObject(AuthAPISamples.USER))),
+        @ApiResponse(responseCode = "400", 
+                        description = "Bad request on user retrieval",
+                        content = @Content(mediaType = "application/json",
+                        schema = @Schema(implementation = ServerMessageResponse.class),
+                        examples = @ExampleObject(GenericBusinessSamples.SERVER_MESSAGE_RESPONSE))),
+        @ApiResponse(responseCode = "401", 
+                        description = "Access Denied for user retrieval",
+                        content = @Content(mediaType = "application/json",
+                        schema = @Schema(implementation = ServerMessageResponse.class),
+                        examples = @ExampleObject(GenericBusinessSamples.SERVER_MESSAGE_RESPONSE))),
+        @ApiResponse(responseCode = "500", 
+                        description = "Internal Server Error during user retrieval",
+                        content = @Content(mediaType = "application/json",
+                        schema = @Schema(implementation = ServerMessageResponse.class),
+                        examples = @ExampleObject(GenericBusinessSamples.SERVER_MESSAGE_RESPONSE)))                        
+    })
+    @Operation(summary = "Retrieves the information from the specified user.",
+                description = "This endpoint retrieves the information from the specified user.")    
+    @Parameter(name = "userId",
+                description = "The id of the user to be retrieved",
+                required = true,
+                in = ParameterIn.PATH,
+                schema = @Schema(type = "integer", format = "int64"))
+    public @interface GetUser{}
 
 }

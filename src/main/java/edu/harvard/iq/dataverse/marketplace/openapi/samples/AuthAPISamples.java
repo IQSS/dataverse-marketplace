@@ -1,6 +1,7 @@
 package edu.harvard.iq.dataverse.marketplace.openapi.samples;
 
 public abstract class AuthAPISamples {
+    
     public static final String JWT = """
         {
             "id": 0,
@@ -54,6 +55,31 @@ public abstract class AuthAPISamples {
             }
         ]
         """;
+
+    public static final String USERS = """
+        [
+            {
+                "id": 2,
+                "username": "USER",
+                "email": "user@dataverse.org"
+            },
+            {
+                "id": 1,
+                "username": "ADMIN",
+                "email": "user@dataverse.org"
+            }
+        ]
+        """;
+
+    public static final String USER = """
+        {
+            "id": 1,
+            "username": "username",
+            "email": "user@dataverse.org"
+        }
+        """;
+                    
+                    
 
 }
 

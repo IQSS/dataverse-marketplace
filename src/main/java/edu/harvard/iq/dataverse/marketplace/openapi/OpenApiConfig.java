@@ -21,8 +21,8 @@ import io.swagger.v3.oas.annotations.security.SecuritySchemes;
     security = @SecurityRequirement(name = "bearerAuth"),
     tags = {
         @Tag(name = "Authentication", description = "User authentication and authorization"),
-        @Tag(name = "Security", description = "User and security management"),
-        
+        @Tag(name = "Security", description = "Security management"),
+        @Tag(name = "Users", description = "User management"),
     }
 )
 @SecuritySchemes({   

@@ -1,44 +1,28 @@
 package edu.harvard.iq.dataverse.marketplace.controller.api;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
-
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.authentication.*;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
-import edu.harvard.iq.dataverse.marketplace.model.Role;
-import edu.harvard.iq.dataverse.marketplace.model.User;
+import org.springframework.web.bind.annotation.*;
+import edu.harvard.iq.dataverse.marketplace.model.*;
 import edu.harvard.iq.dataverse.marketplace.openapi.annotations.AuthAPIDocs;
 import edu.harvard.iq.dataverse.marketplace.payload.ServerMessageResponse;
-import edu.harvard.iq.dataverse.marketplace.payload.auth.RoleDTO;
+import edu.harvard.iq.dataverse.marketplace.payload.auth.*;
 import edu.harvard.iq.dataverse.marketplace.payload.auth.request.LoginRequest;
 import edu.harvard.iq.dataverse.marketplace.payload.auth.request.RoleCreationRequest;
 import edu.harvard.iq.dataverse.marketplace.payload.auth.request.SignupRequest;
 import edu.harvard.iq.dataverse.marketplace.payload.auth.response.JwtResponse;
 import edu.harvard.iq.dataverse.marketplace.payload.auth.response.RoleCreationResponse;
-import edu.harvard.iq.dataverse.marketplace.repository.RoleRepo;
-import edu.harvard.iq.dataverse.marketplace.repository.UserRepo;
+import edu.harvard.iq.dataverse.marketplace.repository.*;
 import edu.harvard.iq.dataverse.marketplace.security.UserDetailsImpl;
 import edu.harvard.iq.dataverse.marketplace.security.jwt.JwtUtils;
-
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
@@ -253,6 +237,40 @@ public class AuthController {
 
         return ResponseEntity.ok(rolesDTO);
     }
+
+    @GetMapping("/user")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    @AuthAPIDocs.GetUsers
+    public ResponseEntity<?> getUsers() {
+
+        Set<UserDTO> usersDTO = new HashSet<>();
+        List<User> users = userRepository.findAll();
+        for (User user : users) {
+            usersDTO.add(new UserDTO(user));
+        }
+
+        return ResponseEntity.ok(usersDTO);
+    }
+
+    @GetMapping("/user/{userId}")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    @AuthAPIDocs.GetUser
+    public ResponseEntity<?> getUser(@PathVariable("userId") Long userId) {
+
+        UserDTO userDTO = new UserDTO();
+        User user = userRepository.findById(userId).orElse(null);
+        if (user != null) {
+            userDTO = new UserDTO(user);
+        } else {
+            return ResponseEntity.badRequest().body(new ServerMessageResponse(HttpStatus.BAD_REQUEST,
+                    "User not found.",
+                    "Error during the retrieval of the user, the user was not found."));
+        }
+
+        return ResponseEntity.ok(userDTO);
+    }
+
+    
 
     
 
