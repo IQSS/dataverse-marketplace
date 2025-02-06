@@ -74,8 +74,9 @@ public class AuthController {
                         roles));
     }
 
+    
+    @PreAuthorize(ApplicationRoles.ADMIN_ROLE)
     @PostMapping("/signup")
-    @PreAuthorize("hasAuthority('ADMIN')")
     @AuthAPIDocs.Signup
     public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest signUpRequest) {
 
@@ -109,8 +110,9 @@ public class AuthController {
         return ResponseEntity.ok(messageResponse);
     }
 
+    
+    @PreAuthorize(ApplicationRoles.ADMIN_ROLE)
     @PostMapping("/role")
-    @PreAuthorize("hasAuthority('ADMIN')")
     @AuthAPIDocs.RoleCreationRequest
     public ResponseEntity<?> createRole(@Valid @RequestBody RoleCreationRequest roleCreationRequest) {
         
@@ -126,7 +128,7 @@ public class AuthController {
         return ResponseEntity.ok(new RoleCreationResponse(role));
     }
 
-    @PreAuthorize("hasAuthority('ADMIN')")
+    @PreAuthorize(ApplicationRoles.ADMIN_ROLE)
     @PostMapping("/role/{roleId}/user/{userId}")
     @AuthAPIDocs.AssignRole
     public ResponseEntity<?> assignRole(@PathVariable("roleId") Integer roleId, @PathVariable("userId") Long userId) {
@@ -162,7 +164,7 @@ public class AuthController {
         
     }
 
-    @PreAuthorize("hasAuthority('ADMIN')")
+    @PreAuthorize(ApplicationRoles.ADMIN_ROLE)
     @DeleteMapping("/role/{roleId}/user/{userId}")
     @AuthAPIDocs.RemoveRole
     public ResponseEntity<?> removeRole(@PathVariable("roleId") Integer roleId, @PathVariable("userId") Long userId) {
@@ -223,8 +225,8 @@ public class AuthController {
                 "The password was successfully updated."));
     }
     
+    @PreAuthorize(ApplicationRoles.ADMIN_ROLE)
     @GetMapping("/roles")
-    @PreAuthorize("hasAuthority('ADMIN')")
     @AuthAPIDocs.GetRoles
     public ResponseEntity<?> getRoles() {
 
@@ -238,8 +240,8 @@ public class AuthController {
         return ResponseEntity.ok(rolesDTO);
     }
 
+    @PreAuthorize(ApplicationRoles.ADMIN_ROLE)
     @GetMapping("/user")
-    @PreAuthorize("hasAuthority('ADMIN')")
     @AuthAPIDocs.GetUsers
     public ResponseEntity<?> getUsers() {
 
@@ -252,8 +254,8 @@ public class AuthController {
         return ResponseEntity.ok(usersDTO);
     }
 
+    @PreAuthorize(ApplicationRoles.ADMIN_ROLE)
     @GetMapping("/user/{userId}")
-    @PreAuthorize("hasAuthority('ADMIN')")
     @AuthAPIDocs.GetUser
     public ResponseEntity<?> getUser(@PathVariable("userId") Long userId) {
 
@@ -269,10 +271,5 @@ public class AuthController {
 
         return ResponseEntity.ok(userDTO);
     }
-
-    
-
-    
-
 
 }
