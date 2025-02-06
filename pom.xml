@@ -9,7 +9,7 @@
 		<version>3.4.2</version>
 		<relativePath /> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>edu.harvard.iq</groupId>
+	<groupId>org.dataverse.marketplace</groupId>
 	<artifactId>dataverse-marketplace</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>dataverse-marketplace</name>
