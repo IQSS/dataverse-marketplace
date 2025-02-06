@@ -61,6 +61,7 @@ public class LoginAndAuthTest {
         signupRequest.setUsername("testuser" + randomNumber);        
         signupRequest.setEmail(randomNumber +"@test.org");
         signupRequest.setPassword("testuser");
+        
 
         assertDoesNotThrow(() -> {
             HttpEntity<SignupRequest> signupEntity = new HttpEntity<>(signupRequest, adminHeaders);
