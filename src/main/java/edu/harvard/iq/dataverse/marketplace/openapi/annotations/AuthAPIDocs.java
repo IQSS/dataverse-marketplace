@@ -1,46 +1,20 @@
 package edu.harvard.iq.dataverse.marketplace.openapi.annotations;
 
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
+
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
-
-import edu.harvard.iq.dataverse.marketplace.payload.ServerMessageResponse;
-import edu.harvard.iq.dataverse.marketplace.payload.auth.RoleDTO;
-import edu.harvard.iq.dataverse.marketplace.payload.auth.response.JwtResponse;
-import edu.harvard.iq.dataverse.marketplace.payload.auth.response.RoleCreationResponse;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.enums.ParameterIn;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.ExampleObject;
-import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import io.swagger.v3.oas.annotations.tags.Tag;
-import edu.harvard.iq.dataverse.marketplace.openapi.samples.AuthAPISamples;
-import edu.harvard.iq.dataverse.marketplace.openapi.samples.GenericBusinessSamples;
-=======
-=======
->>>>>>> Stashed changes
-import java.lang.annotation.*;
 import edu.harvard.iq.dataverse.marketplace.payload.*;
 import edu.harvard.iq.dataverse.marketplace.payload.auth.*;
 import edu.harvard.iq.dataverse.marketplace.payload.auth.response.*;
+import edu.harvard.iq.dataverse.marketplace.openapi.samples.*;
 import io.swagger.v3.oas.annotations.*;
 import io.swagger.v3.oas.annotations.enums.*;
 import io.swagger.v3.oas.annotations.media.*;
 import io.swagger.v3.oas.annotations.parameters.*;
 import io.swagger.v3.oas.annotations.responses.*;
 import io.swagger.v3.oas.annotations.tags.*;
-import edu.harvard.iq.dataverse.marketplace.openapi.samples.*;
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
 
 public @interface AuthAPIDocs {
 
