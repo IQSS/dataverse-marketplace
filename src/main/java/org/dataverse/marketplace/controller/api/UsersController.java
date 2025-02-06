@@ -22,7 +22,7 @@ import org.dataverse.marketplace.security.ApplicationRoles;
 
 
 @RestController
-@RequestMapping("/api/user")
+@RequestMapping("/api/users")
 public class UsersController {
 
     @Autowired
