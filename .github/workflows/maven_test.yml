@@ -6,6 +6,8 @@
 # separate terms of service, privacy policy, and support
 # documentation.
 
+name: Java CI with Maven
+
 on:
   push:
     branches: [ "main" ]
@@ -25,6 +27,11 @@ jobs:
           POSTGRES_DB: dv_mkt_pg
           POSTGRES_USER: admin
           POSTGRES_PASSWORD: admin
+        options: >-
+          --health-cmd="pg_isready -U admin -d dv_mkt_pg"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
 
     steps:
     - uses: actions/checkout@v4
@@ -50,17 +57,17 @@ jobs:
     # Ensure PostgreSQL is configured to accept TCP/IP connections
     - name: Configure PostgreSQL for TCP/IP connections
       run: |
-        echo "listen_addresses = '*'" >> /var/lib/postgresql/data/postgresql.conf
-        echo "host all all 0.0.0.0/0 md5" >> /var/lib/postgresql/data/pg_hba.conf
-        sudo service postgresql restart
+        docker exec ${{ job.services.postgres.id }} bash -c "echo \"listen_addresses = '*'\" >> /var/lib/postgresql/data/postgresql.conf"
+        docker exec ${{ job.services.postgres.id }} bash -c "echo \"host all all 0.0.0.0/0 md5\" >> /var/lib/postgresql/data/pg_hba.conf"
+        docker restart ${{ job.services.postgres.id }}
 
     # Check PostgreSQL service status
     - name: Check PostgreSQL service status
-      run: sudo service postgresql status
+      run: docker exec ${{ job.services.postgres.id }} bash -c "pg_isready -U admin -d dv_mkt_pg"
 
     # Print PostgreSQL logs
     - name: Print PostgreSQL logs
-      run: sudo cat /var/log/postgresql/postgresql-17-main.log
+      run: docker logs ${{ job.services.postgres.id }}
 
     # Build with Maven
     - name: Build with Maven
