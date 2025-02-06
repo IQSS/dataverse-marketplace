@@ -43,11 +43,11 @@ public class UsersTest {
         
         assertDoesNotThrow(() -> {
             HttpEntity<String> request = new HttpEntity<>(adminHeaders);
-            UserDTO[] users = restTemplate.exchange(serverUrl + "/user", HttpMethod.GET, request, UserDTO[].class).getBody();
+            UserDTO[] users = restTemplate.exchange(serverUrl + "/users", HttpMethod.GET, request, UserDTO[].class).getBody();
             assertNotNull(users);
             assert(users.length > 0);
 
-            UserDTO user = restTemplate.exchange(serverUrl + "/user/" + users[0].getId(), HttpMethod.GET, request, UserDTO.class).getBody();
+            UserDTO user = restTemplate.exchange(serverUrl + "/users/" + users[0].getId(), HttpMethod.GET, request, UserDTO.class).getBody();
             assertNotNull(user);
         });
     }

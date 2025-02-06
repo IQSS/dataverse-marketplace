@@ -32,8 +32,8 @@ public class LoginAndAuthTest {
      * /api/auth/signup
      * /api/auth/password/update
      * /api/auth/roles
-     * /api/auth/role
-     * /api/auth/role/{roleId}/user/{userId}
+     * /api/auth/roles
+     * /api/auth/roles/{roleId}/user/{userId}
      * 
      * 
      */
@@ -109,7 +109,7 @@ public class LoginAndAuthTest {
             
             HttpEntity<RoleCreationRequest> request = new HttpEntity<>(testNewRole, testuserHeaders);
             ResponseEntity<ServerMessageResponse> roleCreationResponse =
-                restTemplate.postForEntity(serverUrl + "/auth/role", request, ServerMessageResponse.class);
+                restTemplate.postForEntity(serverUrl + "/auth/roles", request, ServerMessageResponse.class);
             assertNotNull(roleCreationResponse);
         });
 
@@ -117,7 +117,7 @@ public class LoginAndAuthTest {
         assertThrows(HttpClientErrorException.class, () -> {
             HttpEntity<String> request = new HttpEntity<>(testuserHeaders);
             ResponseEntity<ServerMessageResponse> roleCreationResponse =
-                restTemplate.postForEntity(serverUrl + "/auth/role", request, ServerMessageResponse.class);
+                restTemplate.postForEntity(serverUrl + "/auth/roles", request, ServerMessageResponse.class);
             assertNotNull(roleCreationResponse);
         });
 
@@ -125,7 +125,7 @@ public class LoginAndAuthTest {
         assertDoesNotThrow(() -> {
             HttpEntity<RoleCreationRequest> request = new HttpEntity<>(testNewRole, adminHeaders);
             ResponseEntity<RoleCreationResponse> roleCreationResponse = 
-                restTemplate.postForEntity(serverUrl + "/auth/role", request, RoleCreationResponse.class);
+                restTemplate.postForEntity(serverUrl + "/auth/roles", request, RoleCreationResponse.class);
             assertNotNull(roleCreationResponse);
         });
 
@@ -153,7 +153,7 @@ public class LoginAndAuthTest {
             assertTrue(rolesNotAssignedToTestUser.size() > 0);
 
             String roleAssignmentRequest = serverUrl + 
-                                            "/auth/role/" + 
+                                            "/auth/roles/" + 
                                             rolesNotAssignedToTestUser.get(0).getId() +
                                             "/user/" + 
                                             testUserLoginNewPass.getId();
