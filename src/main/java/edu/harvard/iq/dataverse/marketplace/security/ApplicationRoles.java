@@ -1,4 +1,4 @@
-package edu.harvard.iq.dataverse.marketplace.model;
+package edu.harvard.iq.dataverse.marketplace.security;
 
 public abstract class ApplicationRoles {
 

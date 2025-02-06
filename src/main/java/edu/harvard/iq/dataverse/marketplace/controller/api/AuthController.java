@@ -12,25 +12,20 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import edu.harvard.iq.dataverse.marketplace.model.*;
+import edu.harvard.iq.dataverse.marketplace.model.enums.RoleEnum;
 import edu.harvard.iq.dataverse.marketplace.openapi.annotations.AuthAPIDocs;
-import edu.harvard.iq.dataverse.marketplace.payload.ServerMessageResponse;
-import edu.harvard.iq.dataverse.marketplace.payload.auth.*;
-import edu.harvard.iq.dataverse.marketplace.payload.auth.request.LoginRequest;
-import edu.harvard.iq.dataverse.marketplace.payload.auth.request.RoleCreationRequest;
-import edu.harvard.iq.dataverse.marketplace.payload.auth.request.SignupRequest;
-import edu.harvard.iq.dataverse.marketplace.payload.auth.response.JwtResponse;
-import edu.harvard.iq.dataverse.marketplace.payload.auth.response.RoleCreationResponse;
+import edu.harvard.iq.dataverse.marketplace.payload.*;
+import edu.harvard.iq.dataverse.marketplace.payload.auth.RoleDTO;
+import edu.harvard.iq.dataverse.marketplace.payload.auth.request.*;
+import edu.harvard.iq.dataverse.marketplace.payload.auth.response.*;
 import edu.harvard.iq.dataverse.marketplace.repository.*;
-import edu.harvard.iq.dataverse.marketplace.security.UserDetailsImpl;
+import edu.harvard.iq.dataverse.marketplace.security.*;
 import edu.harvard.iq.dataverse.marketplace.security.jwt.JwtUtils;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 
 
 /**
  * This class is used to authenticate users and register new users.
  */
-@CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {
@@ -175,7 +170,7 @@ public class AuthController {
             UserDetailsImpl loggedInUser = (UserDetailsImpl) authentication.getPrincipal();
             Role role = roleRepository.findById(roleId).orElse(null);
 
-            if (loggedInUser.getId().equals(userId) && role.getName().equals("ADMIN")) {
+            if (loggedInUser.getId().equals(userId) && role.getName().equals(RoleEnum.ADMIN.getName())) {
                 return ResponseEntity.badRequest().body(
                     new ServerMessageResponse(HttpStatus.BAD_REQUEST,
                         "Cannot remove role ADMIN from self.",
@@ -197,7 +192,7 @@ public class AuthController {
 
             ServerMessageResponse messageResponse = new ServerMessageResponse(HttpStatus.OK,
                     "User role was successfully removed.",
-                    String.format("The user %s was successfully removed the role %s.", user.getUsername(), role.getName()));
+                    String.format("The user %s was successfully removed from the role %s.", user.getUsername(), role.getName()));
             
             return ResponseEntity.ok(messageResponse);
             
@@ -240,36 +235,6 @@ public class AuthController {
         return ResponseEntity.ok(rolesDTO);
     }
 
-    @PreAuthorize(ApplicationRoles.ADMIN_ROLE)
-    @GetMapping("/user")
-    @AuthAPIDocs.GetUsers
-    public ResponseEntity<?> getUsers() {
-
-        Set<UserDTO> usersDTO = new HashSet<>();
-        List<User> users = userRepository.findAll();
-        for (User user : users) {
-            usersDTO.add(new UserDTO(user));
-        }
-
-        return ResponseEntity.ok(usersDTO);
-    }
-
-    @PreAuthorize(ApplicationRoles.ADMIN_ROLE)
-    @GetMapping("/user/{userId}")
-    @AuthAPIDocs.GetUser
-    public ResponseEntity<?> getUser(@PathVariable("userId") Long userId) {
-
-        UserDTO userDTO = new UserDTO();
-        User user = userRepository.findById(userId).orElse(null);
-        if (user != null) {
-            userDTO = new UserDTO(user);
-        } else {
-            return ResponseEntity.badRequest().body(new ServerMessageResponse(HttpStatus.BAD_REQUEST,
-                    "User not found.",
-                    "Error during the retrieval of the user, the user was not found."));
-        }
-
-        return ResponseEntity.ok(userDTO);
-    }
+   
 
 }
