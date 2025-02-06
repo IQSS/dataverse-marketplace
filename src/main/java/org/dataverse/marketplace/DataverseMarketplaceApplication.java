@@ -1,4 +1,4 @@
-package edu.harvard.iq.dataverse.marketplace;
+package org.dataverse.marketplace;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
