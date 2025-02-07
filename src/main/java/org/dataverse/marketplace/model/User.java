@@ -38,6 +38,7 @@ public class User {
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "user_roles", joinColumns = @jakarta.persistence.JoinColumn(name = "user_id"), inverseJoinColumns = @jakarta.persistence.JoinColumn(name = "role_id"))
     private Set<Role> roles = new HashSet<>();
+    
 
     public User() {
     }
@@ -46,7 +47,9 @@ public class User {
         this.username = username;
         this.email = email;
         this.password = password;
-      }
+    }
+
+    /* Getters & Setters */
 
     public Long getId() {
         return this.id;
