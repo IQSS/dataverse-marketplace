@@ -1,11 +1,15 @@
 package org.dataverse.marketplace.model;
 
+import java.util.Set;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
 import jakarta.persistence.Lob;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
@@ -30,6 +34,14 @@ public class MarketplaceItemImage {
 
     @Lob
     private byte[] image;
+
+    @ManyToMany
+    @JoinTable(
+        name = "item_tag",
+        joinColumns = @JoinColumn(name = "item_id"),
+        inverseJoinColumns = @JoinColumn(name = "tag_id")
+    )
+    private Set<ItemTag> tags;
 
     /* Getters & Setters */
 

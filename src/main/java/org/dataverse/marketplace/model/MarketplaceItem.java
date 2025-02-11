@@ -2,16 +2,9 @@ package org.dataverse.marketplace.model;
 
 import java.util.List;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.OneToOne;
-import jakarta.persistence.SequenceGenerator;
-import jakarta.persistence.Table;
-
+import jakarta.persistence.*;
 @Entity
+@Inheritance(strategy = InheritanceType.JOINED)
 @Table(name = "marketplace_item")
 public class MarketplaceItem {
 
@@ -26,9 +19,6 @@ public class MarketplaceItem {
     private String name;
 
     private String description;
-
-    @OneToOne(mappedBy = "marketplaceItem")
-    private ExternalTool externalTool;
 
     @OneToMany(mappedBy = "marketplaceItem")
     private List<MarketplaceItemImage> images;
@@ -57,14 +47,6 @@ public class MarketplaceItem {
 
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    public ExternalTool getExternalTool() {
-        return this.externalTool;
-    }
-
-    public void setExternalTool(ExternalTool externalTool) {
-        this.externalTool = externalTool;
     }
 
     public List<MarketplaceItemImage> getImages() {

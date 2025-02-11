@@ -1,6 +1,6 @@
 CREATE SEQUENCE IF NOT EXISTS mkt_item_id_seq;
 CREATE SEQUENCE IF NOT EXISTS mkt_item_image_id_seq;
-CREATE SEQUENCE IF NOT EXISTS ext_tool_id_seq;
+CREATE SEQUENCE IF NOT EXISTS ext_tool_version_id_seq;
 
 
 CREATE TABLE IF NOT EXISTS marketplace_item (
@@ -18,13 +18,19 @@ CREATE TABLE IF NOT EXISTS marketplace_item_image (
 );
 
 CREATE TABLE IF NOT EXISTS external_tool (
+    mk_item_id integer NOT NULL PRIMARY KEY,
+    CONSTRAINT fk_item FOREIGN KEY (mk_item_id) REFERENCES marketplace_item (id)
+);
+
+CREATE TABLE IF NOT EXISTS external_tool_version (
     id integer NOT NULL PRIMARY KEY,
     mk_item_id integer NOT NULL,
     release_note varchar,
     item_version varchar,
     dv_min_version varchar NOT NULL,
     json_data bytea NOT NULL,
-    CONSTRAINT fk_item FOREIGN KEY (mk_item_id) REFERENCES marketplace_item (id)
+    CONSTRAINT fk_item FOREIGN KEY (mk_item_id) REFERENCES marketplace_item (id),
+    CONSTRAINT unique_mk_item_version UNIQUE (mk_item_id, id)
 );
 
 CREATE TABLE IF NOT EXISTS log_mkt_item (
