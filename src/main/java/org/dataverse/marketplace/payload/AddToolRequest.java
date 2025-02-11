@@ -1,5 +1,7 @@
 package org.dataverse.marketplace.payload;
 
+import java.util.List;
+
 import org.springframework.web.multipart.MultipartFile;
 
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -33,7 +35,7 @@ public class AddToolRequest {
     @Schema(description = "Tool JSON descriptor file", 
         example = "ask-the-data.json")
     @NotEmpty
-    MultipartFile jsonData;
+    List<MultipartFile> jsonData;
 
 
     public String getName() {
@@ -76,26 +78,16 @@ public class AddToolRequest {
         this.dvMinVersion = dvMinVersion;
     }
 
-    public MultipartFile getJsonData() {
+    public List<MultipartFile> getJsonData() {
         return this.jsonData;
     }
 
-    public void setJsonData(MultipartFile jsonData) {
+    public void setJsonData(List<MultipartFile> jsonData) {
         this.jsonData = jsonData;
     }
     
 
-    @Override
-    public String toString() {
-        return "{" +
-            " name='" + getName() + "'" +
-            ", description='" + getDescription() + "'" +
-            ", releaseNote='" + getReleaseNote() + "'" +
-            ", version='" + getVersion() + "'" +
-            ", dvMinVersion='" + getDvMinVersion() + "'" +
-            ", jsonData='" + getJsonData().getOriginalFilename() + "'" +
-            "}";
-    }
+    
 
    
 

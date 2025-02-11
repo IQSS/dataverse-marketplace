@@ -9,7 +9,6 @@ import jakarta.validation.Valid;
 import java.io.IOException;
 
 import org.dataverse.marketplace.payload.AddToolRequest;
-import org.dataverse.marketplace.repository.ExternalToolRepo;
 import org.dataverse.marketplace.service.ExternalToolService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

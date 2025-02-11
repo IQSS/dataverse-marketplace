@@ -1,33 +1,27 @@
 package org.dataverse.marketplace.model;
 
-import org.hibernate.annotations.JdbcType;
-import org.hibernate.type.descriptor.jdbc.VarbinaryJdbcType;
-
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.SequenceGenerator;
-import jakarta.persistence.Table;
+import java.io.Serializable;
+import java.util.List;
+import java.util.Objects;
+import jakarta.persistence.*;
 
 @Entity
-@Table(name = "external_tool_version")
+@IdClass(ExternalToolVersion.ExternalToolVersionId.class)
+@Table(name = "external_tool_version", uniqueConstraints = {
+        @UniqueConstraint(columnNames = { "id", "mk_item_id" })
+})
 public class ExternalToolVersion {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "ext_tool_version_id_seq")    
-    @SequenceGenerator(
-        name = "ext_tool_version_id_seq", 
-        sequenceName = "ext_tool_version_id_seq", 
-        allocationSize = 1)
     Integer id;
 
+    @Id
+    @Column(name = "mk_item_id")
+    private Integer mkItemId;
+
     @ManyToOne
-    @JoinColumn(name = "mk_item_id")
-    ExternalTool externalTool;
+    @JoinColumn(name = "mk_item_id", insertable = false, updatable = false)
+    private ExternalTool externalTool;
 
     @Column(name = "release_note")
     private String releaseNote;
@@ -38,12 +32,11 @@ public class ExternalToolVersion {
     @Column(name = "dv_min_version")
     private String dataverseMinVersion;
 
-    @JdbcType(VarbinaryJdbcType.class)
-    @Column(name = "json_data")
-    private byte[] jsonData;
+    @OneToMany(mappedBy = "externalToolVersion")
+    private List<ExternalToolManifest> manifests;
+    
 
-
-
+    /* Getters and Setters */
 
     public Integer getId() {
         return this.id;
@@ -51,6 +44,14 @@ public class ExternalToolVersion {
 
     public void setId(Integer id) {
         this.id = id;
+    }
+
+    public Integer getMkItemId() {
+        return this.mkItemId;
+    }
+
+    public void setMkItemId(Integer mkItemId) {
+        this.mkItemId = mkItemId;
     }
 
     public ExternalTool getExternalTool() {
@@ -84,15 +85,39 @@ public class ExternalToolVersion {
     public void setDataverseMinVersion(String dataverseMinVersion) {
         this.dataverseMinVersion = dataverseMinVersion;
     }
+    
+    @Embeddable
+    public static class ExternalToolVersionId implements Serializable {
 
-    public byte[] getJsonData() {
-        return this.jsonData;
+        private Integer id;
+        private Integer mkItemId;
+
+        // Default constructor
+        public ExternalToolVersionId() {
+        }
+
+        // Parameterized constructor
+        public ExternalToolVersionId(Integer id, Integer mkItemId) {
+            this.id = id;
+            this.mkItemId = mkItemId;
+        }
+
+        // Getters and setters
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o)
+                return true;
+            if (o == null || getClass() != o.getClass())
+                return false;
+            ExternalToolVersionId that = (ExternalToolVersionId) o;
+            return Objects.equals(id, that.id) && Objects.equals(mkItemId, that.mkItemId);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(id, mkItemId);
+        }
     }
-
-    public void setJsonData(byte[] jsonData) {
-        this.jsonData = jsonData;
-    }
-
-   
 
 }

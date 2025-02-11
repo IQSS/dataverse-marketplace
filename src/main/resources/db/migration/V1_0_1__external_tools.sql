@@ -23,14 +23,13 @@ CREATE TABLE IF NOT EXISTS external_tool (
 );
 
 CREATE TABLE IF NOT EXISTS external_tool_version (
-    id integer NOT NULL PRIMARY KEY,
     mk_item_id integer NOT NULL,
+    id integer NOT NULL,
     release_note varchar,
     item_version varchar,
     dv_min_version varchar NOT NULL,
-    json_data bytea NOT NULL,
-    CONSTRAINT fk_item FOREIGN KEY (mk_item_id) REFERENCES marketplace_item (id),
-    CONSTRAINT unique_mk_item_version UNIQUE (mk_item_id, id)
+    PRIMARY KEY (id, mk_item_id),
+    CONSTRAINT fk_item FOREIGN KEY (mk_item_id) REFERENCES marketplace_item (id)
 );
 
 CREATE TABLE IF NOT EXISTS log_mkt_item (
@@ -40,6 +39,15 @@ CREATE TABLE IF NOT EXISTS log_mkt_item (
     operation varchar NOT NULL,
     CONSTRAINT fk_item FOREIGN KEY (mkt_item_id) REFERENCES marketplace_item (id),
     CONSTRAINT fk_user FOREIGN KEY (user_id) REFERENCES users (id)
+);
+
+CREATE TABLE IF NOT EXISTS external_tool_manifest (
+    version_id integer NOT NULL,
+    mk_item_id integer NOT NULL,
+    mime_type  varchar NOT NULL,
+    manifest bytea NOT NULL,
+    PRIMARY KEY (version_id, mk_item_id),
+    CONSTRAINT fk_item FOREIGN KEY (version_id, mk_item_id) REFERENCES external_tool_version (id, mk_item_id)
 );
 
 CREATE TABLE IF NOT EXISTS tags (
