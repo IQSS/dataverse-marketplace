@@ -15,6 +15,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import jakarta.transaction.Transactional;
 
 @Service
@@ -59,19 +62,22 @@ public class ExternalToolService {
 
         for (MultipartFile manifest : externalTool.getJsonData()) {
             
-            
             ExternalToolManifest newManifest = new ExternalToolManifest();
         
             System.out.println(externalTool.getJsonData().size());
-            
             
             newManifest.setMkItemId(newTool.getId());
             newManifest.setVersionId(newVersion.getId());
             newManifest.setJsonData(manifest.getBytes());
 
-            //CHANGE THIS!!!
-            newManifest.setMimeType(externalTool.getJsonData().getContentType());
+            System.out.println(new String(manifest.getBytes()));
             
+            String jsonString = new String(manifest.getBytes());
+            ObjectMapper objectMapper = new ObjectMapper();
+            JsonNode jsonNode = objectMapper.readTree(jsonString);
+            String contentType = jsonNode.get("contentType").asText();
+            newManifest.setMimeType(contentType);
+
             externalToolManifestRepo.save(newManifest);
         }
 
