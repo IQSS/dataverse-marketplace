@@ -11,8 +11,6 @@ public class ExternalToolDTO {
 
     private String name;
     private String description;
-    private String releaseNote;
-    private String dataverseMinVersion;
     private List<VersionDTO> versions;
 
     public ExternalToolDTO(ExternalTool externalTool) {
@@ -44,22 +42,6 @@ public class ExternalToolDTO {
         this.description = description;
     }
 
-    public String getReleaseNote() {
-        return this.releaseNote;
-    }
-
-    public void setReleaseNote(String releaseNote) {
-        this.releaseNote = releaseNote;
-    }
-
-    public String getDataverseMinVersion() {
-        return this.dataverseMinVersion;
-    }
-
-    public void setDataverseMinVersion(String dataverseMinVersion) {
-        this.dataverseMinVersion = dataverseMinVersion;
-    }
-
     public List<VersionDTO> getVersions() {
         return this.versions;
     }
@@ -68,7 +50,7 @@ public class ExternalToolDTO {
         this.versions = versions;
     }
 
-    private class VersionDTO {
+    public class VersionDTO {
 
         private String version;
         private String releaseNote;

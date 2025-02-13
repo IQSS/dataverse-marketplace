@@ -1,6 +1,7 @@
 package org.dataverse.marketplace.service;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.dataverse.marketplace.model.*;
@@ -59,11 +60,18 @@ public class ExternalToolService {
         newVersion.setVersionMetadata(versionMetadata);
         externalToolVersionRepo.save(newVersion);
 
+        List<ExternalToolVersion> versions = new ArrayList<ExternalToolVersion>();
+        versions.add(newVersion);
+        newTool.setExternalToolVersions(versions);
+
+        List<ExternalToolManifest> manifests = new ArrayList<ExternalToolManifest>();
+        newVersion.setManifests(manifests);
+
         for (MultipartFile manifest : externalTool.getJsonData()) {
             
             Long storedResourceId = resourceStorageService
                                         .storeResource(manifest, 
-                                        StoredResourceStorageTypeEnum.DATABASE);
+                                        StoredResourceStorageTypeEnum.FILESYSTEM);
 
             ExternalToolManifest newManifest = new ExternalToolManifest();
             newManifest.setMkItemId(newTool.getId());
@@ -75,11 +83,12 @@ public class ExternalToolService {
             JsonNode jsonNode = objectMapper.readTree(jsonString);
             String contentType = jsonNode.get("contentType").asText();
             newManifest.setMimeType(contentType);
-
+            manifests.add(newManifest);
+            
             externalToolManifestRepo.save(newManifest);
         }
 
-        return null;
+        return new ExternalToolDTO(newTool);
     }
 
 }

@@ -1,7 +1,6 @@
 package org.dataverse.marketplace.security.jwt;
 
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 

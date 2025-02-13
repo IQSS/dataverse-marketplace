@@ -1,6 +1,5 @@
 package org.dataverse.marketplace.security.jwt;
 
-import java.security.Key;
 import java.util.Date;
 
 import javax.crypto.SecretKey;
