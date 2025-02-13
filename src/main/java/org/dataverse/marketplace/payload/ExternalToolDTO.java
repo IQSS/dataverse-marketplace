@@ -1,6 +1,11 @@
 package org.dataverse.marketplace.payload;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.dataverse.marketplace.model.ExternalTool;
+import org.dataverse.marketplace.model.ExternalToolManifest;
+import org.dataverse.marketplace.model.ExternalToolVersion;
 
 public class ExternalToolDTO {
 
@@ -8,28 +13,23 @@ public class ExternalToolDTO {
     private String description;
     private String releaseNote;
     private String dataverseMinVersion;
-    private String version;
+    private List<VersionDTO> versions;
 
-    public ExternalToolDTO() {
-    }
+    public ExternalToolDTO(ExternalTool externalTool) {
 
-    public ExternalToolDTO(String name, String description, String releaseNote, String dataverseMinVersion, String version) {
-        this.name = name;
-        this.description = description;
-        this.releaseNote = releaseNote;
-        this.dataverseMinVersion = dataverseMinVersion;
-        this.version = version;
-    }
+        name = externalTool.getName();
+        description = externalTool.getDescription();
 
-    public ExternalToolDTO(ExternalTool externalToolDTO) {
+        ArrayList<VersionDTO> versions = new ArrayList<>();
+        for (ExternalToolVersion version : externalTool.getExternalToolVersions()) {
+            versions.add(new VersionDTO(version));
+        }
+        this.versions = versions;
 
-        // this.releaseNote = externalToolDTO.getReleaseNote();
-        // this.dataverseMinVersion = externalToolDTO.getDataverseMinVersion();
-        // this.version = externalToolDTO.getVersion();
     }
 
     public String getName() {
-        return name;
+        return this.name;
     }
 
     public void setName(String name) {
@@ -37,7 +37,7 @@ public class ExternalToolDTO {
     }
 
     public String getDescription() {
-        return description;
+        return this.description;
     }
 
     public void setDescription(String description) {
@@ -45,7 +45,7 @@ public class ExternalToolDTO {
     }
 
     public String getReleaseNote() {
-        return releaseNote;
+        return this.releaseNote;
     }
 
     public void setReleaseNote(String releaseNote) {
@@ -53,19 +53,72 @@ public class ExternalToolDTO {
     }
 
     public String getDataverseMinVersion() {
-        return dataverseMinVersion;
+        return this.dataverseMinVersion;
     }
 
     public void setDataverseMinVersion(String dataverseMinVersion) {
         this.dataverseMinVersion = dataverseMinVersion;
     }
 
-    public String getVersion() {
-        return version;
+    public List<VersionDTO> getVersions() {
+        return this.versions;
     }
 
-    public void setVersion(String version) {
-        this.version = version;
+    public void setVersions(List<VersionDTO> versions) {
+        this.versions = versions;
     }
 
+    private class VersionDTO {
+
+        private String version;
+        private String releaseNote;
+        private String dataverseMinVersion;
+        private List<Long> manifestStoredResourceId;
+        
+        public VersionDTO(ExternalToolVersion version) {
+
+            this.version = version.getVersionMetadata().getVersion();
+            this.releaseNote = version.getVersionMetadata().getReleaseNote();
+            this.dataverseMinVersion = version.getVersionMetadata().getDataverseMinVersion();
+
+            this.manifestStoredResourceId = new ArrayList<>();
+
+            for (ExternalToolManifest manifest : version.getManifests()){
+                this.manifestStoredResourceId.add(manifest.getManifestStoredResourceId());
+            }
+        }
+
+        public String getVersion() {
+            return this.version;
+        }
+
+        public void setVersion(String version) {
+            this.version = version;
+        }
+
+        public String getReleaseNote() {
+            return this.releaseNote;
+        }
+
+        public void setReleaseNote(String releaseNote) {
+            this.releaseNote = releaseNote;
+        }
+
+        public String getDataverseMinVersion() {
+            return this.dataverseMinVersion;
+        }
+
+        public void setDataverseMinVersion(String dataverseMinVersion) {
+            this.dataverseMinVersion = dataverseMinVersion;
+        }
+
+        public List<Long> getManifestStoredResourceId() {
+            return this.manifestStoredResourceId;
+        }
+
+        public void setManifestStoredResourceId(List<Long> manifestStoredResourceId) {
+            this.manifestStoredResourceId = manifestStoredResourceId;
+        }
+        
+    }
 }

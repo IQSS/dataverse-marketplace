@@ -5,10 +5,7 @@ import org.hibernate.type.descriptor.jdbc.VarbinaryJdbcType;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 
 @Entity
@@ -16,12 +13,9 @@ import jakarta.persistence.Table;
 public class DatabaseResourceStorage {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "db_storage_id_seq")    
-    @SequenceGenerator(
-        name = "db_storage_id_seq", 
-        sequenceName = "db_storage_id_seq", 
-        allocationSize = 1)
+    @Column(name = "stored_resource_id")
     private Long storedResourceId;
+    
 
     @JdbcType(VarbinaryJdbcType.class)
     @Column(name = "resource_data")

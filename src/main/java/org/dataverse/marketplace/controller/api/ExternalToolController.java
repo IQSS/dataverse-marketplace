@@ -7,8 +7,14 @@ import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import jakarta.validation.Valid;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
+import org.apache.catalina.startup.Tool;
+import org.dataverse.marketplace.model.ExternalTool;
 import org.dataverse.marketplace.payload.AddToolRequest;
+import org.dataverse.marketplace.payload.ExternalToolDTO;
 import org.dataverse.marketplace.service.ExternalToolService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -26,7 +32,14 @@ public class ExternalToolController {
 
     @GetMapping()
     public ResponseEntity<?> getAllTools() {
-        return ResponseEntity.ok(externalToolService.getAllTools());
+
+        List<ExternalTool> tools = externalToolService.getAllTools();
+        ArrayList<ExternalToolDTO> toolDTOs = new ArrayList<>();
+        for (ExternalTool tool : tools) {
+            toolDTOs.add(new ExternalToolDTO(tool));
+        }
+
+        return ResponseEntity.ok(toolDTOs);
     }
 
     @PostMapping()

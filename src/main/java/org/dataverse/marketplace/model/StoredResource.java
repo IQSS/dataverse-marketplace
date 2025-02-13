@@ -1,5 +1,6 @@
 package org.dataverse.marketplace.model;
 
+
 import jakarta.persistence.*;
 
 @Entity
@@ -7,10 +8,15 @@ import jakarta.persistence.*;
 public class StoredResource {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "resource_storage_id_seq")    
+    @SequenceGenerator(
+        name = "resource_storage_id_seq", 
+        sequenceName = "resource_storage_id_seq", 
+        allocationSize = 1)
     private Long id;
-
+    
     @OneToOne
-    @JoinTable(name = "stored_resource_storage_type", joinColumns = @JoinColumn(name = "id"))
+    @JoinColumn(name = "storage_type_id")
     private StoredResourceStorageType type;
 
     @Column(name = "file_name")
@@ -23,8 +29,6 @@ public class StoredResource {
     Long fileSize;
 
     /* Getters and Setters */
-
-
 
     public Long getId() {
         return this.id;
@@ -41,7 +45,7 @@ public class StoredResource {
     public void setType(StoredResourceStorageType type) {
         this.type = type;
     }
-
+   
     public String getFileName() {
         return this.fileName;
     }

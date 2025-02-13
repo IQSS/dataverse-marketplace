@@ -54,8 +54,8 @@ CREATE TABLE IF NOT EXISTS stored_resource_storage_type (
 );
 
 Insert into stored_resource_storage_type (id, type_name) values (1, 'DATABASE');
-Insert into stored_resource_storage_type (id, type_name) values (2, 'DISK');
-Insert into stored_resource_storage_type (id, type_name) values (3, 'S3');
+Insert into stored_resource_storage_type (id, type_name) values (2, 'FILESYSTEM');
+Insert into stored_resource_storage_type (id, type_name) values (3, 'CLOUD_S3');
 
 CREATE TABLE IF NOT EXISTS stored_resource (
     id bigint NOT NULL PRIMARY KEY,

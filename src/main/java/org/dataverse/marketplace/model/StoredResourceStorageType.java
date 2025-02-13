@@ -16,12 +16,27 @@ import jakarta.persistence.Table;
 public class StoredResourceStorageType {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-    @Enumerated(EnumType.STRING)
-    @Column(name = "TYPE_name")
-    private StoredResourceStorageTypeEnum name;
+    private Integer id;
     
+    @Column(name = "type_name")
+    private String typeName;
+
+    /* Getters and Setters */
+
+    public Integer getId() {
+        return this.id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public String getTypeName() {
+        return this.typeName;
+    }
+
+    public void setTypeName(String typeName) {
+        this.typeName = typeName;
+    }
 
 }

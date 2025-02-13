@@ -31,7 +31,6 @@ public class ExternalToolManifest {
     @Id
     @Column(name = "mkt_item_id")
     private Integer mkItemId;
-
     
     @Column(name = "manifest_stored_resource_id")
     private Long manifestStoredResourceId;

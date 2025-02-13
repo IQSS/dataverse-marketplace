@@ -62,7 +62,7 @@ public class ExternalToolService {
         for (MultipartFile manifest : externalTool.getJsonData()) {
             
             Long storedResourceId = resourceStorageService
-                                        .storeResource(manifest.getBytes(), 
+                                        .storeResource(manifest, 
                                         StoredResourceStorageTypeEnum.DATABASE);
 
             ExternalToolManifest newManifest = new ExternalToolManifest();
