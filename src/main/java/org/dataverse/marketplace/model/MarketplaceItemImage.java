@@ -2,6 +2,7 @@ package org.dataverse.marketplace.model;
 
 import java.util.Set;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -30,10 +31,11 @@ public class MarketplaceItemImage {
     @JoinColumn(name = "mkt_item_id")
     private MarketplaceItem marketplaceItem;
 
-    private String alt_text;
+    @Column(name = "alt_text")
+    private String altText;
 
-    @Lob
-    private byte[] image;
+    @Column(name = "image_stored_resource_id")
+    private Long manifestStoredResourceId;
 
     @ManyToMany
     @JoinTable(
@@ -61,24 +63,28 @@ public class MarketplaceItemImage {
         this.marketplaceItem = marketplaceItem;
     }
 
-    public String getAlt_text() {
-        return this.alt_text;
+    public String getAltText() {
+        return this.altText;
     }
 
-    public void setAlt_text(String alt_text) {
-        this.alt_text = alt_text;
+    public void setAltText(String altText) {
+        this.altText = altText;
     }
 
-    public byte[] getImage() {
-        return this.image;
+    public Long getManifestStoredResourceId() {
+        return this.manifestStoredResourceId;
     }
 
-    public void setImage(byte[] image) {
-        this.image = image;
+    public void setManifestStoredResourceId(Long manifestStoredResourceId) {
+        this.manifestStoredResourceId = manifestStoredResourceId;
     }
 
-    
+    public Set<ItemTag> getTags() {
+        return this.tags;
+    }
 
-
+    public void setTags(Set<ItemTag> tags) {
+        this.tags = tags;
+    }
 
 }

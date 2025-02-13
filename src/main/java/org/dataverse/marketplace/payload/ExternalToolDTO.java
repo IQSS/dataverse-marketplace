@@ -6,24 +6,29 @@ import java.util.List;
 import org.dataverse.marketplace.model.ExternalTool;
 import org.dataverse.marketplace.model.ExternalToolManifest;
 import org.dataverse.marketplace.model.ExternalToolVersion;
+import org.dataverse.marketplace.model.MarketplaceItemImage;
 
 public class ExternalToolDTO {
 
     private String name;
     private String description;
     private List<VersionDTO> versions;
+    private List<Long> images;
 
     public ExternalToolDTO(ExternalTool externalTool) {
 
         name = externalTool.getName();
         description = externalTool.getDescription();
 
-        ArrayList<VersionDTO> versions = new ArrayList<>();
+        this.versions = new ArrayList<>();
         for (ExternalToolVersion version : externalTool.getExternalToolVersions()) {
             versions.add(new VersionDTO(version));
         }
-        this.versions = versions;
 
+        this.images = new ArrayList<>();
+        for(MarketplaceItemImage image : externalTool.getImages()){
+            this.images.add(image.getManifestStoredResourceId() );
+        }
     }
 
     public String getName() {
@@ -48,6 +53,14 @@ public class ExternalToolDTO {
 
     public void setVersions(List<VersionDTO> versions) {
         this.versions = versions;
+    }
+
+    public List<Long> getImages() {
+        return this.images;
+    }
+
+    public void setImages(List<Long> images) {
+        this.images = images;
     }
 
     public class VersionDTO {

@@ -35,6 +35,9 @@ public class AddToolRequest {
     @NotEmpty
     List<MultipartFile> jsonData;
 
+    @Schema(description = "Marketplace item image file", 
+        example = "ask-the-data.png")
+    List<MultipartFile> itemImages;
 
     public String getName() {
         return this.name;
@@ -83,10 +86,14 @@ public class AddToolRequest {
     public void setJsonData(List<MultipartFile> jsonData) {
         this.jsonData = jsonData;
     }
-    
 
-    
+    public List<MultipartFile> getItemImages() {
+        return this.itemImages;
+    }
 
-   
+    public void setItemImages(List<MultipartFile> itemImages) {
+        this.itemImages = itemImages;
+    }
+
 
 }

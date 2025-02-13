@@ -38,20 +38,20 @@ public class ExternalToolService {
     }
 
     @Transactional
-    public ExternalToolDTO addTool(AddToolRequest externalTool) throws IOException {
+    public ExternalToolDTO addTool(AddToolRequest addToolRequest) throws IOException {
 
         ExternalTool newTool = new ExternalTool();
-        newTool.setName(externalTool.getName());
-        newTool.setDescription(externalTool.getDescription());
+        newTool.setName(addToolRequest.getName());
+        newTool.setDescription(addToolRequest.getDescription());
         externalToolRepo.save(newTool);
 
         Integer externalToolNextVersion = externalToolVersionRepo.getNextIdForIten(newTool.getId());
         externalToolNextVersion = externalToolNextVersion == null ? 1 : externalToolNextVersion + 1;
         
         VersionMetadata versionMetadata = new VersionMetadata();
-        versionMetadata.setVersion(externalTool.getVersion());
-        versionMetadata.setReleaseNote(externalTool.getReleaseNote());
-        versionMetadata.setDataverseMinVersion(externalTool.getDvMinVersion());
+        versionMetadata.setVersion(addToolRequest.getVersion());
+        versionMetadata.setReleaseNote(addToolRequest.getReleaseNote());
+        versionMetadata.setDataverseMinVersion(addToolRequest.getDvMinVersion());
         versionMetadataRepo.save(versionMetadata);
 
         ExternalToolVersion newVersion = new ExternalToolVersion();
@@ -67,7 +67,7 @@ public class ExternalToolService {
         List<ExternalToolManifest> manifests = new ArrayList<ExternalToolManifest>();
         newVersion.setManifests(manifests);
 
-        for (MultipartFile manifest : externalTool.getJsonData()) {
+        for (MultipartFile manifest : addToolRequest.getJsonData()) {
             
             Long storedResourceId = resourceStorageService
                                         .storeResource(manifest, 
@@ -88,7 +88,26 @@ public class ExternalToolService {
             externalToolManifestRepo.save(newManifest);
         }
 
+        List<MarketplaceItemImage> images = new ArrayList<MarketplaceItemImage>();
+        newTool.setImages(images);
+
+        for (MultipartFile image : addToolRequest.getItemImages()) {
+
+            Long storedResourceId = resourceStorageService
+                                        .storeResource(image, 
+                                        StoredResourceStorageTypeEnum.FILESYSTEM);
+
+            MarketplaceItemImage newImage = new MarketplaceItemImage();
+            newImage.setMarketplaceItem(newTool);
+            newImage.setManifestStoredResourceId(storedResourceId);
+            newImage.setAltText(image.getOriginalFilename());
+            newTool.getImages().add(newImage);
+            images.add(newImage);
+        }
+
         return new ExternalToolDTO(newTool);
     }
+
+    
 
 }
