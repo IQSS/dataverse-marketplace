@@ -2,6 +2,7 @@ package org.dataverse.marketplace.service;
 
 import org.dataverse.marketplace.model.DatabaseResourceStorage;
 import org.dataverse.marketplace.model.enums.StoredResourceStorageTypeEnum;
+import org.dataverse.marketplace.repository.DatabaseResourceStorageRepo;
 import org.dataverse.marketplace.repository.StoredResourceRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,7 +14,7 @@ public class ResourceStorageService {
     StoredResourceRepo storedResourceRepo;
 
     @Autowired
-    databaseResourceStorageRepo databaseResourceStorageRepo;
+    DatabaseResourceStorageRepo databaseResourceStorageRepo;
 
     public byte[] getResourceById(Long resourceId) {
         return null;
@@ -24,9 +25,10 @@ public class ResourceStorageService {
             DatabaseResourceStorage dbResourceStorage = new DatabaseResourceStorage();
             dbResourceStorage.setResourceData(resourceData);
 
-            return storedResourceRepo.save(dbResourceStorage).getId();
+            return databaseResourceStorageRepo.save(dbResourceStorage).getStoredResourceId();
         }
-        return null;
+
+        throw new IllegalArgumentException("Unsupported storage type: " + storageType);
     }
 
 }

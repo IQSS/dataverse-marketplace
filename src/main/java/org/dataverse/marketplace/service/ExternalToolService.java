@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.List;
 
 import org.dataverse.marketplace.model.*;
+import org.dataverse.marketplace.model.enums.StoredResourceStorageTypeEnum;
 import org.dataverse.marketplace.payload.*;
 import org.dataverse.marketplace.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +28,9 @@ public class ExternalToolService {
 
     @Autowired
     private VersionMetadataRepo versionMetadataRepo;
+
+    @Autowired
+    private ResourceStorageService resourceStorageService;
     
     public List<ExternalTool> getAllTools() {
         return externalToolRepo.findAll();
@@ -57,11 +61,14 @@ public class ExternalToolService {
 
         for (MultipartFile manifest : externalTool.getJsonData()) {
             
-            
+            Long storedResourceId = resourceStorageService
+                                        .storeResource(manifest.getBytes(), 
+                                        StoredResourceStorageTypeEnum.DATABASE);
+
             ExternalToolManifest newManifest = new ExternalToolManifest();
             newManifest.setMkItemId(newTool.getId());
             newManifest.setVersionId(newVersion.getId());
-            newManifest.setJsonData(manifest.getBytes());
+            newManifest.setManifestStoredResourceId(storedResourceId);
             
             String jsonString = new String(manifest.getBytes());
             ObjectMapper objectMapper = new ObjectMapper();

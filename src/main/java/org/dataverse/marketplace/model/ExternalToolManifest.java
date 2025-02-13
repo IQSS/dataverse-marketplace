@@ -48,6 +48,7 @@ public class ExternalToolManifest {
 
     /* Getters and Setters */
 
+
     public Integer getVersionId() {
         return this.versionId;
     }
@@ -87,6 +88,7 @@ public class ExternalToolManifest {
     public void setExternalToolVersion(ExternalToolVersion externalToolVersion) {
         this.externalToolVersion = externalToolVersion;
     }
+    
     @Embeddable
     public static class ExternalToolManifestId implements Serializable {
 
