@@ -10,7 +10,7 @@ import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "external_tool")
-@PrimaryKeyJoinColumn(name = "mk_item_id")
+@PrimaryKeyJoinColumn(name = "mkt_item_id")
 public class ExternalTool extends MarketplaceItem {
 
     @OneToMany(mappedBy = "externalTool")

@@ -20,7 +20,7 @@ import jakarta.persistence.UniqueConstraint;
 @Entity
 @IdClass(ExternalToolManifest.ExternalToolManifestId.class)
 @Table(name = "external_tool_manifest", uniqueConstraints = {
-        @UniqueConstraint(columnNames = { "version_id", "mk_item_id" })
+        @UniqueConstraint(columnNames = { "version_id", "mkt_item_id" })
 })
 public class ExternalToolManifest {
 
@@ -29,12 +29,12 @@ public class ExternalToolManifest {
     Integer versionId;
 
     @Id
-    @Column(name = "mk_item_id")
+    @Column(name = "mkt_item_id")
     private Integer mkItemId;
 
-    @JdbcType(VarbinaryJdbcType.class)
-    @Column(name = "manifest")
-    private byte[] jsonData;
+    
+    @Column(name = "manifest_stored_resource_id")
+    private Long manifestStoredResourceId;
 
     @Column(name = "mime_type")
     private String mimeType;
@@ -42,12 +42,11 @@ public class ExternalToolManifest {
     @ManyToOne
     @JoinColumns({
         @JoinColumn(name = "version_id", referencedColumnName = "id", insertable = false, updatable = false),
-        @JoinColumn(name = "mk_item_id", referencedColumnName = "mk_item_id", insertable = false, updatable = false)
+        @JoinColumn(name = "mkt_item_id", referencedColumnName = "mkt_item_id", insertable = false, updatable = false)
     })
     private ExternalToolVersion externalToolVersion;
 
     /* Getters and Setters */
-
 
     public Integer getVersionId() {
         return this.versionId;
@@ -65,12 +64,12 @@ public class ExternalToolManifest {
         this.mkItemId = mkItemId;
     }
 
-    public byte[] getJsonData() {
-        return this.jsonData;
+    public Long getManifestStoredResourceId() {
+        return this.manifestStoredResourceId;
     }
 
-    public void setJsonData(byte[] jsonData) {
-        this.jsonData = jsonData;
+    public void setManifestStoredResourceId(Long manifestStoredResourceId) {
+        this.manifestStoredResourceId = manifestStoredResourceId;
     }
 
     public String getMimeType() {
@@ -88,7 +87,6 @@ public class ExternalToolManifest {
     public void setExternalToolVersion(ExternalToolVersion externalToolVersion) {
         this.externalToolVersion = externalToolVersion;
     }
-
     @Embeddable
     public static class ExternalToolManifestId implements Serializable {
 

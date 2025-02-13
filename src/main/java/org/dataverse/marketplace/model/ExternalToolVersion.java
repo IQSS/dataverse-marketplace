@@ -8,7 +8,7 @@ import jakarta.persistence.*;
 @Entity
 @IdClass(ExternalToolVersion.ExternalToolVersionId.class)
 @Table(name = "external_tool_version", uniqueConstraints = {
-        @UniqueConstraint(columnNames = { "id", "mk_item_id" })
+        @UniqueConstraint(columnNames = { "id", "mkt_item_id" })
 })
 public class ExternalToolVersion {
 
@@ -16,27 +16,23 @@ public class ExternalToolVersion {
     Integer id;
 
     @Id
-    @Column(name = "mk_item_id")
+    @Column(name = "mkt_item_id")
     private Integer mkItemId;
 
     @ManyToOne
-    @JoinColumn(name = "mk_item_id", insertable = false, updatable = false)
+    @JoinColumn(name = "mkt_item_id", insertable = false, updatable = false)
     private ExternalTool externalTool;
 
-    @Column(name = "release_note")
-    private String releaseNote;
-
-    @Column(name = "item_version")
-    private String version;
-
-    @Column(name = "dv_min_version")
-    private String dataverseMinVersion;
+    @OneToOne()
+    @JoinColumn(name = "v_metadata_id")
+    private VersionMetadata versionMetadata;
 
     @OneToMany(mappedBy = "externalToolVersion")
     private List<ExternalToolManifest> manifests;
     
 
     /* Getters and Setters */
+
 
     public Integer getId() {
         return this.id;
@@ -62,28 +58,20 @@ public class ExternalToolVersion {
         this.externalTool = externalTool;
     }
 
-    public String getReleaseNote() {
-        return this.releaseNote;
+    public VersionMetadata getVersionMetadata() {
+        return this.versionMetadata;
     }
 
-    public void setReleaseNote(String releaseNote) {
-        this.releaseNote = releaseNote;
+    public void setVersionMetadata(VersionMetadata versionMetadata) {
+        this.versionMetadata = versionMetadata;
     }
 
-    public String getVersion() {
-        return this.version;
+    public List<ExternalToolManifest> getManifests() {
+        return this.manifests;
     }
 
-    public void setVersion(String version) {
-        this.version = version;
-    }
-
-    public String getDataverseMinVersion() {
-        return this.dataverseMinVersion;
-    }
-
-    public void setDataverseMinVersion(String dataverseMinVersion) {
-        this.dataverseMinVersion = dataverseMinVersion;
+    public void setManifests(List<ExternalToolManifest> manifests) {
+        this.manifests = manifests;
     }
     
     @Embeddable
