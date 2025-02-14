@@ -53,7 +53,6 @@ public class ExternalToolController {
     @ExternalToolsAPIDocs.AddExternalToolsRequest
     public ResponseEntity<?> addNewTool(@Valid @RequestBody AddToolRequest addToolRequest) throws IOException{
         
-        System.out.println(addToolRequest);
         return ResponseEntity.ok(externalToolService.addTool(addToolRequest));
     }
 

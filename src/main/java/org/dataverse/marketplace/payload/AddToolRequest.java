@@ -33,14 +33,18 @@ public class AddToolRequest {
     String dvMinVersion;
 
     @Schema(description = "Tool JSON descriptor file", 
-        example = "ask-the-data.json",
-        implementation = MultipartFile.class)
+        example = "[\"ask-the-data.json\"]",
+        type = "array",
+        contentMediaType = "application/octet-stream",
+        implementation = MultipartFile[].class)
     @NotEmpty
     List<MultipartFile> jsonData;
 
     @Schema(description = "Marketplace item image file", 
-        example = "ask-the-data.png",
-        implementation = MultipartFile.class)
+        example = "[\"ask-the-data.png\"]",
+        type = "array",
+        contentMediaType = "application/octet-stream",
+        implementation = MultipartFile[].class)
     List<MultipartFile> itemImages;
 
     public String getName() {

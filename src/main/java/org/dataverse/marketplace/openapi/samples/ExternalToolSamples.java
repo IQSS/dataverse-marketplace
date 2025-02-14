@@ -41,6 +41,25 @@ public abstract class ExternalToolSamples {
             ]
             """;
 
+    public static final String EXTERNAL_TOOL_SINGLE_SAMPLE = """
+           {
+                "name": "NAME",
+                "description": "DESCRIPTION2",
+                "versions": [
+                    {
+                        "version": "1.0",
+                        "releaseNote": "RELEASE_NOTE",
+                        "dataverseMinVersion": "6.0",
+                        "manifestStoredResourceId": [
+                            19
+                        ]
+                    }
+                ],
+                "images": [
+                    20
+                ]
+            }
+            """;
 
     public static final String EXTERNAL_TOOL_VERSIONS_LIST_SAMPLE = """
             [{
@@ -51,6 +70,22 @@ public abstract class ExternalToolSamples {
                     1
                 ]
             }]
+            """;
+
+    public static final String EXTERNAL_TOOL_MULTIPART_FORM_SAMPLE = """
+            {
+                "name": "NAME",
+                "description": "DESCRIPTION",
+                "releaseNote": "RELEASE_NOTE",
+                "version": "1.0",
+                "dvMinVersion": "6.0",
+                "jsonData": [
+                    "ask-the-data.json"
+                ],
+                "itemImages": [
+                    "ask-the-data.png"
+                ]
+            }
             """;
 
 }

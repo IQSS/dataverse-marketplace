@@ -6,10 +6,10 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 import org.dataverse.marketplace.openapi.samples.GenericBusinessSamples;
+import org.dataverse.marketplace.payload.AddToolRequest;
 import org.dataverse.marketplace.payload.ExternalToolDTO;
 import org.dataverse.marketplace.payload.ServerMessageResponse;
-import org.springframework.http.MediaType;
-import org.springframework.web.multipart.MultipartFile;
+import org.dataverse.marketplace.openapi.samples.AuthAPISamples;
 import org.dataverse.marketplace.openapi.samples.ExternalToolSamples;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -60,26 +60,30 @@ public @interface ExternalToolsAPIDocs {
                         description = "Add new external tool",
                         content = @Content(mediaType = "application/json",
                         schema = @Schema(implementation = ExternalToolDTO.class),
-                        examples = @ExampleObject(ExternalToolSamples.EXTERNAL_TOOLS_LIST_SAMPLE))),    
+                        examples = @ExampleObject(ExternalToolSamples.EXTERNAL_TOOL_SINGLE_SAMPLE))),    
         @ApiResponse(responseCode = "400", 
-                        description = "Bad request on External tools list retrieval",
+                        description = "Bad request when adding a new external tool",
                         content = @Content(mediaType = "application/json",
                         schema = @Schema(implementation = ServerMessageResponse.class),
                         examples = @ExampleObject(GenericBusinessSamples.SERVER_MESSAGE_RESPONSE))),
         @ApiResponse(responseCode = "401", 
-                        description = "Bad credentials on External tools list retrieval",
+                        description = "Bad credentials when adding a new external tool",
                         content = @Content(mediaType = "application/json",
                         schema = @Schema(implementation = ServerMessageResponse.class),
                         examples = @ExampleObject(GenericBusinessSamples.SERVER_MESSAGE_RESPONSE))),
         @ApiResponse(responseCode = "500", 
-                        description = "Internal Server Error during External tools list retrieval",
+                        description = "Internal Server Error when adding a new external tool",
                         content = @Content(mediaType = "application/json",
                         schema = @Schema(implementation = ServerMessageResponse.class),
                         examples = @ExampleObject(GenericBusinessSamples.SERVER_MESSAGE_RESPONSE)))
     })
     @Operation(summary = "Adds a new external tool",
-                description = "This endpoint will add a new external tool to the marketplace."
-               )
+                description = "This endpoint will add a new external tool to the marketplace.")
+    @RequestBody(description = "The external tool creation request", 
+                required = true, 
+                content = @Content(mediaType = "multipart/form-data",
+                schema = @Schema(implementation = AddToolRequest.class),
+                examples = @ExampleObject(ExternalToolSamples.EXTERNAL_TOOL_MULTIPART_FORM_SAMPLE)))
     public @interface AddExternalToolsRequest {}
 
 }
