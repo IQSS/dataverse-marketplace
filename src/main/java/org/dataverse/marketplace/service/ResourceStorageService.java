@@ -43,7 +43,7 @@ public class ResourceStorageService {
             return new ByteArrayResource(Files.readAllBytes(filePath));
         }
 
-        throw new IllegalArgumentException("File not found for resource id: " + storedResource.getId());
+        throw new NoSuchFileException("File not found for resource id: " + storedResource.getId());
     }    
 
     public Long storeResource(MultipartFile multipartFile, StoredResourceStorageTypeEnum storageTypeEnum) throws IOException {

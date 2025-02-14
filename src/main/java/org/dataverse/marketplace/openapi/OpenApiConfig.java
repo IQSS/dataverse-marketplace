@@ -23,6 +23,8 @@ import io.swagger.v3.oas.annotations.security.SecuritySchemes;
         @Tag(name = "Authentication", description = "User authentication and authorization"),
         @Tag(name = "Security", description = "Security management"),
         @Tag(name = "Users", description = "User management"),
+        @Tag(name = "StoredResources", description = "Stored resources management"),
+        @Tag(name = "ExternalTools", description = "External tools management")
     }
 )
 @SecuritySchemes({   

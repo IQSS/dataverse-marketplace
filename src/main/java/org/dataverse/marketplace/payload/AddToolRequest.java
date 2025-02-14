@@ -5,6 +5,7 @@ import org.springframework.web.multipart.MultipartFile;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotEmpty;
 
+
 @Schema(description = "Request to add a new external tool")
 public class AddToolRequest {
 
@@ -18,25 +19,28 @@ public class AddToolRequest {
     @NotEmpty
     String description;
 
-    @Schema(description = "A brief not about the current release of the external tool.")
+    @Schema(description = "A brief not about the current release of the external tool.", 
+        example = "This release includes a new feature that allows you to ask questions to an LLM.")
     String releaseNote;
     
     @Schema(description = "Version of the external tool", 
-        example = "1.0.0")
+        example = "\"1.0\"")
     String version;
 
     @Schema(description = "Minimum version of Dataverse that the external tool is compatible with", 
-        example = "6.0")
+        example = "\"6.0\"")
     @NotEmpty
     String dvMinVersion;
 
     @Schema(description = "Tool JSON descriptor file", 
-        example = "ask-the-data.json")
+        example = "ask-the-data.json",
+        implementation = MultipartFile.class)
     @NotEmpty
     List<MultipartFile> jsonData;
 
     @Schema(description = "Marketplace item image file", 
-        example = "ask-the-data.png")
+        example = "ask-the-data.png",
+        implementation = MultipartFile.class)
     List<MultipartFile> itemImages;
 
     public String getName() {
@@ -93,6 +97,20 @@ public class AddToolRequest {
 
     public void setItemImages(List<MultipartFile> itemImages) {
         this.itemImages = itemImages;
+    }
+
+
+    @Override
+    public String toString() {
+        return "{" +
+            " name='" + getName() + "'" +
+            ", description='" + getDescription() + "'" +
+            ", releaseNote='" + getReleaseNote() + "'" +
+            ", version='" + getVersion() + "'" +
+            ", dvMinVersion='" + getDvMinVersion() + "'" +
+            ", jsonData='" + getJsonData() + "'" +
+            ", itemImages='" + getItemImages() + "'" +
+            "}";
     }
 
 

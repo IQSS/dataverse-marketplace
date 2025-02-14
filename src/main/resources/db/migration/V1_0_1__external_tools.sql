@@ -10,13 +10,7 @@ CREATE TABLE IF NOT EXISTS marketplace_item (
     description varchar NOT NULL
 );
 
-CREATE TABLE IF NOT EXISTS marketplace_item_image (
-    id integer NOT NULL PRIMARY KEY,
-    mkt_item_id integer NOT NULL,
-    alt_text varchar NOT NULL,
-    image bytea NOT NULL UNIQUE,
-    CONSTRAINT fk_item FOREIGN KEY (mkt_item_id) REFERENCES marketplace_item (id)
-);
+
 
 CREATE TABLE IF NOT EXISTS external_tool (
     mkt_item_id integer NOT NULL PRIMARY KEY,
@@ -64,6 +58,15 @@ CREATE TABLE IF NOT EXISTS stored_resource (
     mime_type varchar NOT NULL,
     file_size bigint NOT NULL,
     CONSTRAINT fk_storage_type FOREIGN KEY (storage_type_id) REFERENCES stored_resource_storage_type (id)
+);
+
+CREATE TABLE IF NOT EXISTS marketplace_item_image (
+    id integer NOT NULL PRIMARY KEY,
+    mkt_item_id integer NOT NULL,
+    alt_text varchar NOT NULL,
+    image_stored_resource_id bigint NOT NULL,
+    CONSTRAINT fk_item FOREIGN KEY (mkt_item_id) REFERENCES marketplace_item (id),
+    CONSTRAINT fk_image FOREIGN KEY (image_stored_resource_id) REFERENCES stored_resource (id)
 );
 
 CREATE TABLE IF NOT EXISTS external_tool_manifest (

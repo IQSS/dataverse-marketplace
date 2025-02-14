@@ -32,6 +32,9 @@ public class ExternalToolService {
 
     @Autowired
     private ResourceStorageService resourceStorageService;
+
+    @Autowired
+    private MarketplaceItemImageRepo marketplaceItemImageRepo;
     
     public List<ExternalTool> getAllTools() {
         return externalToolRepo.findAll();
@@ -64,8 +67,7 @@ public class ExternalToolService {
         versions.add(newVersion);
         newTool.setExternalToolVersions(versions);
 
-        List<ExternalToolManifest> manifests = new ArrayList<ExternalToolManifest>();
-        newVersion.setManifests(manifests);
+        newVersion.setManifests(new ArrayList<ExternalToolManifest>());
 
         for (MultipartFile manifest : addToolRequest.getJsonData()) {
             
@@ -83,13 +85,12 @@ public class ExternalToolService {
             JsonNode jsonNode = objectMapper.readTree(jsonString);
             String contentType = jsonNode.get("contentType").asText();
             newManifest.setMimeType(contentType);
-            manifests.add(newManifest);
-            
             externalToolManifestRepo.save(newManifest);
+
+            newVersion.getManifests().add(newManifest);
         }
 
-        List<MarketplaceItemImage> images = new ArrayList<MarketplaceItemImage>();
-        newTool.setImages(images);
+        newTool.setImages(new ArrayList<MarketplaceItemImage>());
 
         for (MultipartFile image : addToolRequest.getItemImages()) {
 
@@ -101,8 +102,9 @@ public class ExternalToolService {
             newImage.setMarketplaceItem(newTool);
             newImage.setManifestStoredResourceId(storedResourceId);
             newImage.setAltText(image.getOriginalFilename());
+
+            marketplaceItemImageRepo.save(newImage);
             newTool.getImages().add(newImage);
-            images.add(newImage);
         }
 
         return new ExternalToolDTO(newTool);

@@ -7,13 +7,30 @@ import org.dataverse.marketplace.model.ExternalTool;
 import org.dataverse.marketplace.model.ExternalToolManifest;
 import org.dataverse.marketplace.model.ExternalToolVersion;
 import org.dataverse.marketplace.model.MarketplaceItemImage;
+import org.dataverse.marketplace.openapi.samples.ExternalToolSamples;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+
+@Schema(name = "ExternalTool",
+        description = "A representation of an external tool")
 public class ExternalToolDTO {
 
+    @Schema(description = "The name of the external tool", 
+            example = "My External Tool")
     private String name;
+
+    @Schema(description = "The description of the external tool", 
+            example = "This is a description of my external tool")
     private String description;
+
+    @Schema(description = "The list of versions of the external tool", 
+            example = ExternalToolSamples.EXTERNAL_TOOL_VERSIONS_LIST_SAMPLE)
     private List<VersionDTO> versions;
-    private List<Long> images;
+    
+    @Schema(description = "The list of storage id for the images of the external tool", 
+            implementation = Long[].class,
+            example = "[1, 2, 3]")
+    private List<Long> imagesResourceId;
 
     public ExternalToolDTO(ExternalTool externalTool) {
 
@@ -25,9 +42,9 @@ public class ExternalToolDTO {
             versions.add(new VersionDTO(version));
         }
 
-        this.images = new ArrayList<>();
+        this.imagesResourceId = new ArrayList<>();
         for(MarketplaceItemImage image : externalTool.getImages()){
-            this.images.add(image.getManifestStoredResourceId() );
+            this.imagesResourceId.add(image.getManifestStoredResourceId());
         }
     }
 
@@ -56,18 +73,32 @@ public class ExternalToolDTO {
     }
 
     public List<Long> getImages() {
-        return this.images;
+        return this.imagesResourceId;
     }
 
-    public void setImages(List<Long> images) {
-        this.images = images;
+    public void setImages(List<Long> imagesResourceId) {
+        this.imagesResourceId = imagesResourceId;
     }
 
+    @Schema(description = "A representation of a version of an external tool", 
+        name = "Version")
     public class VersionDTO {
 
+        @Schema(description = "The version of the external tool", 
+                example = "\"1.0\"")
         private String version;
+
+        @Schema(description = "The release note of the external tool", 
+                example = "This is a release note")
         private String releaseNote;
+
+        @Schema(description = "The minimum version of Dataverse required for the external tool", 
+                example = "\"6.0\"")
         private String dataverseMinVersion;
+
+        @Schema(description = "The list of storage id for the manifests of the external tool",   
+                implementation = Long[].class,              
+                example = "[1, 2, 3]")
         private List<Long> manifestStoredResourceId;
         
         public VersionDTO(ExternalToolVersion version) {
