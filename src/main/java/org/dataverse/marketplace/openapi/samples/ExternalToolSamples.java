@@ -20,23 +20,6 @@ public abstract class ExternalToolSamples {
                     "imagesResourceId": [
                         2
                     ]
-                },
-                {
-                    "name": "NAME",
-                    "description": "DESCRIPTION2",
-                    "versions": [
-                        {
-                            "version": "1.0",
-                            "releaseNote": "RELEASE_NOTE",
-                            "dataverseMinVersion": "6.0",
-                            "manifestStoredResourceId": [
-                                3
-                            ]
-                        }
-                    ],
-                    "imagesResourceId": [
-                        4
-                    ]
                 }
             ]
             """;
@@ -74,9 +57,9 @@ public abstract class ExternalToolSamples {
 
     public static final String EXTERNAL_TOOL_MULTIPART_FORM_SAMPLE = """
             {
-                "name": "NAME",
-                "description": "DESCRIPTION",
-                "releaseNote": "RELEASE_NOTE",
+                "name": "Ask the Data",
+                "description": "Ask the Data is an experimental tool that allows you ask natural language questions about the data contained in Dataverse.",
+                "releaseNote": "This release includes a new feature that allows you to ask questions to an LLM.",
                 "version": "1.0",
                 "dvMinVersion": "6.0",
                 "jsonData": [
