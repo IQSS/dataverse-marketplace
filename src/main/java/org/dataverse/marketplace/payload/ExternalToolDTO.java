@@ -2,11 +2,7 @@ package org.dataverse.marketplace.payload;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import org.dataverse.marketplace.model.ExternalTool;
-import org.dataverse.marketplace.model.ExternalToolManifest;
-import org.dataverse.marketplace.model.ExternalToolVersion;
-import org.dataverse.marketplace.model.MarketplaceItemImage;
+import org.dataverse.marketplace.model.*;
 import org.dataverse.marketplace.openapi.samples.ExternalToolSamples;
 
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -14,6 +10,10 @@ import io.swagger.v3.oas.annotations.media.Schema;
 @Schema(name = "ExternalTool",
         description = "A representation of an external tool")
 public class ExternalToolDTO {
+
+    @Schema(description = "The unique identifier of the external tool", 
+            example = "1")
+    private Integer id;
 
     @Schema(description = "The name of the external tool", 
             example = "My External Tool")
@@ -25,7 +25,7 @@ public class ExternalToolDTO {
 
     @Schema(description = "The list of versions of the external tool", 
             example = ExternalToolSamples.EXTERNAL_TOOL_VERSIONS_LIST_SAMPLE)
-    private List<VersionDTO> versions;
+    private List<ExternalToolVersionDTO> versions;
     
     @Schema(description = "The list of storage id for the images of the external tool", 
             implementation = Long[].class,
@@ -33,19 +33,29 @@ public class ExternalToolDTO {
     private List<Long> imagesResourceId;
 
     public ExternalToolDTO(ExternalTool externalTool) {
-
+        id = externalTool.getId();
         name = externalTool.getName();
         description = externalTool.getDescription();
 
         this.versions = new ArrayList<>();
         for (ExternalToolVersion version : externalTool.getExternalToolVersions()) {
-            versions.add(new VersionDTO(version));
+            versions.add(new ExternalToolVersionDTO(version));
         }
 
         this.imagesResourceId = new ArrayList<>();
         for(MarketplaceItemImage image : externalTool.getImages()){
             this.imagesResourceId.add(image.getManifestStoredResourceId());
         }
+    }
+
+    /* Getters and Setters */
+
+    public Integer getId() {
+        return this.id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     public String getName() {
@@ -64,11 +74,11 @@ public class ExternalToolDTO {
         this.description = description;
     }
 
-    public List<VersionDTO> getVersions() {
+    public List<ExternalToolVersionDTO> getVersions() {
         return this.versions;
     }
 
-    public void setVersions(List<VersionDTO> versions) {
+    public void setVersions(List<ExternalToolVersionDTO> versions) {
         this.versions = versions;
     }
 
@@ -80,71 +90,5 @@ public class ExternalToolDTO {
         this.imagesResourceId = imagesResourceId;
     }
 
-    @Schema(description = "A representation of a version of an external tool", 
-        name = "Version")
-    public class VersionDTO {
-
-        @Schema(description = "The version of the external tool", 
-                example = "\"1.0\"")
-        private String version;
-
-        @Schema(description = "The release note of the external tool", 
-                example = "This is a release note")
-        private String releaseNote;
-
-        @Schema(description = "The minimum version of Dataverse required for the external tool", 
-                example = "\"6.0\"")
-        private String dataverseMinVersion;
-
-        @Schema(description = "The list of storage id for the manifests of the external tool",   
-                implementation = Long[].class,              
-                example = "[1, 2, 3]")
-        private List<Long> manifestStoredResourceId;
-        
-        public VersionDTO(ExternalToolVersion version) {
-
-            this.version = version.getVersionMetadata().getVersion();
-            this.releaseNote = version.getVersionMetadata().getReleaseNote();
-            this.dataverseMinVersion = version.getVersionMetadata().getDataverseMinVersion();
-
-            this.manifestStoredResourceId = new ArrayList<>();
-
-            for (ExternalToolManifest manifest : version.getManifests()){
-                this.manifestStoredResourceId.add(manifest.getManifestStoredResourceId());
-            }
-        }
-
-        public String getVersion() {
-            return this.version;
-        }
-
-        public void setVersion(String version) {
-            this.version = version;
-        }
-
-        public String getReleaseNote() {
-            return this.releaseNote;
-        }
-
-        public void setReleaseNote(String releaseNote) {
-            this.releaseNote = releaseNote;
-        }
-
-        public String getDataverseMinVersion() {
-            return this.dataverseMinVersion;
-        }
-
-        public void setDataverseMinVersion(String dataverseMinVersion) {
-            this.dataverseMinVersion = dataverseMinVersion;
-        }
-
-        public List<Long> getManifestStoredResourceId() {
-            return this.manifestStoredResourceId;
-        }
-
-        public void setManifestStoredResourceId(List<Long> manifestStoredResourceId) {
-            this.manifestStoredResourceId = manifestStoredResourceId;
-        }
-        
-    }
+    
 }

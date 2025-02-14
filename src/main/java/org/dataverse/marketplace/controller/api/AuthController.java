@@ -108,7 +108,7 @@ public class AuthController {
     
     @PreAuthorize(ApplicationRoles.ADMIN_ROLE)
     @PostMapping("/roles")
-    @AuthAPIDocs.RoleCreationRequest
+    @AuthAPIDocs.RoleCreationRequestDoc
     public ResponseEntity<?> createRole(@Valid @RequestBody RoleCreationRequest roleCreationRequest) {
         
         if(roleRepository.existsByName(roleCreationRequest.getRoleName().toUpperCase())) {

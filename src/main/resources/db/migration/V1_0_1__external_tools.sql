@@ -10,8 +10,6 @@ CREATE TABLE IF NOT EXISTS marketplace_item (
     description varchar NOT NULL
 );
 
-
-
 CREATE TABLE IF NOT EXISTS external_tool (
     mkt_item_id integer NOT NULL PRIMARY KEY,
     CONSTRAINT fk_item FOREIGN KEY (mkt_item_id) REFERENCES marketplace_item (id)

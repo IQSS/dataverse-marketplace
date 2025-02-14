@@ -9,10 +9,13 @@ import org.dataverse.marketplace.openapi.samples.GenericBusinessSamples;
 import org.dataverse.marketplace.payload.AddToolRequest;
 import org.dataverse.marketplace.payload.ExternalToolDTO;
 import org.dataverse.marketplace.payload.ServerMessageResponse;
+import org.dataverse.marketplace.payload.auth.UserDTO;
 import org.dataverse.marketplace.openapi.samples.AuthAPISamples;
 import org.dataverse.marketplace.openapi.samples.ExternalToolSamples;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -85,5 +88,39 @@ public @interface ExternalToolsAPIDocs {
                 schema = @Schema(implementation = AddToolRequest.class),
                 examples = @ExampleObject(ExternalToolSamples.EXTERNAL_TOOL_MULTIPART_FORM_SAMPLE)))
     public @interface AddExternalToolsRequest {}
+
+    @Target({ElementType.METHOD})    
+    @Retention(RetentionPolicy.RUNTIME)
+    @Tag(name = "ExternalTools")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", 
+                        description = "External Tool successfully retrieved",
+                        content = @Content(mediaType = "application/json",
+                        schema = @Schema(implementation = UserDTO.class),
+                        examples = @ExampleObject(AuthAPISamples.USER))),
+        @ApiResponse(responseCode = "400", 
+                        description = "Bad request on External Tool retrieval",
+                        content = @Content(mediaType = "application/json",
+                        schema = @Schema(implementation = ServerMessageResponse.class),
+                        examples = @ExampleObject(GenericBusinessSamples.SERVER_MESSAGE_RESPONSE))),
+        @ApiResponse(responseCode = "401", 
+                        description = "Access Denied for External Tool retrieval",
+                        content = @Content(mediaType = "application/json",
+                        schema = @Schema(implementation = ServerMessageResponse.class),
+                        examples = @ExampleObject(GenericBusinessSamples.SERVER_MESSAGE_RESPONSE))),
+        @ApiResponse(responseCode = "500", 
+                        description = "Internal Server Error during External Tool retrieval",
+                        content = @Content(mediaType = "application/json",
+                        schema = @Schema(implementation = ServerMessageResponse.class),
+                        examples = @ExampleObject(GenericBusinessSamples.SERVER_MESSAGE_RESPONSE)))                        
+    })
+    @Operation(summary = "Retrieves the information from the specified external tool.",
+                description = "This endpoint retrieves the information from the specified external tool by id.")    
+    @Parameter(name = "toolId",
+                description = "The id of the external tool to be retrieved",
+                required = true,
+                in = ParameterIn.PATH,
+                schema = @Schema(type = "integer"))
+    public @interface GetExternalToolById{}
 
 }

@@ -40,6 +40,10 @@ public class ExternalToolService {
         return externalToolRepo.findAll();
     }
 
+    public ExternalTool getToolById(Integer toolId) {
+        return externalToolRepo.findById(toolId).orElse(null);
+    }
+
     @Transactional
     public ExternalToolDTO addTool(AddToolRequest addToolRequest) throws IOException {
 
