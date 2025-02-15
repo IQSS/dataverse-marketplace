@@ -44,6 +44,18 @@ public class ExternalToolService {
         return externalToolRepo.findById(toolId).orElse(null);
     }
 
+    public ExternalToolVersion getToolVersionById(Integer toolId, Integer versionId) {
+        return externalToolVersionRepo.findByMkItemIdAndId(toolId, versionId);
+    }
+
+    public List<ExternalToolManifest> getToolManifests(Integer toolId, Integer versionId) {
+        return externalToolManifestRepo.findByMkItemIdAndVersionId(toolId, versionId);
+    }
+
+    public ExternalToolVersion updateToolVersion(ExternalToolVersion externalToolVersion) {
+        return externalToolVersionRepo.save(externalToolVersion);
+    }
+
     @Transactional
     public ExternalToolDTO addTool(AddToolRequest addToolRequest) throws IOException {
 

@@ -9,6 +9,10 @@ import io.swagger.v3.oas.annotations.media.Schema;
         name = "Version")
 public class ExternalToolVersionDTO {
 
+    @Schema(description = "The unique identifier of the external tool version", 
+            example = "1")
+    private Integer id;
+
     @Schema(description = "The version of the external tool", 
             example = "\"1.0\"")
     private String version;
@@ -28,6 +32,7 @@ public class ExternalToolVersionDTO {
     
     public ExternalToolVersionDTO(ExternalToolVersion version) {
 
+        this.id = version.getId();
         this.version = version.getVersionMetadata().getVersion();
         this.releaseNote = version.getVersionMetadata().getReleaseNote();
         this.dataverseMinVersion = version.getVersionMetadata().getDataverseMinVersion();
@@ -40,6 +45,14 @@ public class ExternalToolVersionDTO {
     }
 
     /* Getters and Setters */
+
+    public Integer getId() {
+        return this.id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
 
     public String getVersion() {
         return this.version;

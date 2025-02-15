@@ -71,4 +71,12 @@ public abstract class ExternalToolSamples {
             }
             """;
 
+    public static final String EXTERNAL_TOOL_VERSION_REQUEST_SAMPLE = """
+        {
+            "releaseNote": "This release includes a new feature that allows you to ask questions to an LLM.",
+            "version": "1.0",
+            "dvMinVersion": "6.0"
+        }
+    """;
+
 }
