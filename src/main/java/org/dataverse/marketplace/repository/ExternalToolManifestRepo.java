@@ -12,4 +12,7 @@ public interface ExternalToolManifestRepo extends JpaRepository<ExternalToolMani
 
     @Query("SELECT e FROM ExternalToolManifest e WHERE e.mkItemId = ?1 AND e.versionId = ?2")
     public List<ExternalToolManifest> findByMkItemIdAndVersionId(Integer mkItemId, Integer versionId);
+
+    @Query("SELECT MAX (e.manifestId) FROM ExternalToolManifest e WHERE e.mkItemId = ?1 AND e.versionId = ?2")
+    public Integer getNextIdForManifest(Integer mktItemId, Integer versionId);
 }

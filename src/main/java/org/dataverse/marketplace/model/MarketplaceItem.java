@@ -1,6 +1,7 @@
 package org.dataverse.marketplace.model;
 
 import java.util.List;
+import java.util.Set;
 
 import jakarta.persistence.*;
 @Entity
@@ -22,6 +23,14 @@ public class MarketplaceItem {
 
     @OneToMany(mappedBy = "marketplaceItem")
     private List<MarketplaceItemImage> images;
+
+    @ManyToMany
+    @JoinTable(
+        name = "item_tag",
+        joinColumns = @JoinColumn(name = "item_id"),
+        inverseJoinColumns = @JoinColumn(name = "tag_id")
+    )
+    private Set<ItemTag> tags;
 
     /* Getters & Setters */
 
@@ -55,6 +64,14 @@ public class MarketplaceItem {
 
     public void setImages(List<MarketplaceItemImage> images) {
         this.images = images;
+    }
+
+    public Set<ItemTag> getTags() {
+        return this.tags;
+    }
+
+    public void setTags(Set<ItemTag> tags) {
+        this.tags = tags;
     }
 
     

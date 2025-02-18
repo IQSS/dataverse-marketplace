@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.dataverse.marketplace.model.ExternalTool;
+import org.dataverse.marketplace.model.ExternalToolManifest;
 import org.dataverse.marketplace.model.ExternalToolVersion;
 import org.dataverse.marketplace.model.VersionMetadata;
 import org.dataverse.marketplace.openapi.annotations.ExternalToolVersionsAPIDocs;
@@ -26,6 +27,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import io.swagger.v3.oas.annotations.Hidden;
 import jakarta.validation.Valid;
@@ -43,7 +45,6 @@ public class ExternalToolVersionController {
     /**
      * Method to retrieve a specific external tool version
      */
-    @Hidden
     @GetMapping("/{toolId}/versions/{versionId}")
     @ExternalToolVersionsAPIDocs.GetExternalToolVersionByIdDoc
     public ResponseEntity<?> getVersionById(
@@ -79,7 +80,6 @@ public class ExternalToolVersionController {
     /**
      * Method to delete a specific external tool version
      */
-    @Hidden
     @DeleteMapping("/{toolId}/versions/{versionId}")
     @ExternalToolVersionsAPIDocs.DeleteExternalToolVersionByIdDoc
     public ResponseEntity<?> deleteVersionById(
@@ -152,5 +152,44 @@ public class ExternalToolVersionController {
 
         return ResponseEntity.ok(versions);
     }
+
+    @PostMapping(path = "/{toolId}/versions/{versionId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<?> addVersionManifest(
+            @PathVariable("toolId") Integer toolId,
+            @PathVariable("versionId") Integer versionId,
+            @RequestBody List<MultipartFile> jsonData) throws IOException {
+        
+        ExternalToolVersion version = externalToolService.getToolVersionById(toolId, versionId);
+        externalToolVersionService.addVersionManifests(version, jsonData);
+        ServerMessageResponse messageResponse = new ServerMessageResponse(HttpStatus.OK,
+                "Manifests added",
+                String.format("The manifests were added to the version with ID %d.", versionId));
+        
+        return ResponseEntity.ok(messageResponse);
+    }
+
+    @DeleteMapping("/{toolId}/versions/{versionId}/manifests/{manifestId}")
+    public ResponseEntity<?> deleteVersionManifest(
+            @PathVariable("toolId") Integer toolId,
+            @PathVariable("versionId") Integer versionId,
+            @PathVariable("manifestId") Integer manifestId) {
+        
+        try {
+            
+            externalToolVersionService.deleteToolManifest(toolId, versionId, manifestId);
+            ServerMessageResponse messageResponse = new ServerMessageResponse(HttpStatus.OK,
+                    "Manifest deleted",
+                    String.format("The manifest with ID %d was deleted.", manifestId));
+            return ResponseEntity.ok(messageResponse);
+
+        } catch (IOException e) {
+            
+            ServerMessageResponse messageResponse = new ServerMessageResponse(HttpStatus.INTERNAL_SERVER_ERROR,
+                    "Error deleting manifest",
+                    String.format("An error occurred while deleting the manifest with ID %d.", manifestId));
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(messageResponse);
+        }
+    }
+    
 
 }

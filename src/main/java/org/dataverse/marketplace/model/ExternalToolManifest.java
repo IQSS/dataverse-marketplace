@@ -7,7 +7,7 @@ import jakarta.persistence.*;
 @Entity
 @IdClass(ExternalToolManifest.ExternalToolManifestId.class)
 @Table(name = "external_tool_manifest", uniqueConstraints = {
-        @UniqueConstraint(columnNames = { "version_id", "mkt_item_id" })
+        @UniqueConstraint(columnNames = { "version_id", "mkt_item_id", "manifest_id" })
 })
 public class ExternalToolManifest {
 
@@ -18,6 +18,10 @@ public class ExternalToolManifest {
     @Id
     @Column(name = "mkt_item_id")
     private Integer mkItemId;
+
+    @Id
+    @Column(name = "manifest_id")
+    private Integer manifestId;
     
     @Column(name = "manifest_stored_resource_id")
     private Long manifestStoredResourceId;
@@ -51,6 +55,14 @@ public class ExternalToolManifest {
         this.mkItemId = mkItemId;
     }
 
+    public Integer getManifestId() {
+        return this.manifestId;
+    }
+
+    public void setManifestId(Integer manifestId) {
+        this.manifestId = manifestId;
+    }
+
     public Long getManifestStoredResourceId() {
         return this.manifestStoredResourceId;
     }
@@ -80,15 +92,17 @@ public class ExternalToolManifest {
 
         private Integer versionId;
         private Integer mkItemId;
+        private Integer manifestId;
 
         // Default constructor
         public ExternalToolManifestId() {
         }
 
         // Parameterized constructor
-        public ExternalToolManifestId(Integer versionId, Integer mkItemId) {
+        public ExternalToolManifestId(Integer versionId, Integer mkItemId, Integer manifestId) {
             this.versionId = versionId;
             this.mkItemId = mkItemId;
+            this.manifestId = manifestId;
         }
 
         // Getters and setters
@@ -100,12 +114,26 @@ public class ExternalToolManifest {
             if (o == null || getClass() != o.getClass())
                 return false;
                 ExternalToolManifestId that = (ExternalToolManifestId) o;
-            return Objects.equals(versionId, that.versionId) && Objects.equals(mkItemId, that.mkItemId);
+            return Objects.equals(versionId, that.versionId) 
+                && Objects.equals(mkItemId, that.mkItemId)
+                && Objects.equals(manifestId, that.manifestId);
         }
 
         @Override
         public int hashCode() {
-            return Objects.hash(versionId, mkItemId);
+            return Objects.hash(versionId, mkItemId, manifestId);
+        }
+
+        public void setVersionId(Integer versionId) {
+            this.versionId = versionId;
+        }
+
+        public void setMkItemId(Integer mkItemId) {
+            this.mkItemId = mkItemId;
+        }
+
+        public void setManifestId(Integer manifestId) {
+            this.manifestId = manifestId;
         }
     }
 

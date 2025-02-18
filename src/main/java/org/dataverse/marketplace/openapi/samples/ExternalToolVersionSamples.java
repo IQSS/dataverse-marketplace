@@ -32,5 +32,18 @@ public class ExternalToolVersionSamples {
         }
     """;
 
+    public static final String EXTERNAL_TOOL_VERSION_MANIFESTS_SAMPLE = """
+        [   
+          {
+            "manifestId": 1,
+            "storedResourceId": 4
+          },
+          {
+            "manifestId": 2,
+            "storedResourceId": 6
+          }
+        ]
+    """;
+
 
 }

@@ -2,10 +2,12 @@ package org.dataverse.marketplace.service;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 import org.dataverse.marketplace.model.ExternalToolManifest;
 import org.dataverse.marketplace.model.ExternalToolVersion;
 import org.dataverse.marketplace.model.VersionMetadata;
+import org.dataverse.marketplace.model.ExternalToolManifest.ExternalToolManifestId;
 import org.dataverse.marketplace.model.enums.StoredResourceStorageTypeEnum;
 import org.dataverse.marketplace.payload.AddVersionRequest;
 import org.dataverse.marketplace.repository.ExternalToolManifestRepo;
@@ -13,6 +15,7 @@ import org.dataverse.marketplace.repository.ExternalToolVersionRepo;
 import org.dataverse.marketplace.repository.VersionMetadataRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.fasterxml.jackson.databind.JsonNode;
@@ -60,7 +63,7 @@ public class ExternalToolVersionService {
         versionMetadata.setDataverseMinVersion(externalToolVersion.getDvMinVersion());
         versionMetadataRepo.save(versionMetadata);
         
-        Integer externalToolNextVersion = externalToolVersionRepo.getNextIdForIten(toolId);
+        Integer externalToolNextVersion = externalToolVersionRepo.getNextIdForItemVersion(toolId);
         externalToolNextVersion = externalToolNextVersion == null ? 1 : externalToolNextVersion + 1;
 
         ExternalToolVersion newVersion = new ExternalToolVersion();
@@ -69,17 +72,31 @@ public class ExternalToolVersionService {
         newVersion.setVersionMetadata(versionMetadata);
         externalToolVersionRepo.save(newVersion);
 
-        newVersion.setManifests(new ArrayList<ExternalToolManifest>());
+        newVersion.setManifests(addVersionManifests(newVersion, externalToolVersion.getJsonData()));
 
-        for(MultipartFile manifest : externalToolVersion.getJsonData()) {
-            
+        return newVersion;
+    }
+
+    @Transactional
+    public List<ExternalToolManifest> addVersionManifests(ExternalToolVersion externalToolVersion, List<MultipartFile> manifests) throws IOException {
+
+        List<ExternalToolManifest> newManifests = new ArrayList<ExternalToolManifest>();
+
+        for (MultipartFile manifest : manifests) {
+
             Long storedResourceId = resourceStorageService
                                         .storeResource(manifest, 
                                         StoredResourceStorageTypeEnum.FILESYSTEM);
 
+            Integer externalToolManifestId = externalToolManifestRepo.getNextIdForManifest(
+                    externalToolVersion.getMkItemId(), externalToolVersion.getId());
+
+            externalToolManifestId = externalToolManifestId == null ? 1 : externalToolManifestId + 1;
+
             ExternalToolManifest newManifest = new ExternalToolManifest();
-            newManifest.setMkItemId(toolId);
-            newManifest.setVersionId(newVersion.getId());
+            newManifest.setManifestId(externalToolManifestId);
+            newManifest.setMkItemId(externalToolVersion.getMkItemId());
+            newManifest.setVersionId(externalToolVersion.getId());
             newManifest.setManifestStoredResourceId(storedResourceId);
             
             String jsonString = new String(manifest.getBytes());
@@ -88,9 +105,23 @@ public class ExternalToolVersionService {
             String contentType = jsonNode.get("contentType").asText();
             newManifest.setMimeType(contentType);
             externalToolManifestRepo.save(newManifest);
-            newVersion.getManifests().add(newManifest);
+            newManifests.add(newManifest);
         }
+        return newManifests;
+    }
+    
 
-        return newVersion;
-    }   
+    public void deleteToolManifest(Integer toolId,
+            Integer versionId,
+            Integer manifestId) throws IOException {
+
+        ExternalToolManifestId externalToolManifestId = new ExternalToolManifestId();
+        externalToolManifestId.setMkItemId(toolId);
+        externalToolManifestId.setVersionId(versionId);
+        externalToolManifestId.setManifestId(manifestId); 
+
+        ExternalToolManifest manifest = externalToolManifestRepo.findById(externalToolManifestId).get();
+        resourceStorageService.deleteResourceContent(manifest.getManifestStoredResourceId());
+        externalToolManifestRepo.delete(manifest);
+    }
 }

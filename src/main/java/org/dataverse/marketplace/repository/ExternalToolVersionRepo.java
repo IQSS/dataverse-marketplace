@@ -12,7 +12,7 @@ public interface ExternalToolVersionRepo extends JpaRepository<ExternalToolVersi
     //Integer getNextIdForItem(Integer itemId);
 
     @Query("SELECT MAX(e.id) FROM ExternalToolVersion e WHERE e.mkItemId = ?1")
-    public Integer getNextIdForIten(Integer itemId);
+    public Integer getNextIdForItemVersion(Integer itemId);
 
     @Query("SELECT e FROM ExternalToolVersion e WHERE e.mkItemId = ?1 AND e.id = ?2")
     public ExternalToolVersion findByMkItemIdAndId(Integer itemId, Integer id);

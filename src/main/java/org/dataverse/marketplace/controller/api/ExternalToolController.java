@@ -10,6 +10,7 @@ import org.dataverse.marketplace.model.*;
 import org.dataverse.marketplace.openapi.annotations.ExternalToolsAPIDocs;
 import org.dataverse.marketplace.payload.*;
 import org.dataverse.marketplace.service.ExternalToolService;
+import org.dataverse.marketplace.service.ResourceStorageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
@@ -26,6 +27,9 @@ public class ExternalToolController {
 
     @Autowired
     private ExternalToolService externalToolService;
+
+    @Autowired
+    private ResourceStorageService resourceStorageService;
 
     /**
      * Method to retrieve all external tools     
@@ -92,7 +96,8 @@ public class ExternalToolController {
 
     
     @PostMapping(path = "/{toolId}/images", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<?> addToolImages(@PathVariable("toolId") Integer toolId, 
+    public ResponseEntity<?> addToolImages(
+            @PathVariable("toolId") Integer toolId, 
             @RequestBody List<MultipartFile> images) throws IOException {
 
         ExternalTool tool = new ExternalTool();
@@ -104,26 +109,35 @@ public class ExternalToolController {
         
         for(MarketplaceItemImage img : mktImages){
             imagesResourceId.add(img.getImageStoredResourceId());
-        }            
+        }
 
-        return ResponseEntity.ok(imagesResourceId);
+        ServerMessageResponse messageResponse = new ServerMessageResponse(HttpStatus.OK,
+                "Images added",
+                String.format("The images were added to the tool with ID %d.", toolId));    
+
+        return ResponseEntity.ok(messageResponse);
     }
 
     @DeleteMapping("/{toolId}/images/{imageId}")
     public ResponseEntity<?> deleteToolImage(
             @PathVariable("toolId") Integer toolId, 
-            @PathVariable("imageId") Long imageId) {
+            @PathVariable("imageId") Integer imageId) {
 
-        ExternalTool tool = externalToolService.getToolById(toolId);
+        try {
 
-        if(tool == null){
-            ServerMessageResponse messageResponse = new ServerMessageResponse(HttpStatus.NOT_FOUND,
-                    "Resource not found",
-                    String.format("The requested external tool with ID %d was not found.", toolId));
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(messageResponse);
+            MarketplaceItemImage image =  externalToolService.getItemImage(imageId, toolId);
+            resourceStorageService.deleteResourceContent(image.getImageStoredResourceId()); 
+            externalToolService.deleteToolImage(image);
+            return ResponseEntity.ok(new ServerMessageResponse(HttpStatus.OK,
+                    "Image deleted",
+                    String.format("The image with ID %d was deleted.", imageId)));
+
+        } catch (IOException e) {
+            ServerMessageResponse messageResponse = new ServerMessageResponse(HttpStatus.INTERNAL_SERVER_ERROR,
+                    "Error deleting image",
+                    e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(messageResponse);
         }
-
-        return null;
     }
 
 

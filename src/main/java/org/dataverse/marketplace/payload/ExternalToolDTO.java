@@ -3,7 +3,6 @@ package org.dataverse.marketplace.payload;
 import java.util.ArrayList;
 import java.util.List;
 import org.dataverse.marketplace.model.*;
-import org.dataverse.marketplace.openapi.samples.ExternalToolSamples;
 import org.dataverse.marketplace.openapi.samples.ExternalToolVersionSamples;
 
 import io.swagger.v3.oas.annotations.media.Schema;

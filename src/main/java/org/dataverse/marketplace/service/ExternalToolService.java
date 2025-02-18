@@ -99,6 +99,14 @@ public class ExternalToolService {
         return newImages;
     }
 
+    public MarketplaceItemImage getItemImage(Integer imageId, Integer marketplaceItemId) {
+        return marketplaceItemImageRepo.findByMarketplaceItemId(imageId, marketplaceItemId);
+    }
+
+    public void deleteToolImage(MarketplaceItemImage image) {
+        marketplaceItemImageRepo.delete(image);
+    }
+
     
 
 }

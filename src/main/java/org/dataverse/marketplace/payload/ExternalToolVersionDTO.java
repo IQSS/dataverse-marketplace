@@ -3,6 +3,8 @@ package org.dataverse.marketplace.payload;
 import java.util.ArrayList;
 import java.util.List;
 import org.dataverse.marketplace.model.*;
+import org.dataverse.marketplace.openapi.samples.ExternalToolVersionSamples;
+
 import io.swagger.v3.oas.annotations.media.Schema;
 
 @Schema(description = "A representation of a version of an external tool", 
@@ -26,9 +28,9 @@ public class ExternalToolVersionDTO {
     private String dataverseMinVersion;
 
     @Schema(description = "The list of storage id for the manifests of the external tool",   
-            implementation = Long[].class,              
-            example = "[1, 2, 3]")
-    private List<Long> manifestStoredResourceId;
+            implementation = ExternalToolManifestDTO[].class,              
+            example = ExternalToolVersionSamples.EXTERNAL_TOOL_VERSION_MANIFESTS_SAMPLE)
+    private List<ExternalToolManifestDTO> manifests;
     
     public ExternalToolVersionDTO(ExternalToolVersion version) {
 
@@ -37,11 +39,15 @@ public class ExternalToolVersionDTO {
         this.releaseNote = version.getVersionMetadata().getReleaseNote();
         this.dataverseMinVersion = version.getVersionMetadata().getDataverseMinVersion();
 
-        this.manifestStoredResourceId = new ArrayList<>();
+        this.manifests = new ArrayList<>();
 
         for (ExternalToolManifest manifest : version.getManifests()){
-            this.manifestStoredResourceId.add(manifest.getManifestStoredResourceId());
+            ExternalToolManifestDTO manifestDTO = new ExternalToolManifestDTO();
+            manifestDTO.setManifestId(manifest.getManifestId());
+            manifestDTO.setStoredResourceId(manifest.getManifestStoredResourceId());
+            this.manifests.add(manifestDTO);
         }
+        
     }
 
     /* Getters and Setters */
@@ -78,12 +84,12 @@ public class ExternalToolVersionDTO {
         this.dataverseMinVersion = dataverseMinVersion;
     }
 
-    public List<Long> getManifestStoredResourceId() {
-        return this.manifestStoredResourceId;
+    public List<ExternalToolManifestDTO> getManifests() {
+        return this.manifests;
     }
 
-    public void setManifestStoredResourceId(List<Long> manifestStoredResourceId) {
-        this.manifestStoredResourceId = manifestStoredResourceId;
+    public void setManifests(List<ExternalToolManifestDTO> manifests) {
+        this.manifests = manifests;
     }
     
 }

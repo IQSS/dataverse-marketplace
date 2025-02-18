@@ -87,6 +87,7 @@ public class ResourceStorageService {
             databaseResourceStorageRepo.deleteById(resourceId);
         } else if (storedResource.getType().getId() == StoredResourceStorageTypeEnum.FILESYSTEM.getId()) {
             Path filePath = Paths.get(diskStoragePath, storedResource.getId().toString());
+            System.out.println("Deleting file: " + filePath);
             Files.delete(filePath);
         }
     }
