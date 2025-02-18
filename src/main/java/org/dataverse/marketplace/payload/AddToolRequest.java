@@ -12,40 +12,40 @@ public class AddToolRequest {
     @Schema(description = "Name of the external tool", 
         example = "Ask the data")
     @NotEmpty
-    String name;
+    private String name;
 
     @Schema(description = "Description of the external tool", 
         example = "Ask the Data is an experimental tool that allows you ask natural language questions about the data contained in Dataverse.")    
     @NotEmpty
-    String description;
+    private String description;
 
-    @Schema(description = "A brief not about the current release of the external tool.", 
+    @Schema(description = "A brief note about the current version of the new external tool.", 
         example = "This release includes a new feature that allows you to ask questions to an LLM.")
-    String releaseNote;
+    private String releaseNote;
     
-    @Schema(description = "Version of the external tool", 
+    @Schema(description = "Version descriptor of the new external tool", 
         example = "\"1.0\"")
-    String version;
+    private String version;
 
-    @Schema(description = "Minimum version of Dataverse that the external tool is compatible with", 
+    @Schema(description = "Minimum version of Dataverse that the new external tool is compatible with", 
         example = "\"6.0\"")
     @NotEmpty
-    String dvMinVersion;
+    private String dvMinVersion;
 
-    @Schema(description = "Tool JSON descriptor file", 
+    @Schema(description = "Manifest files for the default versionof the new external tool", 
         example = "[\"ask-the-data.json\"]",
         type = "array",
         contentMediaType = "application/octet-stream",
         implementation = MultipartFile[].class)
     @NotEmpty
-    List<MultipartFile> jsonData;
+    private List<MultipartFile> jsonData;
 
     @Schema(description = "Marketplace item image file", 
         example = "[\"ask-the-data.png\"]",
         type = "array",
         contentMediaType = "application/octet-stream",
         implementation = MultipartFile[].class)
-    List<MultipartFile> itemImages;
+    private  List<MultipartFile> itemImages;
 
     public String getName() {
         return this.name;

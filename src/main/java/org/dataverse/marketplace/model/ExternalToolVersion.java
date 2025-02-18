@@ -23,11 +23,11 @@ public class ExternalToolVersion {
     @JoinColumn(name = "mkt_item_id", insertable = false, updatable = false)
     private ExternalTool externalTool;
 
-    @OneToOne()
+    @OneToOne(cascade = CascadeType.REMOVE)
     @JoinColumn(name = "v_metadata_id")
     private VersionMetadata versionMetadata;
 
-    @OneToMany(mappedBy = "externalToolVersion")
+    @OneToMany(mappedBy = "externalToolVersion", cascade = CascadeType.REMOVE)
     private List<ExternalToolManifest> manifests;
     
 

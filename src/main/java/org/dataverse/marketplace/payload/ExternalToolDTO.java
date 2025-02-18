@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import org.dataverse.marketplace.model.*;
 import org.dataverse.marketplace.openapi.samples.ExternalToolSamples;
+import org.dataverse.marketplace.openapi.samples.ExternalToolVersionSamples;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 
@@ -24,7 +25,7 @@ public class ExternalToolDTO {
     private String description;
 
     @Schema(description = "The list of versions of the external tool", 
-            example = ExternalToolSamples.EXTERNAL_TOOL_VERSIONS_LIST_SAMPLE)
+            example = ExternalToolVersionSamples.EXTERNAL_TOOL_VERSIONS_LIST_SAMPLE)
     private List<ExternalToolVersionDTO> versions;
     
     @Schema(description = "The list of storage id for the images of the external tool", 

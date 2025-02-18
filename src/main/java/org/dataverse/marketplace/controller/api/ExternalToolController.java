@@ -1,6 +1,5 @@
 package org.dataverse.marketplace.controller.api;
 
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 
 import java.io.IOException;
@@ -14,6 +13,8 @@ import org.dataverse.marketplace.service.ExternalToolService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
+
+import io.swagger.v3.oas.annotations.Hidden;
 
 @RestController
 @RequestMapping("/api/tools")
@@ -53,68 +54,13 @@ public class ExternalToolController {
      * Method to add a new external tool
      */
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    @ExternalToolsAPIDocs.AddExternalToolsRequest
-    @ApiResponses(value = {
-        
-    })
-    public ResponseEntity<?> addNewTool(@Valid @RequestBody AddToolRequest addToolRequest) throws IOException{
-        
+    @ExternalToolsAPIDocs.AddExternalToolsRequest   
+    public ResponseEntity<?> addNewTool(@Valid AddToolRequest addToolRequest) throws IOException{
         return ResponseEntity.ok(externalToolService.addTool(addToolRequest));
     }
-
-    /**
-     * Method to retrieve all external tools     
-     */
-    @GetMapping("/{toolId}/versions")
-    //DOCS
-    public ResponseEntity<?> getVersionsToolByToolId(@PathVariable("toolId") Integer toolId) {
-
-        
-        ExternalTool tool = externalToolService.getToolById(toolId);
-        if(tool == null){
-            ServerMessageResponse messageResponse = new ServerMessageResponse(HttpStatus.NOT_FOUND,
-                    "Resource not found",
-                    String.format("The requested external tool with ID %d was not found.", toolId));
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(messageResponse);
-        }
-        List<ExternalToolVersionDTO> versions = new ArrayList<>();
-        for (ExternalToolVersion version : tool.getExternalToolVersions()) {
-            versions.add(new ExternalToolVersionDTO(version));
-        }
-
-        return ResponseEntity.ok(versions);
-    }
-
-    @GetMapping("/{toolId}/versions/{versionId}")
-    //DOCS
-    public ResponseEntity<?> getVersionById(@PathVariable("toolId") Integer toolId,
-            @PathVariable("versionId") Integer versionId) {
-        
-        ExternalToolVersion version = externalToolService.getToolVersionById(toolId, versionId);
-        return ResponseEntity.ok(new ExternalToolVersionDTO(version));
-    }
-
-    @PutMapping("/{toolId}/versions/{versionId}")
-    @ExternalToolsAPIDocs.UpdateVersionByIdDocs
-    public ResponseEntity<?> updateVersionById(@PathVariable("toolId") Integer toolId,
-            @PathVariable("versionId") Integer versionId,
-            @Valid @RequestBody ToolVersionRequest updateToolVersionRequest) {
-        
-        ExternalToolVersion version = externalToolService.getToolVersionById(toolId, versionId);
-
-        VersionMetadata metadata = version.getVersionMetadata();
-        metadata.setDataverseMinVersion(updateToolVersionRequest.getDvMinVersion());
-        metadata.setReleaseNote(updateToolVersionRequest.getReleaseNote());
-        metadata.setVersion(updateToolVersionRequest.getVersion());
-
-        externalToolService.updateToolVersion(version);
-
-        return ResponseEntity.ok(new ExternalToolVersionDTO(version));
-    }
-
     
+    @Hidden
     @GetMapping("/{toolId}/versions/{versionId}/manifests")
-    //DOCS
     public ResponseEntity<?> getVersionManifestsById(@PathVariable("toolId") Integer toolId,
             @PathVariable("versionId") Integer versionId) {
 
@@ -126,8 +72,8 @@ public class ExternalToolController {
         return ResponseEntity.ok(manifestStoredResourceId);
     }
 
+    @Hidden
     @GetMapping("/{toolId}/images")
-    //DOCS
     public ResponseEntity<?> getToolImages(@PathVariable("toolId") Integer toolId) {
 
         ExternalTool tool = externalToolService.getToolById(toolId);

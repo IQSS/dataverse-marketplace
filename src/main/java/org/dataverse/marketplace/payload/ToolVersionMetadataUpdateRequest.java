@@ -4,7 +4,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotEmpty;
 
 @Schema(description = "A representation of the update tool version request")
-public class ToolVersionRequest {
+public class ToolVersionMetadataUpdateRequest {
 
     @Schema(description = "A brief not about the current release of the external tool.", 
         example = "This release includes a new feature that allows you to ask questions to an LLM.")

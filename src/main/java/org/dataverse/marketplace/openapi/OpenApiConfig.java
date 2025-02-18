@@ -21,10 +21,13 @@ import io.swagger.v3.oas.annotations.security.SecuritySchemes;
     security = @SecurityRequirement(name = "bearerAuth"),
     tags = {
         @Tag(name = "Authentication", description = "User authentication and authorization"),
+        @Tag(name = "External Tools", description = "External tools management"),
+        @Tag(name = "External Tool Version", description = "External tool versions endpoints"),
         @Tag(name = "Security", description = "Security management"),
-        @Tag(name = "Users", description = "User management"),
         @Tag(name = "StoredResources", description = "Stored resources management"),
-        @Tag(name = "ExternalTools", description = "External tools management")
+        @Tag(name = "Users", description = "User management"),
+        
+
     }
 )
 @SecuritySchemes({   

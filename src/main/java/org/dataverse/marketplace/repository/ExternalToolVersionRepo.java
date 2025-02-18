@@ -17,4 +17,7 @@ public interface ExternalToolVersionRepo extends JpaRepository<ExternalToolVersi
     @Query("SELECT e FROM ExternalToolVersion e WHERE e.mkItemId = ?1 AND e.id = ?2")
     public ExternalToolVersion findByMkItemIdAndId(Integer itemId, Integer id);
 
+    @Query("SELECT COUNT(e) FROM ExternalToolVersion e WHERE e.mkItemId = ?1")
+    public Integer getVersionCount(Integer itemId);
+
 }

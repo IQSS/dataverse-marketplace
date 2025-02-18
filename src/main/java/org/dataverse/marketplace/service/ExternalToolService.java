@@ -52,10 +52,6 @@ public class ExternalToolService {
         return externalToolManifestRepo.findByMkItemIdAndVersionId(toolId, versionId);
     }
 
-    public ExternalToolVersion updateToolVersion(ExternalToolVersion externalToolVersion) {
-        return externalToolVersionRepo.save(externalToolVersion);
-    }
-
     @Transactional
     public ExternalToolDTO addTool(AddToolRequest addToolRequest) throws IOException {
 

@@ -74,4 +74,21 @@ public class ResourceStorageService {
         throw new IllegalArgumentException("Unsupported storage type: " + storageType);
     }
 
+    /**
+     * This method deletes the content of a stored resource depending on the storage type.
+     */
+    public void deleteResourceContent(Long resourceId) throws IOException {
+        StoredResource storedResource = storedResourceRepo.findById(resourceId).orElse(null);
+        if(storedResource == null) {
+            throw new NoSuchFileException("File not found for resource id: " + resourceId);
+        }
+
+        if(storedResource.getType().getId() == StoredResourceStorageTypeEnum.DATABASE.getId()) {
+            databaseResourceStorageRepo.deleteById(resourceId);
+        } else if (storedResource.getType().getId() == StoredResourceStorageTypeEnum.FILESYSTEM.getId()) {
+            Path filePath = Paths.get(diskStoragePath, storedResource.getId().toString());
+            Files.delete(filePath);
+        }
+    }
+
 }
