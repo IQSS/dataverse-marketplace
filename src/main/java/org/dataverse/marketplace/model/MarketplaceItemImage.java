@@ -9,7 +9,6 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
-import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.SequenceGenerator;
@@ -35,7 +34,7 @@ public class MarketplaceItemImage {
     private String altText;
 
     @Column(name = "image_stored_resource_id")
-    private Long manifestStoredResourceId;
+    private Long imageStoredResourceId;
 
     @ManyToMany
     @JoinTable(
@@ -71,14 +70,14 @@ public class MarketplaceItemImage {
         this.altText = altText;
     }
 
-    public Long getManifestStoredResourceId() {
-        return this.manifestStoredResourceId;
+    public Long getImageStoredResourceId() {
+        return this.imageStoredResourceId;
     }
 
-    public void setManifestStoredResourceId(Long manifestStoredResourceId) {
-        this.manifestStoredResourceId = manifestStoredResourceId;
+    public void setImageStoredResourceId(Long imageStoredResourceId) {
+        this.imageStoredResourceId = imageStoredResourceId;
     }
-
+    
     public Set<ItemTag> getTags() {
         return this.tags;
     }

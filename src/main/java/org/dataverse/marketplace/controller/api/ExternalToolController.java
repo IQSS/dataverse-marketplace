@@ -15,6 +15,10 @@ import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 
 import io.swagger.v3.oas.annotations.Hidden;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.multipart.MultipartFile;
+
 
 @RestController
 @RequestMapping("/api/tools")
@@ -72,7 +76,7 @@ public class ExternalToolController {
         return ResponseEntity.ok(manifestStoredResourceId);
     }
 
-    @Hidden
+    
     @GetMapping("/{toolId}/images")
     public ResponseEntity<?> getToolImages(@PathVariable("toolId") Integer toolId) {
 
@@ -80,11 +84,50 @@ public class ExternalToolController {
 
         List<Long> imagesResourceId = new ArrayList<>();
         for (MarketplaceItemImage image : tool.getImages()) {
-            imagesResourceId.add(image.getManifestStoredResourceId());
+            imagesResourceId.add(image.getImageStoredResourceId());
         }
         
         return ResponseEntity.ok(imagesResourceId);
     }
+
+    
+    @PostMapping(path = "/{toolId}/images", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<?> addToolImages(@PathVariable("toolId") Integer toolId, 
+            @RequestBody List<MultipartFile> images) throws IOException {
+
+        ExternalTool tool = new ExternalTool();
+        tool.setId(toolId);
+
+        List<MarketplaceItemImage> mktImages = externalToolService.addItemImages(tool, images);
+
+        ArrayList<Long> imagesResourceId = new ArrayList<>();
+        
+        for(MarketplaceItemImage img : mktImages){
+            imagesResourceId.add(img.getImageStoredResourceId());
+        }            
+
+        return ResponseEntity.ok(imagesResourceId);
+    }
+
+    @DeleteMapping("/{toolId}/images/{imageId}")
+    public ResponseEntity<?> deleteToolImage(
+            @PathVariable("toolId") Integer toolId, 
+            @PathVariable("imageId") Long imageId) {
+
+        ExternalTool tool = externalToolService.getToolById(toolId);
+
+        if(tool == null){
+            ServerMessageResponse messageResponse = new ServerMessageResponse(HttpStatus.NOT_FOUND,
+                    "Resource not found",
+                    String.format("The requested external tool with ID %d was not found.", toolId));
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(messageResponse);
+        }
+
+        
+    }
+
+
+
 
 
 

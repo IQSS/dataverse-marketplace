@@ -40,19 +40,27 @@ public class ExternalToolVersionController {
     @Autowired
     private ExternalToolVersionService externalToolVersionService;
 
+    /**
+     * Method to retrieve a specific external tool version
+     */
     @Hidden
     @GetMapping("/{toolId}/versions/{versionId}")
     @ExternalToolVersionsAPIDocs.GetExternalToolVersionByIdDoc
-    public ResponseEntity<?> getVersionById(@PathVariable("toolId") Integer toolId,
+    public ResponseEntity<?> getVersionById(
+            @PathVariable("toolId") Integer toolId,
             @PathVariable("versionId") Integer versionId) {
 
         ExternalToolVersion version = externalToolService.getToolVersionById(toolId, versionId);
         return ResponseEntity.ok(new ExternalToolVersionDTO(version));
     }
 
+    /**
+     * Method to update a specific external tool version
+     */
     @PutMapping("/{toolId}/versions/{versionId}")
     @ExternalToolVersionsAPIDocs.UpdateVersionByIdDoc
-    public ResponseEntity<?> updateVersionById(@PathVariable("toolId") Integer toolId,
+    public ResponseEntity<?> updateVersionById(
+            @PathVariable("toolId") Integer toolId,
             @PathVariable("versionId") Integer versionId,
             @Valid @RequestBody ToolVersionMetadataUpdateRequest updateToolVersionRequest) {
 
@@ -68,11 +76,16 @@ public class ExternalToolVersionController {
         return ResponseEntity.ok(new ExternalToolVersionDTO(version));
     }
 
+    /**
+     * Method to delete a specific external tool version
+     */
     @Hidden
     @DeleteMapping("/{toolId}/versions/{versionId}")
     @ExternalToolVersionsAPIDocs.DeleteExternalToolVersionByIdDoc
-    public ResponseEntity<?> deleteVersionById(@PathVariable("toolId") Integer toolId,
+    public ResponseEntity<?> deleteVersionById(
+            @PathVariable("toolId") Integer toolId,
             @PathVariable("versionId") Integer versionId) {
+
         try{
             if (externalToolVersionService.getVersionCount(toolId) > 1) {
                 ExternalToolVersion version = externalToolService.getToolVersionById(toolId, versionId);
@@ -96,6 +109,9 @@ public class ExternalToolVersionController {
 
     }
 
+    /**
+     * Method to add a new version to an existing external tool
+     */
     @PostMapping(path = "/{toolId}/versions", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @ExternalToolVersionsAPIDocs.AddExternalToolVersionDoc
     public ResponseEntity<?> addNewExternalToolVersion(

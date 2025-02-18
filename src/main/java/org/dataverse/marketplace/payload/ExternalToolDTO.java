@@ -45,7 +45,7 @@ public class ExternalToolDTO {
 
         this.imagesResourceId = new ArrayList<>();
         for(MarketplaceItemImage image : externalTool.getImages()){
-            this.imagesResourceId.add(image.getManifestStoredResourceId());
+            this.imagesResourceId.add(image.getImageStoredResourceId());
         }
     }
 
