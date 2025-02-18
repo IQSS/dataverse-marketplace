@@ -18,6 +18,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import io.swagger.v3.oas.annotations.Hidden;
+
 
 
 
@@ -30,7 +32,7 @@ public class StoredResourceController {
     
     /**
      * Get a file from the storage service by its ID
-     */
+     */    
     @GetMapping()
     @ResourceStorageAPIDocs.GetStoredResources
     public ResponseEntity<?> getFile(@RequestParam Long storedResourceId) {

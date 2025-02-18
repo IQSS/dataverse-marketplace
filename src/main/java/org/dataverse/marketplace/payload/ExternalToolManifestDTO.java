@@ -1,7 +1,10 @@
 package org.dataverse.marketplace.payload;
 
+import org.dataverse.marketplace.model.ExternalToolManifest;
+
 import io.swagger.v3.oas.annotations.media.Schema;
 
+@Schema(description = "External tool manifest data transfer object")
 public class ExternalToolManifestDTO {
 
     @Schema(description = "The manifest ID", example = "1")
@@ -9,6 +12,14 @@ public class ExternalToolManifestDTO {
 
     @Schema(description = "The stored resource ID", example = "1")
     public Long storedResourceId;
+
+    public ExternalToolManifestDTO() {
+    }
+
+    public ExternalToolManifestDTO(ExternalToolManifest externalToolManifest) {
+        this.manifestId = externalToolManifest.getManifestId();
+        this.storedResourceId = externalToolManifest.getManifestStoredResourceId();
+    }
 
     /* Getters and Setters */
 

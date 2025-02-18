@@ -82,11 +82,11 @@ public class ExternalToolDTO {
         this.versions = versions;
     }
 
-    public List<Long> getImages() {
+    public List<Long> getImagesResourceId() {
         return this.imagesResourceId;
     }
 
-    public void setImages(List<Long> imagesResourceId) {
+    public void setImagesResourceId(List<Long> imagesResourceId) {
         this.imagesResourceId = imagesResourceId;
     }
 

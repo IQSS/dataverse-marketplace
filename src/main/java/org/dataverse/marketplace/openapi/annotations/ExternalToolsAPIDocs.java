@@ -53,7 +53,7 @@ public @interface ExternalToolsAPIDocs {
     })
     @Operation(summary = "Returns a list of all external tools",
                 description = "This endpoint will return a list of all external tools available in the marketplace.")
-    public @interface ExternalToolsList {}
+    public @interface ExternalToolsListDoc{}
 
     @Target({ElementType.METHOD})    
     @Retention(RetentionPolicy.RUNTIME)
@@ -87,7 +87,7 @@ public @interface ExternalToolsAPIDocs {
                 content = @Content(mediaType = "multipart/form-data",
                 schema = @Schema(implementation = AddToolRequest.class),
                 examples = @ExampleObject(ExternalToolSamples.EXTERNAL_TOOL_MULTIPART_FORM_SAMPLE)))
-    public @interface AddExternalToolsRequest {}
+    public @interface AddExternalToolsRequestDoc{}
 
     @Target({ElementType.METHOD})    
     @Retention(RetentionPolicy.RUNTIME)
@@ -121,8 +121,113 @@ public @interface ExternalToolsAPIDocs {
                 required = true,
                 in = ParameterIn.PATH,
                 schema = @Schema(type = "integer"))
-    public @interface GetExternalToolById{}
+    public @interface GetExternalToolByIdDoc{}
 
+    @Target({ElementType.METHOD})    
+    @Retention(RetentionPolicy.RUNTIME)
+    @Tag(name = "External Tools Images")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", 
+                        description = "External Tool Image Resource-IDs list successfully retrieved",
+                        content = @Content(mediaType = "application/json",
+                        schema = @Schema(implementation = Long[].class),
+                        examples = @ExampleObject("[1, 2, 3]"))),
+        @ApiResponse(responseCode = "400", 
+                        description = "Bad request on External Tool Image Resource-IDs list successfully retrieved",
+                        content = @Content(mediaType = "application/json",
+                        schema = @Schema(implementation = ServerMessageResponse.class),
+                        examples = @ExampleObject(GenericBusinessSamples.SERVER_MESSAGE_RESPONSE))),
+        @ApiResponse(responseCode = "401", 
+                        description = "Access Denied for External Tool Image Resource-IDs list successfully retrieved",
+                        content = @Content(mediaType = "application/json",
+                        schema = @Schema(implementation = ServerMessageResponse.class),
+                        examples = @ExampleObject(GenericBusinessSamples.SERVER_MESSAGE_RESPONSE))),
+        @ApiResponse(responseCode = "500", 
+                        description = "Internal Server Error during External Tool Image Resource-IDs list successfully retrieved",
+                        content = @Content(mediaType = "application/json",
+                        schema = @Schema(implementation = ServerMessageResponse.class),
+                        examples = @ExampleObject(GenericBusinessSamples.SERVER_MESSAGE_RESPONSE)))                        
+    })
+    @Operation(summary = "Retrieves the list of image resource-ids from the specified external tool.",
+                description = "This endpoint retrieves the list of image resource-ids from the specified external tool by id.")    
+    @Parameter(name = "toolId",
+                description = "The id of the external tool to retrieve the image resource-ids list",
+                required = true,
+                in = ParameterIn.PATH,
+                schema = @Schema(type = "integer"))    
+    public @interface GetToolImagesDoc{}
+
+    @Target({ElementType.METHOD})    
+    @Retention(RetentionPolicy.RUNTIME)
+    @Tag(name = "External Tools Images")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", 
+                        description = "External Tool Image successfully added",
+                        content = @Content(mediaType = "application/json",
+                        schema = @Schema(implementation = ServerMessageResponse.class),
+                        examples = @ExampleObject(GenericBusinessSamples.SERVER_MESSAGE_RESPONSE))),
+        @ApiResponse(responseCode = "400", 
+                        description = "Bad request on External Tool Image successfully added",
+                        content = @Content(mediaType = "application/json",
+                        schema = @Schema(implementation = ServerMessageResponse.class),
+                        examples = @ExampleObject(GenericBusinessSamples.SERVER_MESSAGE_RESPONSE))),
+        @ApiResponse(responseCode = "401", 
+                        description = "Access Denied for External Tool Image successfully added",
+                        content = @Content(mediaType = "application/json",
+                        schema = @Schema(implementation = ServerMessageResponse.class),
+                        examples = @ExampleObject(GenericBusinessSamples.SERVER_MESSAGE_RESPONSE))),
+        @ApiResponse(responseCode = "500", 
+                        description = "Internal Server Error during External Tool Image successfully added",
+                        content = @Content(mediaType = "application/json",
+                        schema = @Schema(implementation = ServerMessageResponse.class),
+                        examples = @ExampleObject(GenericBusinessSamples.SERVER_MESSAGE_RESPONSE)))                        
+    })
+    @Operation(summary = "Adds a new image to the specified external tool.",
+                description = "This endpoint adds a new image to the specified external tool by id.")    
+    @Parameter(name = "toolId",
+                description = "the id of the external tool to add the image",
+                required = true,
+                in = ParameterIn.PATH,
+                schema = @Schema(type = "integer"))
+    public @interface AddToolImagesDoc{}
     
+    @Target({ElementType.METHOD})    
+    @Retention(RetentionPolicy.RUNTIME)
+    @Tag(name = "External Tools Images")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", 
+                        description = "External Tool Image successfully deleted",
+                        content = @Content(mediaType = "application/json",
+                        schema = @Schema(implementation = ServerMessageResponse.class),
+                        examples = @ExampleObject(GenericBusinessSamples.SERVER_MESSAGE_RESPONSE))),
+        @ApiResponse(responseCode = "400", 
+                        description = "Bad request on External Tool Image successfully deleted",
+                        content = @Content(mediaType = "application/json",
+                        schema = @Schema(implementation = ServerMessageResponse.class),
+                        examples = @ExampleObject(GenericBusinessSamples.SERVER_MESSAGE_RESPONSE))),
+        @ApiResponse(responseCode = "401", 
+                        description = "Access Denied for External Tool Image successfully deleted",
+                        content = @Content(mediaType = "application/json",
+                        schema = @Schema(implementation = ServerMessageResponse.class),
+                        examples = @ExampleObject(GenericBusinessSamples.SERVER_MESSAGE_RESPONSE))),
+        @ApiResponse(responseCode = "500", 
+                        description = "Internal Server Error during External Tool Image successfully deleted",
+                        content = @Content(mediaType = "application/json",
+                        schema = @Schema(implementation = ServerMessageResponse.class),
+                        examples = @ExampleObject(GenericBusinessSamples.SERVER_MESSAGE_RESPONSE)))                        
+    })
+    @Operation(summary = "Deletes the specified external tool image.",
+                description = "This endpoint deletes the specified external tool image by id.")    
+    @Parameter(name = "toolId",
+                description = "The id of the external tool that contains the image to be deleted",
+                required = true,
+                in = ParameterIn.PATH,
+                schema = @Schema(type = "integer"))
+    @Parameter(name = "imageId",
+                description = "The id of the image to be deleted",
+                required = true,
+                in = ParameterIn.PATH,
+                schema = @Schema(type = "integer"))
+    public @interface DeleteToolImageDoc{}
 
 }

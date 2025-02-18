@@ -4,32 +4,17 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.dataverse.marketplace.model.ExternalTool;
-import org.dataverse.marketplace.model.ExternalToolManifest;
-import org.dataverse.marketplace.model.ExternalToolVersion;
-import org.dataverse.marketplace.model.VersionMetadata;
+import org.dataverse.marketplace.model.*;
 import org.dataverse.marketplace.openapi.annotations.ExternalToolVersionsAPIDocs;
-import org.dataverse.marketplace.payload.AddVersionRequest;
-import org.dataverse.marketplace.payload.ExternalToolVersionDTO;
-import org.dataverse.marketplace.payload.ServerMessageResponse;
-import org.dataverse.marketplace.payload.ToolVersionMetadataUpdateRequest;
+import org.dataverse.marketplace.payload.*;
 import org.dataverse.marketplace.service.ExternalToolService;
 import org.dataverse.marketplace.service.ExternalToolVersionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
-import io.swagger.v3.oas.annotations.Hidden;
 import jakarta.validation.Valid;
 
 @RestController
@@ -131,13 +116,12 @@ public class ExternalToolVersionController {
 
     /**
      * Method to retrieve all external tool versions     
-     */
-    @Hidden
+     */    
     @GetMapping("/{toolId}/versions")
     @ExternalToolVersionsAPIDocs.GetExternalToolVersionsByToolIdDoc
-    public ResponseEntity<?> getVersionsToolByToolId(@PathVariable("toolId") Integer toolId) {
+    public ResponseEntity<?> getVersionsToolByToolId(
+            @PathVariable("toolId") Integer toolId) {
 
-        
         ExternalTool tool = externalToolService.getToolById(toolId);
         if(tool == null){
             ServerMessageResponse messageResponse = new ServerMessageResponse(HttpStatus.NOT_FOUND,
@@ -153,11 +137,12 @@ public class ExternalToolVersionController {
         return ResponseEntity.ok(versions);
     }
 
+    @ExternalToolVersionsAPIDocs.AddVersionManifestDoc
     @PostMapping(path = "/{toolId}/versions/{versionId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> addVersionManifest(
             @PathVariable("toolId") Integer toolId,
             @PathVariable("versionId") Integer versionId,
-            @RequestBody List<MultipartFile> jsonData) throws IOException {
+            @RequestPart List<MultipartFile> jsonData) throws IOException {
         
         ExternalToolVersion version = externalToolService.getToolVersionById(toolId, versionId);
         externalToolVersionService.addVersionManifests(version, jsonData);
@@ -167,7 +152,23 @@ public class ExternalToolVersionController {
         
         return ResponseEntity.ok(messageResponse);
     }
+     
+    @GetMapping("/{toolId}/versions/{versionId}/manifests")
+    @ExternalToolVersionsAPIDocs.GetVersionManifestDoc
+    public ResponseEntity<?> getVersionManifestsById(
+        @PathVariable("toolId") Integer toolId,
+        @PathVariable("versionId") Integer versionId) {
 
+        List<ExternalToolManifest> manifests = externalToolService.getToolManifests(toolId, versionId);
+        List<ExternalToolManifestDTO> manifestStoredResourceId = new ArrayList<>();
+        for (ExternalToolManifest manifest : manifests) {
+            ExternalToolManifestDTO manifestDTO = new ExternalToolManifestDTO(manifest);
+            manifestStoredResourceId.add(manifestDTO);
+        }
+        return ResponseEntity.ok(manifestStoredResourceId);
+    }
+
+    @ExternalToolVersionsAPIDocs.DeleteVersionManifestDoc
     @DeleteMapping("/{toolId}/versions/{versionId}/manifests/{manifestId}")
     public ResponseEntity<?> deleteVersionManifest(
             @PathVariable("toolId") Integer toolId,
@@ -190,6 +191,8 @@ public class ExternalToolVersionController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(messageResponse);
         }
     }
+
+    
     
 
 }

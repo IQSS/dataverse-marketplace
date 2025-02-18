@@ -16,8 +16,7 @@ import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 
 import io.swagger.v3.oas.annotations.Hidden;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+
 import org.springframework.web.multipart.MultipartFile;
 
 
@@ -35,7 +34,7 @@ public class ExternalToolController {
      * Method to retrieve all external tools     
      */
     @GetMapping()
-    @ExternalToolsAPIDocs.ExternalToolsList
+    @ExternalToolsAPIDocs.ExternalToolsListDoc
     public ResponseEntity<?> getAllTools() {
 
         List<ExternalTool> tools = externalToolService.getAllTools();
@@ -48,40 +47,28 @@ public class ExternalToolController {
     }
 
     /**
+     * Method to add a new external tool
+     */
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @ExternalToolsAPIDocs.AddExternalToolsRequestDoc
+    public ResponseEntity<?> addNewTool(@Valid AddToolRequest addToolRequest) throws IOException{
+        return ResponseEntity.ok(externalToolService.addTool(addToolRequest));
+    }
+
+    /**
      * Method to retrieve all external tools     
      */
     @GetMapping("/{toolId}")
-    @ExternalToolsAPIDocs.GetExternalToolById
+    @ExternalToolsAPIDocs.GetExternalToolByIdDoc
     public ResponseEntity<?> getToolById(@PathVariable("toolId") Integer toolId) {
 
         ExternalTool tool = externalToolService.getToolById(toolId);
         return ResponseEntity.ok(new ExternalToolDTO(tool));
     }
 
-    /**
-     * Method to add a new external tool
-     */
-    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    @ExternalToolsAPIDocs.AddExternalToolsRequest   
-    public ResponseEntity<?> addNewTool(@Valid AddToolRequest addToolRequest) throws IOException{
-        return ResponseEntity.ok(externalToolService.addTool(addToolRequest));
-    }
-    
-    @Hidden
-    @GetMapping("/{toolId}/versions/{versionId}/manifests")
-    public ResponseEntity<?> getVersionManifestsById(@PathVariable("toolId") Integer toolId,
-            @PathVariable("versionId") Integer versionId) {
-
-        List<ExternalToolManifest> manifests = externalToolService.getToolManifests(toolId, versionId);
-        List<Long> manifestStoredResourceId = new ArrayList<>();
-        for (ExternalToolManifest manifest : manifests) {
-            manifestStoredResourceId.add(manifest.getManifestStoredResourceId());
-        }
-        return ResponseEntity.ok(manifestStoredResourceId);
-    }
-
-    
+   
     @GetMapping("/{toolId}/images")
+    @ExternalToolsAPIDocs.GetToolImagesDoc
     public ResponseEntity<?> getToolImages(@PathVariable("toolId") Integer toolId) {
 
         ExternalTool tool = externalToolService.getToolById(toolId);
@@ -96,6 +83,7 @@ public class ExternalToolController {
 
     
     @PostMapping(path = "/{toolId}/images", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @ExternalToolsAPIDocs.AddToolImagesDoc
     public ResponseEntity<?> addToolImages(
             @PathVariable("toolId") Integer toolId, 
             @RequestBody List<MultipartFile> images) throws IOException {
@@ -119,6 +107,7 @@ public class ExternalToolController {
     }
 
     @DeleteMapping("/{toolId}/images/{imageId}")
+    @ExternalToolsAPIDocs.DeleteToolImageDoc
     public ResponseEntity<?> deleteToolImage(
             @PathVariable("toolId") Integer toolId, 
             @PathVariable("imageId") Integer imageId) {
