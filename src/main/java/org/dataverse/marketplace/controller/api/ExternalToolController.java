@@ -123,7 +123,7 @@ public class ExternalToolController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(messageResponse);
         }
 
-        
+        return null;
     }
 
 
