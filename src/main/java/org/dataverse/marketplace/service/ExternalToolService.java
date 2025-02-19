@@ -9,6 +9,7 @@ import org.dataverse.marketplace.model.enums.StoredResourceStorageTypeEnum;
 import org.dataverse.marketplace.payload.*;
 import org.dataverse.marketplace.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -36,6 +37,7 @@ public class ExternalToolService {
     @Autowired
     private MarketplaceItemImageRepo marketplaceItemImageRepo;
     
+    @Cacheable(value = "externalTools", key = "#root.methodName")
     public List<ExternalTool> getAllTools() {
         return externalToolRepo.findAll();
     }

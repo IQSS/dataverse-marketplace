@@ -14,9 +14,6 @@ import org.dataverse.marketplace.service.ResourceStorageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
-
-import io.swagger.v3.oas.annotations.Hidden;
-
 import org.springframework.web.multipart.MultipartFile;
 
 
@@ -51,8 +48,15 @@ public class ExternalToolController {
      */
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @ExternalToolsAPIDocs.AddExternalToolsRequestDoc
-    public ResponseEntity<?> addNewTool(@Valid AddToolRequest addToolRequest) throws IOException{
-        return ResponseEntity.ok(externalToolService.addTool(addToolRequest));
+    public ResponseEntity<?> addNewTool(@Valid AddToolRequest addToolRequest) {
+        try {
+            return ResponseEntity.ok(externalToolService.addTool(addToolRequest));
+        } catch (IOException e) {
+            ServerMessageResponse messageResponse = new ServerMessageResponse(HttpStatus.INTERNAL_SERVER_ERROR,
+                    "Error adding tool",
+                    e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(messageResponse);
+        }
     }
 
     /**

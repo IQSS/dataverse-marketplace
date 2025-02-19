@@ -40,12 +40,14 @@ public class AddToolRequest {
     @NotEmpty
     private List<MultipartFile> jsonData;
 
-    @Schema(description = "Marketplace item image file", 
-        example = "[\"ask-the-data.png\"]",
+    @Schema(description = "Marketplace item image files", 
         type = "array",
+        
         contentMediaType = "application/octet-stream",
         implementation = MultipartFile[].class)
     private  List<MultipartFile> itemImages;
+
+    /* Getters and Setters */
 
     public String getName() {
         return this.name;
