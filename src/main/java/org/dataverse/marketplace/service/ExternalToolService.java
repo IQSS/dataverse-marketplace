@@ -73,7 +73,10 @@ public class ExternalToolService {
             externalToolVersionService.addToolVersion(addVersionRequest, newTool.getId());
         versions.add(newVersion);
         newTool.setExternalToolVersions(versions);
-        newTool.setImages(addItemImages(newTool, addToolRequest.getItemImages()));
+        if(addToolRequest.getItemImages() != null){
+            newTool.setImages(addItemImages(newTool, addToolRequest.getItemImages()));
+        }
+        
 
         return new ExternalToolDTO(newTool);
     }

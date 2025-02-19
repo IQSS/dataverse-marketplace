@@ -1,13 +1,17 @@
 package org.dataverse.marketplace.payload;
 
+import java.io.Serializable;
 import java.util.List;
+
 import org.springframework.web.multipart.MultipartFile;
+
+import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotEmpty;
 
 
 @Schema(description = "Request to add a new external tool")
-public class AddToolRequest {
+public class AddToolRequest implements Serializable{
 
     @Schema(description = "Name of the external tool", 
         example = "Ask the data")
@@ -33,18 +37,30 @@ public class AddToolRequest {
     private String dvMinVersion;
 
     @Schema(description = "Manifest files for the default versionof the new external tool", 
-        example = "[\"ask-the-data.json\"]",
         type = "array",
-        contentMediaType = "application/octet-stream",
+        contentMediaType = "multipart/form-data",
         implementation = MultipartFile[].class)
+    
+    @ArraySchema(
+        schema = @Schema(description = "Manifest files for the default versionof the new external tool", 
+            type = "array",
+            contentMediaType = "multipart/form-data",
+            implementation = MultipartFile.class,
+            nullable = false),
+        minItems = 1
+    )
     @NotEmpty
     private List<MultipartFile> jsonData;
 
-    @Schema(description = "Marketplace item image files", 
-        type = "array",
-        
-        contentMediaType = "application/octet-stream",
-        implementation = MultipartFile[].class)
+    @ArraySchema(
+        schema = @Schema(description = "Image files for the new external tool", 
+            type = "array",
+            contentMediaType = "multipart/form-data",
+            implementation = MultipartFile.class,
+            nullable = true,
+            defaultValue = "[]"),
+        minItems = 0
+    )
     private  List<MultipartFile> itemImages;
 
     /* Getters and Setters */

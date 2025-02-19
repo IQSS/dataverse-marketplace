@@ -1,5 +1,6 @@
 package org.dataverse.marketplace.payload;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import org.dataverse.marketplace.model.*;
@@ -9,7 +10,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 
 @Schema(description = "A representation of a version of an external tool", 
         name = "Version")
-public class ExternalToolVersionDTO {
+public class ExternalToolVersionDTO implements Serializable{
 
     @Schema(description = "The unique identifier of the external tool version", 
             example = "1")
@@ -31,6 +32,9 @@ public class ExternalToolVersionDTO {
             implementation = ExternalToolManifestDTO[].class,              
             example = ExternalToolVersionSamples.EXTERNAL_TOOL_VERSION_MANIFESTS_SAMPLE)
     private List<ExternalToolManifestDTO> manifests;
+
+    public ExternalToolVersionDTO() {
+    }
     
     public ExternalToolVersionDTO(ExternalToolVersion version) {
 

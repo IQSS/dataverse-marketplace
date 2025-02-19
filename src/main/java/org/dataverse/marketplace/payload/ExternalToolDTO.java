@@ -1,5 +1,6 @@
 package org.dataverse.marketplace.payload;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import org.dataverse.marketplace.model.*;
@@ -9,7 +10,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 
 @Schema(name = "ExternalTool",
         description = "A representation of an external tool")
-public class ExternalToolDTO {
+public class ExternalToolDTO implements Serializable {
 
     @Schema(description = "The unique identifier of the external tool", 
             example = "1")
@@ -32,6 +33,9 @@ public class ExternalToolDTO {
             example = "[1, 2, 3]")
     private List<Long> imagesResourceId;
 
+    public ExternalToolDTO() {
+    }
+
     public ExternalToolDTO(ExternalTool externalTool) {
         id = externalTool.getId();
         name = externalTool.getName();
@@ -43,9 +47,13 @@ public class ExternalToolDTO {
         }
 
         this.imagesResourceId = new ArrayList<>();
-        for(MarketplaceItemImage image : externalTool.getImages()){
-            this.imagesResourceId.add(image.getImageStoredResourceId());
+
+        if(externalTool.getImages() != null){
+            for(MarketplaceItemImage image : externalTool.getImages()){
+                this.imagesResourceId.add(image.getImageStoredResourceId());
+            }    
         }
+        
     }
 
     /* Getters and Setters */

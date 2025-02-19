@@ -49,6 +49,7 @@ public class ExternalToolController {
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @ExternalToolsAPIDocs.AddExternalToolsRequestDoc
     public ResponseEntity<?> addNewTool(@Valid AddToolRequest addToolRequest) {
+
         try {
             return ResponseEntity.ok(externalToolService.addTool(addToolRequest));
         } catch (IOException e) {
