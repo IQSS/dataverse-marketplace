@@ -41,4 +41,14 @@ public class ExternalToolManifestDTO implements Serializable {
         this.storedResourceId = storedResourceId;
     }
 
+
+    @Override
+    public String toString() {
+        return "{" +
+            " manifestId='" + getManifestId() + "'" +
+            ", storedResourceId='" + getStoredResourceId() + "'" +
+            "}";
+    }
+
+
 }

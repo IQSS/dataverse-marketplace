@@ -95,5 +95,18 @@ public class ExternalToolVersionDTO implements Serializable{
     public void setManifests(List<ExternalToolManifestDTO> manifests) {
         this.manifests = manifests;
     }
+
+
+    @Override
+    public String toString() {
+        return "{" +
+            " id='" + getId() + "'" +
+            ", version='" + getVersion() + "'" +
+            ", releaseNote='" + getReleaseNote() + "'" +
+            ", dataverseMinVersion='" + getDataverseMinVersion() + "'" +
+            ", manifests='" + getManifests() + "'" +
+            "}";
+    }
+
     
 }

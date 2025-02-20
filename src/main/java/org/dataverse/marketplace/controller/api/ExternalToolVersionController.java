@@ -7,12 +7,15 @@ import java.util.List;
 import org.dataverse.marketplace.model.*;
 import org.dataverse.marketplace.openapi.annotations.ExternalToolVersionsAPIDocs;
 import org.dataverse.marketplace.payload.*;
+import org.dataverse.marketplace.security.ApplicationRoles;
 import org.dataverse.marketplace.service.ExternalToolService;
 import org.dataverse.marketplace.service.ExternalToolVersionService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import jakarta.validation.Valid;
@@ -43,6 +46,8 @@ public class ExternalToolVersionController {
     /**
      * Method to update a specific external tool version
      */
+    @PreAuthorize(ApplicationRoles.ADMIN_ROLE)
+    @CacheEvict(value = "externalTools", allEntries = true)
     @PutMapping("/{toolId}/versions/{versionId}")
     @ExternalToolVersionsAPIDocs.UpdateVersionByIdDoc
     public ResponseEntity<?> updateVersionById(
@@ -65,6 +70,8 @@ public class ExternalToolVersionController {
     /**
      * Method to delete a specific external tool version
      */
+    @PreAuthorize(ApplicationRoles.ADMIN_ROLE)
+    @CacheEvict(value = "externalTools", allEntries = true)
     @DeleteMapping("/{toolId}/versions/{versionId}")
     @ExternalToolVersionsAPIDocs.DeleteExternalToolVersionByIdDoc
     public ResponseEntity<?> deleteVersionById(
@@ -97,6 +104,8 @@ public class ExternalToolVersionController {
     /**
      * Method to add a new version to an existing external tool
      */
+    @PreAuthorize(ApplicationRoles.ADMIN_ROLE)
+    @CacheEvict(value = "externalTools", allEntries = true)
     @PostMapping(path = "/{toolId}/versions", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @ExternalToolVersionsAPIDocs.AddExternalToolVersionDoc
     public ResponseEntity<?> addNewExternalToolVersion(
@@ -116,7 +125,7 @@ public class ExternalToolVersionController {
 
     /**
      * Method to retrieve all external tool versions     
-     */    
+     */ 
     @GetMapping("/{toolId}/versions")
     @ExternalToolVersionsAPIDocs.GetExternalToolVersionsByToolIdDoc
     public ResponseEntity<?> getVersionsToolByToolId(
@@ -137,6 +146,11 @@ public class ExternalToolVersionController {
         return ResponseEntity.ok(versions);
     }
 
+    /**
+     * Method to add manifests to an existing external tool version
+     */
+    @PreAuthorize(ApplicationRoles.ADMIN_ROLE)
+    @CacheEvict(value = "externalTools", allEntries = true)
     @ExternalToolVersionsAPIDocs.AddVersionManifestDoc
     @PostMapping(path = "/{toolId}/versions/{versionId}/manifests", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> addVersionManifest(
@@ -152,7 +166,10 @@ public class ExternalToolVersionController {
         
         return ResponseEntity.ok(messageResponse);
     }
-     
+    
+    /**
+     * Method to retrieve all manifests of an external tool version
+     */
     @GetMapping("/{toolId}/versions/{versionId}/manifests")
     @ExternalToolVersionsAPIDocs.GetVersionManifestDoc
     public ResponseEntity<?> getVersionManifestsById(
@@ -168,6 +185,11 @@ public class ExternalToolVersionController {
         return ResponseEntity.ok(manifestStoredResourceId);
     }
 
+    /**
+     * Method to delete a specific manifest of an external tool version
+     */
+    @PreAuthorize(ApplicationRoles.ADMIN_ROLE)
+    @CacheEvict(value = "externalTools", allEntries = true)
     @ExternalToolVersionsAPIDocs.DeleteVersionManifestDoc
     @DeleteMapping("/{toolId}/versions/{versionId}/manifests/{manifestId}")
     public ResponseEntity<?> deleteVersionManifest(
@@ -191,8 +213,5 @@ public class ExternalToolVersionController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(messageResponse);
         }
     }
-
-    
-    
 
 }
