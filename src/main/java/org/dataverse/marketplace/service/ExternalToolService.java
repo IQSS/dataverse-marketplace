@@ -9,11 +9,10 @@ import org.dataverse.marketplace.model.enums.StoredResourceStorageTypeEnum;
 import org.dataverse.marketplace.payload.*;
 import org.dataverse.marketplace.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-
-import com.fasterxml.jackson.databind.*;
 import jakarta.transaction.Transactional;
 
 @Service
@@ -38,8 +37,13 @@ public class ExternalToolService {
     private MarketplaceItemImageRepo marketplaceItemImageRepo;
     
     @Cacheable(value = "externalTools", key = "#root.methodName")
-    public List<ExternalTool> getAllTools() {
-        return externalToolRepo.findAll();
+    public List<ExternalToolDTO> getAllTools() {
+        List<ExternalTool> tools = externalToolRepo.findAll();
+        ArrayList<ExternalToolDTO> toolDTOs = new ArrayList<>();
+        for (ExternalTool tool : tools) {
+            toolDTOs.add(new ExternalToolDTO(tool));
+        }
+        return toolDTOs;
     }
 
     public ExternalTool getToolById(Integer toolId) {
@@ -54,6 +58,7 @@ public class ExternalToolService {
         return externalToolManifestRepo.findByMkItemIdAndVersionId(toolId, versionId);
     }
 
+    @CacheEvict(value = "externalTools", allEntries = true)
     @Transactional
     public ExternalToolDTO addTool(AddToolRequest addToolRequest) throws IOException {
 
@@ -81,6 +86,7 @@ public class ExternalToolService {
         return new ExternalToolDTO(newTool);
     }
 
+    @CacheEvict(value = "externalTools", allEntries = true)
     @Transactional
     public List<MarketplaceItemImage> addItemImages(MarketplaceItem item, List<MultipartFile> images) throws IOException {
 
@@ -101,6 +107,8 @@ public class ExternalToolService {
             marketplaceItemImageRepo.save(newImage);
             newImages.add(newImage);
         }
+
+        
         return newImages;
     }
 
@@ -108,10 +116,9 @@ public class ExternalToolService {
         return marketplaceItemImageRepo.findByMarketplaceItemId(imageId, marketplaceItemId);
     }
 
+    @CacheEvict(value = "externalTools", allEntries = true)
     public void deleteToolImage(MarketplaceItemImage image) {
         marketplaceItemImageRepo.delete(image);
     }
-
-    
 
 }

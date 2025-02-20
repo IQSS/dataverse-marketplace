@@ -36,11 +36,6 @@ public class AddToolRequest implements Serializable{
     @NotEmpty
     private String dvMinVersion;
 
-    @Schema(description = "Manifest files for the default versionof the new external tool", 
-        type = "array",
-        contentMediaType = "multipart/form-data",
-        implementation = MultipartFile[].class)
-    
     @ArraySchema(
         schema = @Schema(description = "Manifest files for the default versionof the new external tool", 
             type = "array",

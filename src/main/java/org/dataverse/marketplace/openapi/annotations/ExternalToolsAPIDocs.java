@@ -8,6 +8,7 @@ import java.lang.annotation.Target;
 import org.dataverse.marketplace.openapi.samples.GenericBusinessSamples;
 import org.dataverse.marketplace.payload.AddToolRequest;
 import org.dataverse.marketplace.payload.ExternalToolDTO;
+import org.dataverse.marketplace.payload.MarketplaceItemImageDTO;
 import org.dataverse.marketplace.payload.ServerMessageResponse;
 import org.dataverse.marketplace.payload.auth.UserDTO;
 import org.dataverse.marketplace.openapi.samples.AuthAPISamples;
@@ -164,8 +165,8 @@ public @interface ExternalToolsAPIDocs {
         @ApiResponse(responseCode = "200", 
                         description = "External Tool Image successfully added",
                         content = @Content(mediaType = "application/json",
-                        schema = @Schema(implementation = ServerMessageResponse.class),
-                        examples = @ExampleObject(GenericBusinessSamples.SERVER_MESSAGE_RESPONSE))),
+                        schema = @Schema(implementation = MarketplaceItemImageDTO.class),
+                        examples = @ExampleObject(ExternalToolSamples.EXTERNAL_TOOL_IMAGE_SAMPLE))),
         @ApiResponse(responseCode = "400", 
                         description = "Bad request on External Tool Image successfully added",
                         content = @Content(mediaType = "application/json",

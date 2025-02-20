@@ -12,6 +12,7 @@ import org.dataverse.marketplace.payload.AddToolRequest;
 import org.dataverse.marketplace.payload.AddVersionRequest;
 import org.dataverse.marketplace.payload.ExternalToolDTO;
 import org.dataverse.marketplace.payload.ExternalToolManifestDTO;
+import org.dataverse.marketplace.payload.ExternalToolVersionDTO;
 import org.dataverse.marketplace.payload.ServerMessageResponse;
 import org.dataverse.marketplace.payload.ToolVersionMetadataUpdateRequest;
 import org.springframework.web.multipart.MultipartFile;
@@ -196,8 +197,8 @@ public @interface ExternalToolVersionsAPIDocs {
         @ApiResponse(responseCode = "200", 
                         description = "All versions of the external tool successfully retrieved",
                         content = @Content(mediaType = "application/json",
-                        schema = @Schema(implementation = ServerMessageResponse.class),
-                        examples = @ExampleObject(GenericBusinessSamples.SERVER_MESSAGE_RESPONSE))),
+                        schema = @Schema(implementation = ExternalToolVersionDTO[].class),
+                        examples = @ExampleObject(ExternalToolVersionSamples.EXTERNAL_TOOL_VERSIONS_LIST_SAMPLE))),
         @ApiResponse(responseCode = "400", 
                         description = "Bad request on all versions retrieval",
                         content = @Content(mediaType = "application/json",

@@ -138,7 +138,7 @@ public class ExternalToolVersionController {
     }
 
     @ExternalToolVersionsAPIDocs.AddVersionManifestDoc
-    @PostMapping(path = "/{toolId}/versions/{versionId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping(path = "/{toolId}/versions/{versionId}/manifests", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> addVersionManifest(
             @PathVariable("toolId") Integer toolId,
             @PathVariable("versionId") Integer versionId,

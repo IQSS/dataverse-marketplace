@@ -10,7 +10,7 @@ import jakarta.persistence.*;
 @Table(name = "external_tool_version", uniqueConstraints = {
         @UniqueConstraint(columnNames = { "id", "mkt_item_id" })
 })
-public class ExternalToolVersion {
+public class ExternalToolVersion implements Serializable {
 
     @Id
     Integer id;

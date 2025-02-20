@@ -3,14 +3,20 @@ package org.dataverse.marketplace.openapi.samples;
 public class ExternalToolVersionSamples {
 
     public static final String EXTERNAL_TOOL_VERSIONS_LIST_SAMPLE = """
-            [{
-                "version": "1.0",
-                "releaseNote": "RELEASE_NOTE",
-                "dataverseMinVersion": "6.0",
-                "manifestStoredResourceId": [
-                    1
-                ]
-            }]
+            [
+                {
+                    "id": 1,
+                    "version": "1",
+                    "releaseNote": "This release includes a new feature that allows you to ask questions to an LLM.",
+                    "dataverseMinVersion": "6",
+                    "manifests": [
+                    {
+                        "manifestId": 2,
+                        "storedResourceId": 6
+                    }
+                    ]
+                }
+            ]
             """;
 
     public static final String EXTERNAL_TOOL_VERSION_REQUEST_SAMPLE = """

@@ -44,4 +44,13 @@ public abstract class ExternalToolSamples {
             }
             """;
 
+    public static final String EXTERNAL_TOOL_IMAGE_SAMPLE = """
+            [
+                {
+                    "imageId": 2,
+                    "storedResourceId": 5
+                }
+            ]
+            """;
+
 }

@@ -1,11 +1,13 @@
 package org.dataverse.marketplace.payload;
 
+import java.io.Serializable;
+
 import org.dataverse.marketplace.model.ExternalToolManifest;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 
 @Schema(description = "External tool manifest data transfer object")
-public class ExternalToolManifestDTO {
+public class ExternalToolManifestDTO implements Serializable {
 
     @Schema(description = "The manifest ID", example = "1")
     public Integer manifestId;
