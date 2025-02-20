@@ -1,7 +1,5 @@
 package org.dataverse.marketplace.model;
 
-import java.util.Set;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -28,9 +26,6 @@ public class MarketplaceItemImage {
     @JoinColumn(name = "mkt_item_id")
     private MarketplaceItem marketplaceItem;
 
-    @Column(name = "alt_text")
-    private String altText;
-
     @Column(name = "image_stored_resource_id")
     private Long imageStoredResourceId;
 
@@ -50,14 +45,6 @@ public class MarketplaceItemImage {
 
     public void setMarketplaceItem(MarketplaceItem marketplaceItem) {
         this.marketplaceItem = marketplaceItem;
-    }
-
-    public String getAltText() {
-        return this.altText;
-    }
-
-    public void setAltText(String altText) {
-        this.altText = altText;
     }
 
     public Long getImageStoredResourceId() {

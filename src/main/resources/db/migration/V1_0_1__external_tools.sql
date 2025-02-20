@@ -61,7 +61,6 @@ CREATE TABLE IF NOT EXISTS stored_resource (
 CREATE TABLE IF NOT EXISTS marketplace_item_image (
     id integer NOT NULL PRIMARY KEY,
     mkt_item_id integer NOT NULL,
-    alt_text varchar NOT NULL,
     image_stored_resource_id bigint NOT NULL,
     CONSTRAINT fk_item FOREIGN KEY (mkt_item_id) REFERENCES marketplace_item (id),
     CONSTRAINT fk_image FOREIGN KEY (image_stored_resource_id) REFERENCES stored_resource (id)
