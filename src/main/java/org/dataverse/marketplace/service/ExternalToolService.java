@@ -102,8 +102,6 @@ public class ExternalToolService {
             
             newImage.setMarketplaceItem(item);
             newImage.setImageStoredResourceId(storedResourceId);
-            newImage.setAltText(image.getOriginalFilename());
-
             marketplaceItemImageRepo.save(newImage);
             newImages.add(newImage);
         }
