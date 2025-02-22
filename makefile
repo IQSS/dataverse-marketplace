@@ -12,7 +12,10 @@ make boot-b:
 	mvn spring-boot:run
 
 make run:
+	cd dv-marketplace/docker-dev && docker build -t mkt-proxy . && docker run -d -p 8081:8081 --name mkt-proxy mkt-proxy & \
+	cd dv-marketplace && npm run dev & \
 	mvn -Pct clean package -DskipTests=true docker:build docker:run
+	
 
 make build:
 	cd dv-marketplace && npm run build && cd -

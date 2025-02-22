@@ -12,3 +12,13 @@ code {
 	font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
 		monospace;
 }
+
+#loginButton {
+	background-color: #c55b28;
+    color: white;
+    padding: 0rem 1rem;
+    border-radius: 0.5rem;
+    border: 1px solid lightgray;
+    margin-bottom: 1rem;
+    margin-left: 1rem;
+}

@@ -6,6 +6,7 @@ import ErrorView from './components/ErrorView.tsx';
 
 import 'bootstrap-icons/font/bootstrap-icons.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import './assets/css/index.css';
 
 import Install from './components/Install.tsx';
 import Marketplace from './components/Marketplace.tsx';
