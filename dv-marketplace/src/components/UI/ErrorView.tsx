@@ -5,7 +5,7 @@ const ErrorView = ({ error, resetErrorBoundary }: { error: Error; resetErrorBoun
             <div role="alert">
                 <p>Something went wrong:</p>
                 <pre>{error.message}</pre>
-                <button onClick={resetErrorBoundary}>Try again</button>
+                <button type="button" onClick={resetErrorBoundary}>Try again</button>
             </div>
         </div>
     );
