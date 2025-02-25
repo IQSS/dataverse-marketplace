@@ -9,18 +9,11 @@ const ExternalToolCardDeck = () => {
 
 
     return (
-        <div className="container mt-3">
-          
+        <div className="container-fluid">
             <div className='row justify-content-center'>
-            <div className="col-12 col-md-10 col-lg-8">
-                <div className="row">
-
-                {tools.map(tool => (
-                    <ExternalToolCard key={tool.id} tool={tool} />
-                ))}
-
-                </div>
-                </div>
+                    {tools.map(tool => (
+                        <ExternalToolCard key={tool.id} tool={tool} />
+                    ))}
             </div>
         </div>
     );

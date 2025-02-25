@@ -4,7 +4,7 @@ import ExternalToolCardDeck from "./ExternalToolCardDeck";
 function MarketplaceHome () {
     
     return (<>
-        <ControlledCarousel/>
+        
         <ExternalToolCardDeck />
         </>
     );
