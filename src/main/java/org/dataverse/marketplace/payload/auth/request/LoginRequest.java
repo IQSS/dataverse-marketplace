@@ -16,7 +16,7 @@ public class LoginRequest {
     private String username;
 
     @NotBlank
-    @Size(min = 6)
+    @Size(min = 5)
     @Schema(description = "The password of the user to be logged in.", example = "password")
     private String password;
 

@@ -42,7 +42,7 @@ public class LoginAndAuthTest {
 
         serverUrl = "http://localhost:" + port + "/api"; 
 
-        JwtResponse adminLogin = testLogin("admin", "admin");
+        JwtResponse adminLogin = testLogin("admin", "admin", restTemplate, serverUrl);
         assertNotNull(adminLogin);
 
         //Headers for admin
@@ -51,7 +51,7 @@ public class LoginAndAuthTest {
         
         //Test for unexisting user
         assertThrows(HttpClientErrorException.Unauthorized.class, () -> {
-            testLogin("testuser", "testuser");
+            testLogin("testuser", "testuser", restTemplate, serverUrl);
         });
         
         //Test for user creation
@@ -68,7 +68,7 @@ public class LoginAndAuthTest {
             restTemplate.exchange(serverUrl + "/auth/signup", HttpMethod.POST, signupEntity, String.class);
         });
        
-        JwtResponse testUserLogin = testLogin("testuser" + randomNumber, "testuser");
+        JwtResponse testUserLogin = testLogin("testuser" + randomNumber, "testuser", restTemplate, serverUrl);
         assertNotNull(testUserLogin);
 
         //Headers for test user
@@ -134,7 +134,7 @@ public class LoginAndAuthTest {
         assertDoesNotThrow(() -> {
             
             JwtResponse testUserLoginNewPass =
-                testLogin("testuser" + randomNumber, "newpassword");
+                testLogin("testuser" + randomNumber, "newpassword", restTemplate, serverUrl);
             List<String> testUserRoles = testUserLoginNewPass.getRoles();
 
             HttpEntity<String> adminRequest = new HttpEntity<>(adminHeaders);
@@ -171,7 +171,10 @@ public class LoginAndAuthTest {
         
     }
 
-    private JwtResponse testLogin(String username, String password){
+    public static JwtResponse testLogin(String username, 
+                    String password, 
+                    RestTemplate restTemplate,
+                    String serverUrl) {
         LoginRequest loginRequest = new LoginRequest();
         loginRequest.setUsername(username);
         loginRequest.setPassword(password);

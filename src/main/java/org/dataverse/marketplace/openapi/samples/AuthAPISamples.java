@@ -17,8 +17,8 @@ public abstract class AuthAPISamples {
 
     public static final String LOGIN_REQUEST = """
         {
-            "username": "username",
-            "password": "password"
+            "username": "admin",
+            "password": "admin"
         }
         """;
 
