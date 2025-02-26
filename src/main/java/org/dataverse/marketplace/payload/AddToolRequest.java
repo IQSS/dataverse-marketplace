@@ -46,15 +46,6 @@ public class AddToolRequest implements Serializable{
     @NotEmpty
     private List<MultipartFile> jsonData;
 
-    // @ArraySchema(
-    //     schema = @Schema(description = "Image files for the new external tool", 
-    //         type = "array",
-    //         contentMediaType = "multipart/form-data",
-    //         implementation = MultipartFile.class,
-    //         nullable = true,
-    //         defaultValue = "[]"),
-    //     minItems = 0
-    // )
     @Schema(description = "Image files for the new external tool", 
             type = "array",
             contentMediaType = "multipart/form-data",
