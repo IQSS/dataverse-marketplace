@@ -49,5 +49,6 @@
     "extends": [
       "plugin:storybook/recommended"
     ]
-  }
+  }, 
+  "homepage": "./"
 }

@@ -13,6 +13,7 @@ import org.springframework.core.io.Resource;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -49,11 +50,11 @@ public @interface ResourceStorageAPIDocs {
     })
     @Operation(summary = "Retrieves a stored resource by its ID",
                 description = "This endpoint will retrieve a stored resource file from the storage system.")
-    @Parameter(name = "storedResourceId", 
-                description = "The id from the stored resource", 
-                required = true, 
-                schema = @Schema(implementation = Long.class),
-                examples = @ExampleObject(value = "1"))
+    @Parameter(name = "storedResourceId",
+                description = "The id from the stored resource",
+                required = true,
+                in = ParameterIn.PATH,
+                schema = @Schema(type = "integer"))
     public @interface GetStoredResources {}
 
 }
