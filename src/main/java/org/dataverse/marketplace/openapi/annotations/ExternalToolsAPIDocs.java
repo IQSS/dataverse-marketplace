@@ -10,6 +10,7 @@ import org.dataverse.marketplace.payload.AddToolRequest;
 import org.dataverse.marketplace.payload.ExternalToolDTO;
 import org.dataverse.marketplace.payload.MarketplaceItemImageDTO;
 import org.dataverse.marketplace.payload.ServerMessageResponse;
+import org.dataverse.marketplace.payload.UpdateToolRequest;
 import org.dataverse.marketplace.payload.auth.UserDTO;
 import org.dataverse.marketplace.openapi.samples.AuthAPISamples;
 import org.dataverse.marketplace.openapi.samples.ExternalToolSamples;
@@ -190,6 +191,10 @@ public @interface ExternalToolsAPIDocs {
                 required = true,
                 in = ParameterIn.PATH,
                 schema = @Schema(type = "integer"))
+    @RequestBody(description = "The image to be added to the external tool",
+                required = true,
+                content = @Content(mediaType = "multipart/form-data",
+                schema = @Schema(type = "string", format = "binary")))
     public @interface AddToolImagesDoc{}
     
     @Target({ElementType.METHOD})    
@@ -230,5 +235,44 @@ public @interface ExternalToolsAPIDocs {
                 in = ParameterIn.PATH,
                 schema = @Schema(type = "integer"))
     public @interface DeleteToolImageDoc{}
+
+    @Target({ElementType.METHOD})    
+    @Retention(RetentionPolicy.RUNTIME)
+    @Tag(name = "External Tools")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", 
+                        description = "External Tool successfully updated",
+                        content = @Content(mediaType = "application/json",
+                        schema = @Schema(implementation = ServerMessageResponse.class),
+                        examples = @ExampleObject(GenericBusinessSamples.SERVER_MESSAGE_RESPONSE))),
+        @ApiResponse(responseCode = "400", 
+                        description = "Bad request on External Tool update",
+                        content = @Content(mediaType = "application/json",
+                        schema = @Schema(implementation = ServerMessageResponse.class),
+                        examples = @ExampleObject(GenericBusinessSamples.SERVER_MESSAGE_RESPONSE))),
+        @ApiResponse(responseCode = "401", 
+                        description = "Access Denied for External Tool update",
+                        content = @Content(mediaType = "application/json",
+                        schema = @Schema(implementation = ServerMessageResponse.class),
+                        examples = @ExampleObject(GenericBusinessSamples.SERVER_MESSAGE_RESPONSE))),
+        @ApiResponse(responseCode = "500", 
+                        description = "Internal Server Error during External Tool update",
+                        content = @Content(mediaType = "application/json",
+                        schema = @Schema(implementation = ServerMessageResponse.class),
+                        examples = @ExampleObject(GenericBusinessSamples.SERVER_MESSAGE_RESPONSE)))                        
+    })
+    @Operation(summary = "Update the specified external tool.",
+                description = "This endpoint updates the specified external tool.")
+    @Parameter(name = "toolId",
+                description = "The id of the external tool that contains the image to be updated",
+                required = true,
+                in = ParameterIn.PATH,
+                schema = @Schema(type = "integer"))
+    @RequestBody(description = "The external tool update request", 
+                required = true, 
+                content = @Content(mediaType = "application/json",
+                schema = @Schema(implementation = UpdateToolRequest.class),
+                examples = @ExampleObject(ExternalToolSamples.UPDATE_EXTERNAL_TOOL_REQUEST)))
+    public @interface UpdateExternalToolDoc{}
 
 }
