@@ -31,9 +31,9 @@ public class StoredResourceController {
     /**
      * Get a file from the storage service by its ID
      */    
-    @GetMapping("/{resourceId}")
+    @GetMapping("/{storedResourceId}")
     @ResourceStorageAPIDocs.GetStoredResources
-    public ResponseEntity<?> getFile(@PathVariable("resourceId") Long storedResourceId) {
+    public ResponseEntity<?> getFile(@PathVariable("storedResourceId") Long storedResourceId) {
         
         try {
             StoredResource storedResource = resourceStorageService.getStoredResourceById(storedResourceId);
