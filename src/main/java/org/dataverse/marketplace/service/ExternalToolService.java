@@ -86,6 +86,14 @@ public class ExternalToolService {
         return new ExternalToolDTO(newTool);
     }
 
+    public ExternalTool updateTool(ExternalTool tool, UpdateToolRequest updateToolRequest) {
+       
+        tool.setName(updateToolRequest.getName());
+        tool.setDescription(updateToolRequest.getDescription());
+        externalToolRepo.save(tool);
+        return tool;
+    }
+
     @CacheEvict(value = "externalTools", allEntries = true)
     @Transactional
     public List<MarketplaceItemImage> addItemImages(MarketplaceItem item, List<MultipartFile> images) throws IOException {

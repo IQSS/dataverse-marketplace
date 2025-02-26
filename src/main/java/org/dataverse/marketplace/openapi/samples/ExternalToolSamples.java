@@ -40,17 +40,31 @@ public abstract class ExternalToolSamples {
                 "description": "Ask the Data is an experimental tool that allows you ask natural language questions about the data contained in Dataverse.",
                 "releaseNote": "This release includes a new feature that allows you to ask questions to an LLM.",
                 "version": "1.0",
-                "dvMinVersion": "6.0"
+                "dvMinVersion": "6.0",
+                "jsonData": [
+                    "file.json"
+                ],
+                "images": [
+                    "file.png"
+                ]
             }
             """;
 
+    public static final String EXTERNAL_TOOL_IMAGE_SAMPLE_ARR = 
+        "[" + ExternalToolSamples.EXTERNAL_TOOL_IMAGE_SAMPLE + ']';
+
     public static final String EXTERNAL_TOOL_IMAGE_SAMPLE = """
-            [
-                {
-                    "imageId": 2,
-                    "storedResourceId": 5
-                }
-            ]
+            {
+                "imageId": 2,
+                "storedResourceId": 5
+            }
             """;
+    public static final String UPDATE_EXTERNAL_TOOL_REQUEST = """
+            {
+                "name": "Ask the data",
+                "description": "As the data is..."
+            }
+            """;
+
 
 }

@@ -12,7 +12,7 @@ public class ExternalToolManifestDTO implements Serializable {
     @Schema(description = "The manifest ID", example = "1")
     public Integer manifestId;
 
-    @Schema(description = "The stored resource ID", example = "1")
+    @Schema(description = "The manifest's stored resource ID", example = "1")
     public Long storedResourceId;
 
     public ExternalToolManifestDTO() {

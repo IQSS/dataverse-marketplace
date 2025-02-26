@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.web.multipart.MultipartFile;
 
 import io.swagger.v3.oas.annotations.media.ArraySchema;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotEmpty;
 
@@ -36,26 +37,31 @@ public class AddToolRequest implements Serializable{
     @NotEmpty
     private String dvMinVersion;
 
-    @ArraySchema(
-        schema = @Schema(description = "Manifest files for the default versionof the new external tool", 
+    @Schema(description = "Manifest files for the default versionof the new external tool", 
             type = "array",
             contentMediaType = "multipart/form-data",
-            implementation = MultipartFile.class,
-            nullable = false),
-        minItems = 1
-    )
+            implementation = MultipartFile[].class,
+            nullable = false,
+            example = "[\"file.json\"]")
     @NotEmpty
     private List<MultipartFile> jsonData;
 
-    @ArraySchema(
-        schema = @Schema(description = "Image files for the new external tool", 
+    // @ArraySchema(
+    //     schema = @Schema(description = "Image files for the new external tool", 
+    //         type = "array",
+    //         contentMediaType = "multipart/form-data",
+    //         implementation = MultipartFile.class,
+    //         nullable = true,
+    //         defaultValue = "[]"),
+    //     minItems = 0
+    // )
+    @Schema(description = "Image files for the new external tool", 
             type = "array",
             contentMediaType = "multipart/form-data",
-            implementation = MultipartFile.class,
+            implementation = MultipartFile[].class,
             nullable = true,
-            defaultValue = "[]"),
-        minItems = 0
-    )
+            defaultValue = "[]",
+            example = "[\"image1.png\", \"image2.png\"]")
     private  List<MultipartFile> itemImages;
 
     /* Getters and Setters */

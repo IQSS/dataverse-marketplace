@@ -69,6 +69,35 @@ public class ExternalToolController {
         return ResponseEntity.ok(new ExternalToolDTO(tool));
     }
 
+    @PreAuthorize(ApplicationRoles.ADMIN_ROLE)
+    @PutMapping("/{toolId}")
+    @ExternalToolsAPIDocs.UpdateExternalToolDoc
+    public ResponseEntity<?> updateTool(@PathVariable("toolId") Integer toolId, @Valid UpdateToolRequest updateToolRequest) {
+
+        ExternalTool tool = externalToolService.getToolById(toolId);
+
+        if(tool == null){
+            ServerMessageResponse messageResponse = new ServerMessageResponse(HttpStatus.NOT_FOUND,
+                    "Resource not found",
+                    String.format("The requested external tool with ID %d was not found.", toolId));
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(messageResponse);
+        }
+
+        try {
+            ServerMessageResponse messageResponse = new ServerMessageResponse(HttpStatus.OK,
+                    "Tool updated",
+                    String.format("The tool with ID %d was updated.", toolId));
+            externalToolService.updateTool(tool, updateToolRequest);
+            return ResponseEntity.ok(messageResponse);
+        } catch (Exception e) {
+            ServerMessageResponse messageResponse 
+                = new ServerMessageResponse(HttpStatus.INTERNAL_SERVER_ERROR,
+                                            "Error updating tool",
+                                            e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(messageResponse);
+        }
+    }
+
    
     /**
      * Method to retrieve the images of an external tool.
