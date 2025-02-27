@@ -1,4 +1,3 @@
-import { MutableRefObject } from "react";
 
 export interface Version {
   id: number;
@@ -11,12 +10,17 @@ export interface Version {
   }[];
 }
 
+export interface Image {
+  id: number;
+  storedResourceId: number;
+}
+
 export interface ExternalTool {
   id: number;
   name: string;
   description: string;
   versions: Version[];
-  imagesResourceId: number[];
+  images: Image[];
 }
 
 export type User = {

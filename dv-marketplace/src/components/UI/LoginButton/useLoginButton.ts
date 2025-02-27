@@ -11,7 +11,7 @@ export default function useLoginButton() {
     }, [userContext.user]);
 
     const handleLogButton = () => {
-        userContext.user === null ? userContext.setShow(true) : userContext.setUser(null);
+        userContext.user === null ? userContext.setShowLogin(true) : userContext.setUser(null);
     };
 
     return {

@@ -13,7 +13,7 @@ const LoginForm = () => {
 	} = useLoginCustomForm();
 
 	return (
-		<Modal show={userContext.show} onHide={handleClose}>
+		<Modal show={userContext.showLogin} onHide={handleClose}>
 			<Modal.Header closeButton>
 				<Modal.Title>Login</Modal.Title>
 			</Modal.Header>

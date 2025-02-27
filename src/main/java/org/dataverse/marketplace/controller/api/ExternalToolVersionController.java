@@ -110,17 +110,28 @@ public class ExternalToolVersionController {
     @ExternalToolVersionsAPIDocs.AddExternalToolVersionDoc
     public ResponseEntity<?> addNewExternalToolVersion(
             @PathVariable("toolId") Integer toolId,
-            @Valid AddVersionRequest addVersionRequest) {  
-                
-        try {
-            return ResponseEntity.ok(
-                externalToolVersionService.addToolVersion(addVersionRequest, toolId));
-        } catch (IOException e) {
-            ServerMessageResponse messageResponse = new ServerMessageResponse(HttpStatus.INTERNAL_SERVER_ERROR,
-                    "Error adding version",
-                    String.format("An error occurred while adding a new version for the tool with ID %d.", toolId));
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(messageResponse);
+            @Valid AddVersionRequest addVersionRequest) { 
+        
+        ExternalTool tool = externalToolService.getToolById(toolId);
+        if (tool == null) {
+            ServerMessageResponse messageResponse = new ServerMessageResponse(HttpStatus.NOT_FOUND,
+                    "Resource not found",
+                    String.format("The requested external tool with ID %d was not found.", toolId));
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(messageResponse);
+        } else {
+
+            try {
+                ExternalToolVersion newVersion = externalToolVersionService.addToolVersion(addVersionRequest, toolId);
+                return ResponseEntity.ok(new ExternalToolVersionDTO(newVersion));
+            } catch (IOException e) {
+                ServerMessageResponse messageResponse = new ServerMessageResponse(HttpStatus.INTERNAL_SERVER_ERROR,
+                        "Error adding version",
+                        String.format("An error occurred while adding a new version for the tool with ID %d.", toolId));
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(messageResponse);
+            }
         }
+                
+        
     }
 
     /**

@@ -3,6 +3,7 @@ package org.dataverse.marketplace.controller.api;
 import jakarta.validation.Valid;
 
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -141,14 +142,22 @@ public class ExternalToolController {
                     String.format("The requested external tool with ID %d was not found.", toolId));
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(messageResponse);
         }
+        
+        try {
+            List<MarketplaceItemImage> addedImages = externalToolService.addItemImages(tool, images);
+            ArrayList<MarketplaceItemImageDTO> imagesList = new ArrayList<>();
+            for (MarketplaceItemImage image : addedImages) {
+                imagesList.add(new MarketplaceItemImageDTO(image));
+            }
+            return ResponseEntity.ok(imagesList);
+            
+        } catch (Exception e) {
+            ServerMessageResponse messageResponse = new ServerMessageResponse(HttpStatus.INTERNAL_SERVER_ERROR,
+                    "Error adding images",
+                    e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(messageResponse);
 
-        externalToolService.addItemImages(tool, images);
-
-        ServerMessageResponse messageResponse = new ServerMessageResponse(HttpStatus.OK,
-                "Images added",
-                String.format("The images were added to the tool with ID %d.", toolId));    
-
-        return ResponseEntity.ok(messageResponse);
+        }
     }
 
     /**

@@ -1,5 +1,5 @@
 //import LoginButton from "../components/LoginButton";
-import CarouselImage from "../components/UI/MarketplaceHome/CarouselImage";
+import CarouselImage from "../components/pages/MarketplaceHome/CarouselImage";
 
 export default {
     title: 'Button',

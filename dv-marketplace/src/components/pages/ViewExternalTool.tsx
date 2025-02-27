@@ -3,7 +3,6 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import type { ExternalTool } from "../../types/MarketplaceTypes";
 import { BASE_URL } from "/config";
-import { Accordion } from "react-bootstrap";
 
 
 const ViewExternalTool = () => {
@@ -42,14 +41,9 @@ const ViewExternalTool = () => {
                     <p>{tool?.versions[0].releaseNote}</p>
                     <h5>Dataverse required version:</h5>
                     <p>{tool?.versions[0].dataverseMinVersion}</p>
-                    <img src={`${BASE_URL}/api/stored-resource/${tool?.imagesResourceId[0]}`} alt={tool?.name} />
+                    <img src={`${BASE_URL}/api/stored-resource/${tool?.images[0]?.storedResourceId}`} alt={tool?.name} />
                     
-                    <Accordion>
-                        <Accordion.Header>
-                        Previous versions:
-                        </Accordion.Header>
-                    </Accordion>
-
+                   
                 </div>
             </div>
             

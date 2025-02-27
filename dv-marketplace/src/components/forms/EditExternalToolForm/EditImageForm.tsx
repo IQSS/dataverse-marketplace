@@ -1,16 +1,18 @@
 import { Alert, Button, Form } from "react-bootstrap";
 import useEditImageForm from "./useEditImageForm";
-import { BASE_URL } from "/config";
+import { InnerCardDeck } from "../../UI/CardDeck";
+import MarketplaceCard from "../../UI/MarketplaceCard";
+import type { ExternalTool, Image } from "../../../types/MarketplaceTypes";
 
-const EditImageForm = ({ tool }) => {
+
+const EditImageForm = ({ tool }: { tool: ExternalTool | undefined }) => {
 
     const {
         addImageFormIsOpen,
         setAddImageFormIsOpen,
         handleImageSubmit,
         handleImageDelete
-
-    } = useEditImageForm();
+    } = useEditImageForm({ tool });
 
     return (
         <>
@@ -29,7 +31,7 @@ const EditImageForm = ({ tool }) => {
             <Form onSubmit={handleImageSubmit} encType="multipart/form-data">
                 <Form.Group className="mb-3" controlId="formBasicEmail">
                     <Form.Label>Image</Form.Label>
-                    <Form.Control type="file" name="images" />
+                    <Form.Control type="file" name="images" multiple/>
                 </Form.Group>
                 <Button variant="primary" type="submit" >
                     Submit
@@ -37,16 +39,18 @@ const EditImageForm = ({ tool }) => {
             </Form>
         </Alert>
 
-        <ul>
+        <InnerCardDeck>
 
-            {tool?.imagesResourceId.map((imageId, index) => (
-                <li key={index}>
-                    <img src={`${BASE_URL}/api/stored-resource/${imageId}`} alt={tool?.name} />
-                    <button type='button' className='btn bi-trash px-0' onClick={() => handleImageDelete(imageId)}><span/></button>
-                    
-                </li>
-            ))}
-        </ul>
+            {tool?.images.map((image: Image) => (
+                <MarketplaceCard
+                    key={image.id}
+                    imageId={image.storedResourceId}>
+                    <button type='button' className='btn bi-trash px-0' onClick={() => handleImageDelete(image.storedResourceId)}><span/></button>
+                </MarketplaceCard>
+            ))}  
+        </InnerCardDeck>
+
+       
         </>
     );
 };

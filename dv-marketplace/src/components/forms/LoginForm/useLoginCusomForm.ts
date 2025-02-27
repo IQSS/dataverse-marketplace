@@ -12,7 +12,7 @@ export default function useLoginCustomForm() {
     const [password, setPassword] = useState('');
 
     const handleClose = () => {
-        userContext.setShow(false)
+        userContext.setShowLogin(false)
     };
     
 

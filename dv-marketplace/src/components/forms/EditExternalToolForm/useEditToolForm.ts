@@ -1,24 +1,18 @@
-import { useContext, useEffect, useState } from "react";
-import { UserContext } from "../../context/UserContextProvider";
+import { useEffect, useState } from "react";
 import axios from "axios";
 import { useParams } from "react-router-dom";
 import { BASE_URL } from "/config";
 import type { ExternalTool } from "../../../types/MarketplaceTypes";
+import useMarketplaceApiRepo from "../../../repositories/useMarketplaceApiRepo";
 
 
 export default function useEditToolForm() {
 
-    const userContext = useContext(UserContext);
-    const jwtToken = userContext.user ? userContext.user.accessToken : '';
-    const [modalIsOpen, setModalIsOpen] = useState(false);
-    const [modalMessage, setModalMessage] = useState('');
     
-    const [tool, setTool] = useState<ExternalTool | null>(null);
-
-
+    const [tool, setTool] = useState<ExternalTool | undefined>();
     const { id } = useParams();
 
-    
+    const {putRequest} = useMarketplaceApiRepo();
 
     useEffect(() => {
         const fetchTool = async () => {
@@ -36,39 +30,16 @@ export default function useEditToolForm() {
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         const formData = new FormData(event.currentTarget);
-
-        try {
-            const response = await axios.put(`${BASE_URL}/api/tools/${id}`, 
-                formData, {
-                headers: {
-                    'Authorization': `Bearer ${jwtToken}`
-                }
-            });
-            console.log(response.data);
-            setModalMessage("Tool added successfully");
-        } catch (error) {
-            if (axios.isAxiosError(error)) {
-                setModalMessage(error.response?.data?.message || error.message);
-            } else {
-                setModalMessage(String(error));
-            }
-        } finally {
-            setModalIsOpen(true);
+        await putRequest(`/api/tools/${id}`, formData);
+        if (tool) {
+            tool.name = formData.get("name") as string;
+            tool.description = formData.get("description") as string;
         }
     };
-
-    
-
-
-
-
 
 
     return {
         handleSubmit,
-        modalIsOpen,
-        modalMessage,
-        closeModal: () => setModalIsOpen(false),
         tool
     };
 
