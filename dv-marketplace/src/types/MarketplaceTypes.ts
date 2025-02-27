@@ -1,3 +1,5 @@
+import { MutableRefObject } from "react";
+
 export interface Version {
   id: number;
   version: string;
@@ -16,4 +18,26 @@ export interface ExternalTool {
   versions: Version[];
   imagesResourceId: number[];
 }
+
+export type User = {
+    id: number;
+    username: string;
+    email: string;
+    roles: string[];
+    accessToken: string;
+    tokenType: string;
+};
+
+export type UserContextType = {
+    user: User | null;
+    setUser: (user: User | null) => void;
+    showLogin: boolean;
+    setShowLogin: (show: boolean) => void;
+    showMessage: boolean;
+    setShowMessage: (show: boolean) => void;
+    modalMessage: string;
+    setModalMessage: (message: string) => void;
+    modalTitle: string;
+    setModalTitle: (title: string) => void;
+};
 

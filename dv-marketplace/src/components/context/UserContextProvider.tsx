@@ -1,55 +1,61 @@
-import { type MutableRefObject, createContext, useEffect, useRef, useState } from 'react';
-
-export type User = {
-    id: number;
-    username: string;
-    email: string;
-    roles: string[];
-    accessToken: string;
-    tokenType: string;
-};
-
-export type UserContextType = {
-    user: User | null;
-    setUser: (user: User | null) => void;
-    userRef: MutableRefObject<User | null>;
-    login: (user: User) => void;
-    logout: () => void;
-    show: boolean;
-    setShow: (show: boolean) => void;
-};
+import { createContext, useEffect, useState } from 'react';
+import type { User, UserContextType } from '../../types/MarketplaceTypes';
 
 export const UserContext = createContext<UserContextType>({
     user: null,
     setUser: () => {},
-    userRef: { current: null },
-    login: () => {},
-    logout: () => {},
-    show: false,
-    setShow: () => {},
+    showLogin: false,
+    setShowLogin: () => {},
+    showMessage: false,
+    setShowMessage: () => {},
+    modalMessage: '',
+    setModalMessage: () => {},
+    modalTitle: '',
+    setModalTitle: () => {}
 });
 
 const UserContextProvider = ({ children }: { children: React.ReactNode }) => {
     
     const [user, setUser] = useState<User | null>(null);
-    const [show, setShow] = useState(false);
+    const [showLogin, setShowLogin] = useState(false);
+    //App message dialog
+    const [showMessage, setShowMessage] = useState(false);
+    const [modalMessage, setModalMessage] = useState('');
+    const [modalTitle, setModalTitle] = useState('');
 
- 
 
-    const userRef = useRef<User | null>(null);
 
-    const login = (user: User) => {
-        setUser(user);
-        userRef.current = user;
-    };
 
-    const logout = () => {
-        setUser(null);
-        userRef.current = null;
-    };
+    useEffect((): void => {
+        const user = localStorage.getItem('user');
+        if (user) {
+            setUser(JSON.parse(user));
+        }
+    }, []);
+
+    useEffect((): void => {
+        if (user) {
+            localStorage.setItem('user', JSON.stringify(user));
+        } else {
+            localStorage.removeItem('user');
+        }
+    }, [user]);
+
+    
 
     return (
-        <UserContext.Provider value={{ user, setUser, userRef, login, logout, show, setShow}}>
+        <UserContext.Provider value={{ 
+                user, 
+                setUser, 
+                showLogin, 
+                setShowLogin,
+                showMessage,
+                setShowMessage,
+                modalMessage,
+                setModalMessage,
+                modalTitle,
+                setModalTitle
+                }}>
             {children}
         </UserContext.Provider>
     );

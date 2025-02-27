@@ -3,7 +3,7 @@ import { UserContext } from "../../context/UserContextProvider";
 import axios from "axios";
 import { useParams } from "react-router-dom";
 import { BASE_URL } from "/config";
-import { ExternalTool } from "../../../types/MarketplaceTypes";
+import type { ExternalTool } from "../../../types/MarketplaceTypes";
 
 
 export default function useEditToolForm() {
@@ -12,10 +12,13 @@ export default function useEditToolForm() {
     const jwtToken = userContext.user ? userContext.user.accessToken : '';
     const [modalIsOpen, setModalIsOpen] = useState(false);
     const [modalMessage, setModalMessage] = useState('');
+    
+    const [tool, setTool] = useState<ExternalTool | null>(null);
+
 
     const { id } = useParams();
 
-    const [tool, setTool] = useState<ExternalTool | null>(null);
+    
 
     useEffect(() => {
         const fetchTool = async () => {
@@ -35,7 +38,8 @@ export default function useEditToolForm() {
         const formData = new FormData(event.currentTarget);
 
         try {
-            const response = await axios.post('${BASE_URL}/api/tools', formData, {
+            const response = await axios.put(`${BASE_URL}/api/tools/${id}`, 
+                formData, {
                 headers: {
                     'Authorization': `Bearer ${jwtToken}`
                 }
@@ -53,16 +57,18 @@ export default function useEditToolForm() {
         }
     };
 
-    const closeModal = () => {
-        setModalIsOpen(false);
-    };
+    
+
+
+
+
+
 
     return {
-        userContext,
         handleSubmit,
         modalIsOpen,
         modalMessage,
-        closeModal,
+        closeModal: () => setModalIsOpen(false),
         tool
     };
 

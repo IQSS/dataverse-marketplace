@@ -86,6 +86,7 @@ public class ExternalToolService {
         return new ExternalToolDTO(newTool);
     }
 
+    @CacheEvict(value = "externalTools", allEntries = true)
     public ExternalTool updateTool(ExternalTool tool, UpdateToolRequest updateToolRequest) {
        
         tool.setName(updateToolRequest.getName());
