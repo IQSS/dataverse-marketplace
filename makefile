@@ -1,7 +1,7 @@
 make install:
 	cd dv-marketplace && npm install && cd -
 
-make react-run:
+make react:
 	cd dv-marketplace && npm run dev && cd -
 
 make boot:
