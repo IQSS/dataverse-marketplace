@@ -7,11 +7,12 @@ export interface Version {
   manifests: {
     manifestId: number;
     storedResourceId: number;
+    fileName: string;
   }[];
 }
 
 export interface Image {
-  id: number;
+  imageId: number;
   storedResourceId: number;
 }
 

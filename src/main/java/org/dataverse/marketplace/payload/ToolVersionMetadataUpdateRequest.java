@@ -47,4 +47,15 @@ public class ToolVersionMetadataUpdateRequest {
     }
 
 
+    @Override
+    public String toString() {
+        return "{" +
+            " releaseNote='" + getReleaseNote() + "'" +
+            ", version='" + getVersion() + "'" +
+            ", dvMinVersion='" + getDvMinVersion() + "'" +
+            "}";
+    }
+
+
+
 }

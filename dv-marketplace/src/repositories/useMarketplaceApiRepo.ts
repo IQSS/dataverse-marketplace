@@ -10,29 +10,56 @@ export default function useMarketplaceApiRepo() {
     const BASE_URL = 'http://localhost:8081';
     const jwtToken = userContext.user ? userContext.user.accessToken : '';
 
-    const deleteRequest = async (url: string) => {
-        makeApiRequest(url, 'DELETE', new FormData());
-        
+    const deleteBodyRequest = async (url: string) => {
+        return makeApiBodyRequest(url, 'DELETE', new FormData());        
     }
 
-    const postRequest = async (url: string, formData: FormData) => {
-        return makeApiRequest(url, 'POST', formData);
+    const postBodyRequest = async (url: string, FormData: FormData) => {
+        return makeApiBodyRequest(url, 'POST', FormData);
+    }
+    
+
+    const putBodyRequest = async (url: string, formData: FormData) => {
+        return makeApiBodyRequest(url, 'PUT', formData);
     }
 
-    const putRequest = async (url: string, formData: FormData) => {
-        makeApiRequest(url, 'PUT', formData);
+
+    const deleteFormRequest = async (url: string) => {
+        return makeApiFormRequest(url, 'DELETE', new FormData());
     }
 
-    const makeApiRequest = async (url: string, method: string, formData: FormData) => {
+    const postFormRequest = async (url: string, formData: FormData) => {
+        return makeApiFormRequest(url, 'POST', formData);
+    }
+
+    const putFormRequest = async (url: string, formData: FormData) => {
+        return makeApiFormRequest(url, 'PUT', formData);
+    }
+
+    const makeApiBodyRequest = async (url: string, method: string, formData: FormData) => {
+        return handleRequest(url, method, formData, true);
+    }
+
+    const makeApiFormRequest = async (url: string, method: string, formData: FormData) => {
+         return handleRequest(url, method, formData, false);
+    }
+    
+    const handleRequest = async (url: string, method: string, formData: FormData, bodyRequest: boolean) => {
         try {
+            const data = bodyRequest ? JSON.stringify(Object.fromEntries(formData.entries())) : formData;
+            const headers = bodyRequest ? {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${jwtToken}`
+                } : {
+                    "Authorization": `Bearer ${jwtToken}`
+                };
+
             const response = await axios({
                 method: method,
                 url: `${BASE_URL}${url}`,
-                data: formData,
-                headers: {
-                    "Authorization": `Bearer ${jwtToken}`
-                }
-            });                        
+                data: data,
+                headers: headers
+            });
 
             userContext.setModalTitle("Success");
             userContext.setModalMessage(response.data.message);
@@ -52,17 +79,21 @@ export default function useMarketplaceApiRepo() {
         }
     }
 
+    
+
     const getImageUrl = (imageId: number) => {
         return `${BASE_URL}/api/stored-resource/${imageId}`;
     }
 
     return {
-        deleteRequest,
-        postRequest,
+        deleteBodyRequest,
+        postBodyRequest,
+        deleteFormRequest,
+        postFormRequest,
+        putBodyRequest,
+        putFormRequest,
         getImageUrl,
         fetchFromApi,
-        putRequest,
-        makeApiRequest
     };
 
 

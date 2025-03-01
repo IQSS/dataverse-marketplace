@@ -3,7 +3,6 @@ package org.dataverse.marketplace.controller.api;
 import jakarta.validation.Valid;
 
 import java.io.IOException;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -73,7 +72,8 @@ public class ExternalToolController {
     @PreAuthorize(ApplicationRoles.ADMIN_ROLE)
     @PutMapping("/{toolId}")
     @ExternalToolsAPIDocs.UpdateExternalToolDoc
-    public ResponseEntity<?> updateTool(@PathVariable("toolId") Integer toolId, @Valid UpdateToolRequest updateToolRequest) {
+    public ResponseEntity<?> updateTool(@PathVariable("toolId") Integer toolId, 
+                                        @Valid @RequestBody UpdateToolRequest updateToolRequest) {
 
         ExternalTool tool = externalToolService.getToolById(toolId);
 

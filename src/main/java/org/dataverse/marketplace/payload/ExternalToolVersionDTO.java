@@ -46,9 +46,7 @@ public class ExternalToolVersionDTO implements Serializable{
         this.manifests = new ArrayList<>();
 
         for (ExternalToolManifest manifest : version.getManifests()){
-            ExternalToolManifestDTO manifestDTO = new ExternalToolManifestDTO();
-            manifestDTO.setManifestId(manifest.getManifestId());
-            manifestDTO.setStoredResourceId(manifest.getManifestStoredResourceId());
+            ExternalToolManifestDTO manifestDTO = new ExternalToolManifestDTO(manifest);
             this.manifests.add(manifestDTO);
         }
         

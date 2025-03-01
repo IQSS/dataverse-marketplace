@@ -1,20 +1,27 @@
 import useEditVersionForm from './useEditVersionForm';
 import { Alert, Button, Form } from 'react-bootstrap';
-import { Link } from 'react-router-dom';
 import type { ExternalTool } from '../../../../types/MarketplaceTypes';
 import MarketplaceCard from '../../../UI/MarketplaceCard';
 import { FormInputTextArea, FormInputTextField } from '../../../UI/FormInputFields';
 import {InnerCardDeck} from '../../../UI/CardDeck';
-
+import { useState } from 'react';
 const EditVersionForm = ({ tool }: { tool: ExternalTool | undefined }) => {
     
 
     const {
         handleVersionSubmit,
         addVersionFormIsOpen,
-        setaddVersionFormIsOpen,
-        handleVersionDelete
+        setAddVersionFormIsOpen,
+        handleVersionDelete,
+        userContext,
+        handleVersionEdit,
+        showVersionEdit,
+        setShowVersionEdit
     } = useEditVersionForm({ tool });
+
+    
+
+
 
     return (
         <>
@@ -23,7 +30,9 @@ const EditVersionForm = ({ tool }: { tool: ExternalTool | undefined }) => {
                 <div className='row'>
                 <h3 className='col-6'>Versions:</h3>
                 <div className='col-6 d-flex justify-content-end align-items-center'>
-                <button type='button' className='btn btn-secondary bi-plus' onClick={() => setaddVersionFormIsOpen(true)}> Add new </button>       
+                    {userContext.user &&
+                        <button type='button' className='btn btn-secondary bi-plus' onClick={() => setAddVersionFormIsOpen(true)}> Add new </button>       
+                    }
                 </div>
                 </div>
             </div>
@@ -47,15 +56,46 @@ const EditVersionForm = ({ tool }: { tool: ExternalTool | undefined }) => {
         <InnerCardDeck>
             {tool?.versions.map((version) => (
                 <MarketplaceCard key={version.id} header={`Version: ${version.version}`}>
-                    <p>Release Note : {version.releaseNote}</p>
-                    <p>DV Min Version : {version.dataverseMinVersion}</p>
-                    <p>Manifests:</p>
-                    <ul>
-                        <li>asd</li>
 
-                    </ul>
-                    <Link to={`/edit/${tool?.id}/versions/`} className='btn bi-pen px-0'><span/></Link>
-                    <button type='button' className='btn bi-trash px-0' onClick={() => handleVersionDelete(version.id)}><span/></button>
+                    { !(showVersionEdit === version.id) &&
+                       <div >
+                            <p>Release Note : {version.releaseNote}</p>
+                            <p>DV Min Version : {version.dataverseMinVersion}</p>
+                            <p>Manifests:</p>
+                            <ul>
+                                <li>{version.manifests[0].fileName} </li>
+                                <li>{version.manifests[0].manifestId} </li>
+                                <li>{version.manifests[0].storedResourceId} </li>
+                            </ul>
+
+                            <>
+                            {/* <Link to={`/edit/${tool?.id}/versions/`} className='btn bi-pen px-0'><span/></Link> */}
+                            <button type='button' className='btn bi-pen px-0' onClick={() => setShowVersionEdit(version.id)}><span/></button>
+                            <button type='button' className='btn bi-trash px-0' onClick={() => handleVersionDelete(version.id)}><span/></button>
+                            </>
+                        </div>
+                        
+                    }
+                    
+
+                    
+                    
+                    <Alert variant='light' show={showVersionEdit === version.id}>
+                        <Form onSubmit={(e) => handleVersionEdit(e, version.id)} >
+                            
+                            <FormInputTextArea label="Release Note" name="releaseNote" id={`releaseNote-${version.id}`} value={version.releaseNote} />
+                            <FormInputTextField label="DV Min Version" name="dvMinVersion" id={`dvMinVersion-${version.id}`} value={version.dataverseMinVersion} />
+                            <FormInputTextField label="Version" name="version" id={`version-${version.id}`} value={version.version} />
+                            
+                            <Button variant="primary" type="submit">
+                                Save Changes
+                            </Button>
+                        </Form>
+                    </Alert>
+
+                    
+
+
                 </MarketplaceCard>                        
             ))}
         </InnerCardDeck> 

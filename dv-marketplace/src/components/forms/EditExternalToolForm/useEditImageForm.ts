@@ -5,8 +5,8 @@ import type { ExternalTool } from "../../../types/MarketplaceTypes";
 export default function useEditImageForm({ tool }: { tool: ExternalTool | undefined }) {
 
     const {
-        deleteRequest,
-        postRequest
+        deleteBodyRequest,
+        postFormRequest
     } = useMarketplaceApiRepo();
 
     
@@ -15,7 +15,7 @@ export default function useEditImageForm({ tool }: { tool: ExternalTool | undefi
     const handleImageSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         const formData = new FormData(event.currentTarget);
-        const data = await postRequest(`/api/tools/${tool?.id}/images`, formData);
+        const data = await postFormRequest(`/api/tools/${tool?.id}/images`, formData);
         if (Array.isArray(data)) {
             for (const item of data) {
                 tool?.images.push(item);
@@ -29,7 +29,7 @@ export default function useEditImageForm({ tool }: { tool: ExternalTool | undefi
     };
 
     const handleImageDelete = async (imageId: number) => {
-        deleteRequest(`/api/tools/${tool?.id}/images/${imageId}`);
+        deleteBodyRequest(`/api/tools/${tool?.id}/images/${imageId}`);
         if (tool?.images) {
             tool.images = tool.images.filter((image) => image.storedResourceId !== imageId);
         }

@@ -12,7 +12,7 @@ export default function useEditToolForm() {
     const [tool, setTool] = useState<ExternalTool | undefined>();
     const { id } = useParams();
 
-    const {putRequest} = useMarketplaceApiRepo();
+    const {putBodyRequest} = useMarketplaceApiRepo();
 
     useEffect(() => {
         const fetchTool = async () => {
@@ -30,7 +30,7 @@ export default function useEditToolForm() {
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         const formData = new FormData(event.currentTarget);
-        await putRequest(`/api/tools/${id}`, formData);
+        await putBodyRequest(`/api/tools/${id}`, formData);
         if (tool) {
             tool.name = formData.get("name") as string;
             tool.description = formData.get("description") as string;

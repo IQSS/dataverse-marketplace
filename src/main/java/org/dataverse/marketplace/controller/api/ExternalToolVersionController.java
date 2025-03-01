@@ -55,6 +55,7 @@ public class ExternalToolVersionController {
             @PathVariable("versionId") Integer versionId,
             @Valid @RequestBody ToolVersionMetadataUpdateRequest updateToolVersionRequest) {
 
+        System.out.println(updateToolVersionRequest);
         ExternalToolVersion version = externalToolService.getToolVersionById(toolId, versionId);
 
         VersionMetadata metadata = version.getVersionMetadata();
@@ -110,7 +111,7 @@ public class ExternalToolVersionController {
     @ExternalToolVersionsAPIDocs.AddExternalToolVersionDoc
     public ResponseEntity<?> addNewExternalToolVersion(
             @PathVariable("toolId") Integer toolId,
-            @Valid AddVersionRequest addVersionRequest) { 
+            @Valid @RequestBody AddVersionRequest addVersionRequest) { 
         
         ExternalTool tool = externalToolService.getToolById(toolId);
         if (tool == null) {

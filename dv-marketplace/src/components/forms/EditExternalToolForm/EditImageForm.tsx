@@ -3,6 +3,10 @@ import useEditImageForm from "./useEditImageForm";
 import { InnerCardDeck } from "../../UI/CardDeck";
 import MarketplaceCard from "../../UI/MarketplaceCard";
 import type { ExternalTool, Image } from "../../../types/MarketplaceTypes";
+import { useContext } from "react";
+import { UserContext } from "../../context/UserContextProvider";
+import { Modal } from "react-bootstrap";
+import { useState } from "react";
 
 
 const EditImageForm = ({ tool }: { tool: ExternalTool | undefined }) => {
@@ -14,6 +18,8 @@ const EditImageForm = ({ tool }: { tool: ExternalTool | undefined }) => {
         handleImageDelete
     } = useEditImageForm({ tool });
 
+    const userContext = useContext(UserContext);
+
     return (
         <>
         <Alert variant='light'>
@@ -21,7 +27,9 @@ const EditImageForm = ({ tool }: { tool: ExternalTool | undefined }) => {
                 <div className='row'>
                 <h3 className='col-6'>Images:</h3>
                 <div className='col-6 d-flex justify-content-end align-items-center'>
+                {userContext.user &&
                     <button type='button' className='btn btn-secondary bi-plus' onClick={() => setAddImageFormIsOpen(true)}> Add new </button>       
+                }
                 </div>
                 </div>
             </div>
@@ -29,7 +37,7 @@ const EditImageForm = ({ tool }: { tool: ExternalTool | undefined }) => {
 
         <Alert variant='info' show={addImageFormIsOpen}>
             <Form onSubmit={handleImageSubmit} encType="multipart/form-data">
-                <Form.Group className="mb-3" controlId="formBasicEmail">
+                <Form.Group className="mb-3">
                     <Form.Label>Image</Form.Label>
                     <Form.Control type="file" name="images" multiple/>
                 </Form.Group>
@@ -43,13 +51,18 @@ const EditImageForm = ({ tool }: { tool: ExternalTool | undefined }) => {
 
             {tool?.images.map((image: Image) => (
                 <MarketplaceCard
-                    key={image.id}
+                    key={image.imageId}
                     imageId={image.storedResourceId}>
-                    <button type='button' className='btn bi-trash px-0' onClick={() => handleImageDelete(image.storedResourceId)}><span/></button>
+                    {userContext.user &&
+                        <button type='button' className='btn bi-trash px-0' onClick={() => handleImageDelete(image.storedResourceId)}><span/></button>
+                    }
                 </MarketplaceCard>
             ))}  
         </InnerCardDeck>
 
+        
+
+        
        
         </>
     );

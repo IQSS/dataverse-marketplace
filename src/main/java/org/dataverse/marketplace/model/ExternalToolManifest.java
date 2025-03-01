@@ -29,6 +29,10 @@ public class ExternalToolManifest {
     @Column(name = "mime_type")
     private String mimeType;
 
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "manifest_stored_resource_id", referencedColumnName = "id", insertable = false, updatable = false)
+    private StoredResource storedResource;
+
     @ManyToOne
     @JoinColumns({
         @JoinColumn(name = "version_id", referencedColumnName = "id", insertable = false, updatable = false),
@@ -85,6 +89,14 @@ public class ExternalToolManifest {
 
     public void setExternalToolVersion(ExternalToolVersion externalToolVersion) {
         this.externalToolVersion = externalToolVersion;
+    }
+
+    public StoredResource getStoredResource() {
+        return this.storedResource;
+    }
+
+    public void setStoredResource(StoredResource storedResource) {
+        this.storedResource = storedResource;
     }
     
     @Embeddable
