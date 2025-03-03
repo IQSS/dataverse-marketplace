@@ -2,8 +2,8 @@
 #loginButton {
 	background-color: #c55b28;
     color: white;
-    padding: 0rem 1rem;
-    border-radius: 0.5rem;
+    padding: 7px;
+    border-radius: 0.2rem;
     border: 1px solid lightgray;
     margin-bottom: 1rem;
     margin-left: 1rem;
@@ -36,7 +36,9 @@
 }
 
 .card {
-	margin: 3px;
+	margin-top: 15px; 
+	margin-left: 5px;
+	margin-right: 5%;
 	min-width: none;
 	flex-wrap: wrap;
 	
@@ -49,4 +51,12 @@
     text-align: center;
     height: 100%;
 	
+}
+
+.dv-carousel {
+	display: 'flex';
+	flex-direction: 'row';
+	flex-wrap: 'wrap';
+	justify-content: 'center';
+	margin-top: 15px;
 }

@@ -117,6 +117,7 @@ export default function useMarketplaceApiRepo() {
         putFormRequest,
         getImageUrl,
         fetchFromApi,
+        BASE_URL
     };
 
 

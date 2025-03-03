@@ -5,6 +5,7 @@ import MarketplaceCard from "../../../UI/MarketplaceCard";
 import type { ExternalTool, Image } from "../../../../types/MarketplaceTypes";
 import { useContext } from "react";
 import { UserContext } from "../../../context/UserContextProvider";
+import SectionHeader from "../../../UI/SectionHeader";
 
 
 const EditImageForm = ({ tool }: { tool: ExternalTool | undefined }) => {
@@ -20,18 +21,7 @@ const EditImageForm = ({ tool }: { tool: ExternalTool | undefined }) => {
 
     return (
         <>
-        <Alert variant='light'>
-            <div className='container '>
-                <div className='row'>
-                <h3 className='col-6'>Images:</h3>
-                <div className='col-6 d-flex justify-content-end align-items-center'>
-                {userContext.user &&
-                    <button type='button' className='btn btn-secondary bi-plus' onClick={() => setAddImageFormIsOpen(true)}> Add new </button>       
-                }
-                </div>
-                </div>
-            </div>
-        </Alert>
+        <SectionHeader header="Images:" setAddFormIsOpen={setAddImageFormIsOpen}/>
 
         <Alert variant='info' show={addImageFormIsOpen}>
             <Form onSubmit={handleImageSubmit} encType="multipart/form-data">
