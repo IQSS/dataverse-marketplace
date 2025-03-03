@@ -66,7 +66,9 @@ const ViewExternalTool = () => {
                         <p>DV Min Version : {version.dataverseMinVersion}</p>
                         <p>Manifests:</p>
                         <ul>
-                            <li>asd</li>
+                            {version.manifests.map((manifest) => (
+                                <li key={manifest.manifestId}>{manifest.fileName}</li>
+                            ))}
 
                         </ul>
                     </MarketplaceCard>                        

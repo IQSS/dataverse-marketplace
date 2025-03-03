@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.dataverse.marketplace.model.ExternalToolManifest;
 import org.dataverse.marketplace.model.ExternalToolVersion;
+import org.dataverse.marketplace.model.StoredResource;
 import org.dataverse.marketplace.model.VersionMetadata;
 import org.dataverse.marketplace.model.ExternalToolManifest.ExternalToolManifestId;
 import org.dataverse.marketplace.model.enums.StoredResourceStorageTypeEnum;
@@ -84,9 +85,11 @@ public class ExternalToolVersionService {
 
         for (MultipartFile manifest : manifests) {
 
-            Long storedResourceId = resourceStorageService
+            StoredResource storedResource = resourceStorageService
                                         .storeResource(manifest, 
                                         StoredResourceStorageTypeEnum.FILESYSTEM);
+
+            
 
             Integer externalToolManifestId = externalToolManifestRepo.getNextIdForManifest(
                     externalToolVersion.getMkItemId(), externalToolVersion.getId());
@@ -97,7 +100,8 @@ public class ExternalToolVersionService {
             newManifest.setManifestId(externalToolManifestId);
             newManifest.setMkItemId(externalToolVersion.getMkItemId());
             newManifest.setVersionId(externalToolVersion.getId());
-            newManifest.setManifestStoredResourceId(storedResourceId);
+            newManifest.setManifestStoredResourceId(storedResource.getId());
+            newManifest.setStoredResource(storedResource);
             
             String jsonString = new String(manifest.getBytes());
             ObjectMapper objectMapper = new ObjectMapper();
@@ -105,6 +109,11 @@ public class ExternalToolVersionService {
             String contentType = jsonNode.get("contentType").asText();
             newManifest.setMimeType(contentType);
             externalToolManifestRepo.save(newManifest);
+
+            
+
+
+
             newManifests.add(newManifest);
         }
         return newManifests;

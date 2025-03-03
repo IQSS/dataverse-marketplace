@@ -103,14 +103,15 @@ public class ExternalToolService {
 
         for (MultipartFile image : images) {
 
-            Long storedResourceId = resourceStorageService
+            StoredResource storedResource = resourceStorageService
                                         .storeResource(image, 
                                         StoredResourceStorageTypeEnum.FILESYSTEM);
 
             MarketplaceItemImage newImage = new MarketplaceItemImage();
             
             newImage.setMarketplaceItem(item);
-            newImage.setImageStoredResourceId(storedResourceId);
+            newImage.setImageStoredResourceId(storedResource.getId());  
+            newImage.setStoredResource(storedResource);          
             marketplaceItemImageRepo.save(newImage);
             newImages.add(newImage);
         }

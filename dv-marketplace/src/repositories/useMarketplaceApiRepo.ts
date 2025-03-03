@@ -11,7 +11,16 @@ export default function useMarketplaceApiRepo() {
     const jwtToken = userContext.user ? userContext.user.accessToken : '';
 
     const deleteBodyRequest = async (url: string) => {
-        return makeApiBodyRequest(url, 'DELETE', new FormData());        
+        const confirmed = window.confirm("Are you sure you want to delete this item?");
+        if (!confirmed) {
+            userContext.setModalTitle("Cancelled");
+            userContext.setModalMessage("Operation cancelled by user.");
+            userContext.setShowMessage(true);
+            
+        } else {
+            return makeApiBodyRequest(url, 'DELETE', new FormData());
+        }
+        return;
     }
 
     const postBodyRequest = async (url: string, FormData: FormData) => {
@@ -25,7 +34,16 @@ export default function useMarketplaceApiRepo() {
 
 
     const deleteFormRequest = async (url: string) => {
-        return makeApiFormRequest(url, 'DELETE', new FormData());
+        const confirmed = window.confirm("Are you sure you want to delete this item?");
+        if (!confirmed) {
+            userContext.setModalTitle("Cancelled");
+            userContext.setModalMessage("Operation cancelled by user.");
+            userContext.setShowMessage(true);
+            
+        } else {
+            return makeApiFormRequest(url, 'DELETE', new FormData());
+        }
+        return;
     }
 
     const postFormRequest = async (url: string, formData: FormData) => {
@@ -62,7 +80,12 @@ export default function useMarketplaceApiRepo() {
             });
 
             userContext.setModalTitle("Success");
-            userContext.setModalMessage(response.data.message);
+            if (response.data.message) {
+                userContext.setModalMessage(response.data.message);
+            } else {
+                userContext.setModalMessage("Operation successful");
+            }
+            
             userContext.setShowMessage(true);
 
             return response.data;

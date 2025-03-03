@@ -22,7 +22,7 @@ const NavigationBar = () => {
                     <Navbar.Collapse >
                         <Nav className="nav-options ">
                             <NavOptions />
-                            <Search />
+                            {/* <Search /> */}
                             <LoginButton />
                             <ThemeSwitcher />
                         </Nav>

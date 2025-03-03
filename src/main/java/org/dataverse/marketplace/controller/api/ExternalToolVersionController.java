@@ -111,7 +111,7 @@ public class ExternalToolVersionController {
     @ExternalToolVersionsAPIDocs.AddExternalToolVersionDoc
     public ResponseEntity<?> addNewExternalToolVersion(
             @PathVariable("toolId") Integer toolId,
-            @Valid @RequestBody AddVersionRequest addVersionRequest) { 
+            AddVersionRequest addVersionRequest) { 
         
         ExternalTool tool = externalToolService.getToolById(toolId);
         if (tool == null) {
@@ -162,21 +162,31 @@ public class ExternalToolVersionController {
      * Method to add manifests to an existing external tool version
      */
     @PreAuthorize(ApplicationRoles.ADMIN_ROLE)
-    @CacheEvict(value = "externalTools", allEntries = true)
-    @ExternalToolVersionsAPIDocs.AddVersionManifestDoc
+    @CacheEvict(value = "externalTools", allEntries = true)    
     @PostMapping(path = "/{toolId}/versions/{versionId}/manifests", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @ExternalToolVersionsAPIDocs.AddVersionManifestDoc
     public ResponseEntity<?> addVersionManifest(
             @PathVariable("toolId") Integer toolId,
             @PathVariable("versionId") Integer versionId,
-            @RequestPart List<MultipartFile> jsonData) throws IOException {
+            @RequestBody List<MultipartFile> jsonData) throws IOException {
         
         ExternalToolVersion version = externalToolService.getToolVersionById(toolId, versionId);
-        externalToolVersionService.addVersionManifests(version, jsonData);
-        ServerMessageResponse messageResponse = new ServerMessageResponse(HttpStatus.OK,
-                "Manifests added",
-                String.format("The manifests were added to the version with ID %d.", versionId));
         
-        return ResponseEntity.ok(messageResponse);
+        if(version == null){
+            ServerMessageResponse messageResponse = new ServerMessageResponse(HttpStatus.NOT_FOUND,
+                    "Resource not found",
+                    String.format("The requested external tool version with ID %d was not found.", versionId));
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(messageResponse);
+        }
+
+        List<ExternalToolManifest> manifests = 
+            externalToolVersionService.addVersionManifests(version, jsonData);
+        ArrayList<ExternalToolManifestDTO> manifestsDTO = new ArrayList<>();
+        for (ExternalToolManifest m : manifests) {
+            manifestsDTO.add(new ExternalToolManifestDTO(m));
+        }
+        
+        return ResponseEntity.ok(manifestsDTO);
     }
     
     /**

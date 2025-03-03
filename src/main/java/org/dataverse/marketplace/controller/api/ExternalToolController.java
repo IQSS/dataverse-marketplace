@@ -13,6 +13,7 @@ import org.dataverse.marketplace.security.ApplicationRoles;
 import org.dataverse.marketplace.service.ExternalToolService;
 import org.dataverse.marketplace.service.ResourceStorageService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.http.*;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -128,6 +129,7 @@ public class ExternalToolController {
      * Method to add images to an external tool.
      */
     @PreAuthorize(ApplicationRoles.ADMIN_ROLE)
+    @CacheEvict(value = "externalTools", allEntries = true)
     @PostMapping(path = "/{toolId}/images", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @ExternalToolsAPIDocs.AddToolImagesDoc
     public ResponseEntity<?> addToolImages(

@@ -1,12 +1,10 @@
 import { Alert, Button, Form } from "react-bootstrap";
 import useEditImageForm from "./useEditImageForm";
-import { InnerCardDeck } from "../../UI/CardDeck";
-import MarketplaceCard from "../../UI/MarketplaceCard";
-import type { ExternalTool, Image } from "../../../types/MarketplaceTypes";
+import { InnerCardDeck } from "../../../UI/CardDeck";
+import MarketplaceCard from "../../../UI/MarketplaceCard";
+import type { ExternalTool, Image } from "../../../../types/MarketplaceTypes";
 import { useContext } from "react";
-import { UserContext } from "../../context/UserContextProvider";
-import { Modal } from "react-bootstrap";
-import { useState } from "react";
+import { UserContext } from "../../../context/UserContextProvider";
 
 
 const EditImageForm = ({ tool }: { tool: ExternalTool | undefined }) => {

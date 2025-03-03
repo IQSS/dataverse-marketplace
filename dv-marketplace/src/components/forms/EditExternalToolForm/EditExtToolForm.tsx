@@ -1,8 +1,7 @@
 import useEditToolForm from './useEditToolForm';
 import { FormInputTextField, FormInputTextArea } from '../../UI/FormInputFields';
 import { Alert } from 'react-bootstrap';
-import { BASE_URL } from '/config';
-import EditImageForm from './EditImageForm';
+import EditImageForm from './EditImageForm/EditImageForm';
 import EditVersionForm from './EditVersionForm/EditVersionForm';
 
 const EditExtToolForm = () => {
