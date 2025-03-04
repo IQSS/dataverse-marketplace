@@ -217,10 +217,10 @@ public class ExternalToolsTest {
         MultiValueMap<String, Object> postManifestBody = new LinkedMultiValueMap<>();
         postManifestBody.add("jsonData", new FileSystemResource(manifest));
 
-        ResponseEntity<ServerMessageResponse> postManifestResponse = restTemplate.postForEntity(
+        ResponseEntity<ExternalToolManifestDTO[]> postManifestResponse = restTemplate.postForEntity(
                 newToolPostUrl + "/versions/"
                         + getVersionsResponse.getBody()[0].getId() + "/manifests",
-                new HttpEntity<>(postManifestBody, adminHeaders), ServerMessageResponse.class);
+                new HttpEntity<>(postManifestBody, adminHeaders), ExternalToolManifestDTO[].class);
         assertEquals(postManifestResponse.getStatusCode(), HttpStatus.OK);
 
         getManifestResponse = restTemplate.getForEntity(
