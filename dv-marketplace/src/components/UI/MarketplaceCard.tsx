@@ -11,13 +11,32 @@ interface CardDeckProps {
     link?: string | undefined;
 }
 
-const MarketplaceCard = ({ header, imageId, text, link, children }: CardDeckProps) => {
-  
-  const { getImageUrl } = useMarketplaceApiRepo();
+export const MarketplaceCard = ({ header, imageId, text, link, children }: CardDeckProps) => {
 
   return (
     <div className="col-12 col-sm-6 col-md-6 col-lg-3 mb-2 px-0">
-      <Card>
+       <BaseCard header={header} imageId={imageId} text={text} link={link}>
+         {children}
+        </BaseCard>
+    </div>
+  );
+};
+
+export const RowCard = ({ header, imageId, text, link, children }: CardDeckProps) => {
+    return(
+    <div className="col-12">
+       <BaseCard header={header} imageId={imageId} text={text} link={link}>
+         {children}
+        </BaseCard>
+    </div>
+    );
+}
+
+export const BaseCard = ({ header, imageId, text, link, children }: CardDeckProps) => {
+  
+  const { getImageUrl } = useMarketplaceApiRepo();
+  return (
+    <Card>
         {header && (
           <Card.Header>
             <h5>{header}</h5>
@@ -28,8 +47,8 @@ const MarketplaceCard = ({ header, imageId, text, link, children }: CardDeckProp
         )}
         <Card.Body>
           {text && (
-            <Card.Text>
-              {text}
+            <Card.Text className="card-text">
+              {text.length > 100 ? `${text.substring(0, 100)}...` : text}
             </Card.Text>
           )}
           {link && (
@@ -38,8 +57,7 @@ const MarketplaceCard = ({ header, imageId, text, link, children }: CardDeckProp
           {children}
         </Card.Body>
       </Card>
-    </div>
   );
-};
+}
 
 export default MarketplaceCard;

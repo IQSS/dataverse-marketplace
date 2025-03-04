@@ -269,6 +269,10 @@ public @interface ExternalToolVersionsAPIDocs {
     //                             type = "array",
     //                             contentMediaType = "application/octet-stream",
     //                             implementation = MultipartFile[].class)))
+    @RequestBody(description = "The manifest to be added to the version of the external tool",
+                required = true,
+                content = @Content(mediaType = "multipart/form-data",
+                schema = @Schema(type = "string", format = "binary")))
     public @interface AddVersionManifestDoc{}
 
     @Target({ElementType.METHOD})    

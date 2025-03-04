@@ -2,11 +2,11 @@ import { Link, useParams } from "react-router-dom";
 import axios from "axios";
 import { useContext, useEffect, useState } from "react";
 import type { ExternalTool, Image } from "../../types/MarketplaceTypes";
-import { BASE_URL } from "/config";
 import { Alert } from "react-bootstrap";
 import { UserContext } from "../context/UserContextProvider";
 import { InnerCardDeck } from "../UI/CardDeck";
-import MarketplaceCard from "../UI/MarketplaceCard";
+import { RowCard, MarketplaceCard } from "../UI/MarketplaceCard";
+import useMarketplaceApiRepo from "../../repositories/useMarketplaceApiRepo";
 
 
 
@@ -16,6 +16,7 @@ const ViewExternalTool = () => {
 
     const [tool, setTool] = useState<ExternalTool | undefined>();
     const userContext = useContext(UserContext);
+    const { BASE_URL } = useMarketplaceApiRepo();
     useEffect(() => {
         const fetchTool = async () => {
             try {
@@ -26,7 +27,7 @@ const ViewExternalTool = () => {
             }
         };
         fetchTool();
-    }, [id]);
+    }, [id, BASE_URL]);
 
     return (
         <div className="container" style={{ marginTop: "120px" }}>
@@ -54,24 +55,32 @@ const ViewExternalTool = () => {
             <Alert variant='light'>
                 <div className='container '>
                     <div className='row'>
-                    <h3 className='col-6'>Versions:</h3>
+                    <h3 className='col-6'>Releases:</h3>
                     </div>
                 </div>
             </Alert>
 
             <InnerCardDeck>
                 {tool?.versions.map((version) => (
-                    <MarketplaceCard key={version.id} header={`Version: ${version.version}`}>
+                    <RowCard key={version.id} header={`Version: ${version.version}`}>
                         <p>Release Note : {version.releaseNote}</p>
                         <p>DV Min Version : {version.dataverseMinVersion}</p>
                         <p>Manifests:</p>
-                        <ul>
+                        <table className="table">
+                            <tbody>
                             {version.manifests.map((manifest) => (
-                                <li key={manifest.manifestId}>{manifest.fileName}</li>
+                                <tr key={manifest.manifestId}>
+                                    <td>{manifest.fileName}</td>
+                                    <td>
+                                        <Link to="" className="btn bi-download" onClick={() =>{} }> Install </Link>
+                                    </td>
+                                    </tr>
+                                
                             ))}
-
-                        </ul>
-                    </MarketplaceCard>                        
+                            </tbody>                            
+                        </table>
+                        
+                    </RowCard>                        
                 ))}
             </InnerCardDeck> 
 

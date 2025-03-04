@@ -1,5 +1,5 @@
 import CardDeck from "../../UI/CardDeck";
-import MarketplaceCard from "../../UI/MarketplaceCard";
+import { MarketplaceCard } from "../../UI/MarketplaceCard";
 import DvPromoCarrousel from "./DvPromoCarrousel";
 import useMarketplaceHome from "./useMarketplaceHome";
 function MarketplaceHome () {
@@ -9,11 +9,6 @@ function MarketplaceHome () {
     } = useMarketplaceHome();
     
     return (<>
-        {/* <div className="container justify-content-center">
-            <div className="col-12">
-                <img className="card-img-top" src="/assets/img/promo-unc.png" alt="DCM at UNC" />
-            </div>
-        </div> */}
         <DvPromoCarrousel />
         <CardDeck>
             {tools.map(tool => (
