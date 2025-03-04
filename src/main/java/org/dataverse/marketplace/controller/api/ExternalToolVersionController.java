@@ -168,7 +168,7 @@ public class ExternalToolVersionController {
     public ResponseEntity<?> addVersionManifest(
             @PathVariable("toolId") Integer toolId,
             @PathVariable("versionId") Integer versionId,
-            @RequestBody List<MultipartFile> jsonData) throws IOException {
+            @RequestPart List<MultipartFile> jsonData) throws IOException {
         
         ExternalToolVersion version = externalToolService.getToolVersionById(toolId, versionId);
         

@@ -134,7 +134,7 @@ public class ExternalToolController {
     @ExternalToolsAPIDocs.AddToolImagesDoc
     public ResponseEntity<?> addToolImages(
             @PathVariable("toolId") Integer toolId, 
-            @RequestBody List<MultipartFile> images) throws IOException {
+            @RequestPart("images") List<MultipartFile> images) throws IOException {
 
         ExternalTool tool = externalToolService.getToolById(toolId);
 

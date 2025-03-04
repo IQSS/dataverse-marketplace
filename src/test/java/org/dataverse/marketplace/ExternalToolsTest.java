@@ -112,10 +112,10 @@ public class ExternalToolsTest {
         MultiValueMap<String, Object> imagePostBody = new LinkedMultiValueMap<>();
         imagePostBody.add("images", new FileSystemResource(image));
 
-        ResponseEntity<ServerMessageResponse> postImagesResponse 
+        ResponseEntity<MarketplaceItemImageDTO[]> postImagesResponse 
             = restTemplate.postForEntity(imagesUrl,
                     new HttpEntity<>(imagePostBody, adminHeaders), 
-                    ServerMessageResponse.class);
+                    MarketplaceItemImageDTO[].class);
         assertEquals(postImagesResponse.getStatusCode(), HttpStatus.OK);
 
         getImagesResponse = restTemplate.getForEntity( imagesUrl,
