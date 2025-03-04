@@ -1,10 +1,13 @@
 package org.dataverse.marketplace.payload;
 
 import java.util.Date;
+
+import org.dataverse.marketplace.openapi.samples.GenericBusinessSamples;
 import org.springframework.http.HttpStatus;
 import io.swagger.v3.oas.annotations.media.Schema;
 
-@Schema(description = "A representation of the server message response")
+@Schema(description = "A representation of the server message response",
+    example = GenericBusinessSamples.SERVER_MESSAGE_RESPONSE)
 public class ServerMessageResponse {
     
     @Schema(description = "Timestamp of the error", 

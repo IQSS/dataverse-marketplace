@@ -53,6 +53,24 @@
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+		<!-- Spring Cache -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-cache</artifactId>
+		</dependency>
+		<!-- ehcache -->
+		<dependency>
+			<groupId>org.ehcache</groupId>
+			<artifactId>ehcache</artifactId>
+    		<classifier>jakarta</classifier>
+			<exclusions>
+				<exclusion>
+					<groupId>org.ehcache</groupId>
+					<artifactId>ehcache</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+
 		
 
 		<!-- Spring OPenAPI-->
@@ -73,13 +91,6 @@
             <groupId>org.flywaydb</groupId>
 			<artifactId>flyway-database-postgresql</artifactId>
         </dependency>
-
-		<dependency>
-			<groupId>org.junit.jupiter</groupId>
-			<artifactId>junit-jupiter</artifactId>
-			<version>5.11.3</version>
-			<scope>test</scope>
-		</dependency>
 
 		<!-- JWT -->
 		<dependency>
