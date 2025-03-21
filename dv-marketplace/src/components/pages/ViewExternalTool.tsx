@@ -34,18 +34,18 @@ const ViewExternalTool = () => {
 
 
         <Alert variant='light'>
-            <div className='container '>
-                
-                <div className='row'>
-                    <h1 className='col-6'>{tool?.name}:</h1>
-                    <div className='col-6 d-flex justify-content-end align-items-center'>
-                        {userContext.user &&
-                            <Link to ={`/edit/${id}`} className="btn btn-secondary bi-pen" > Edit</Link>
-                        }
-                    </div>
+        <div className='container '>
+            
+            <div className='row'>
+                <h1 className='col-6'>{tool?.name}:</h1>
+                <div className='col-6 d-flex justify-content-end align-items-center'>
+                    {userContext.user &&
+                        <Link to ={`/edit/${id}`} className="btn btn-secondary bi-pen" > Edit</Link>
+                    }
                 </div>
             </div>
-            </Alert>
+        </div>
+        </Alert>
 
             <div>
                 <p className='col-12 d-flex '>
@@ -72,7 +72,7 @@ const ViewExternalTool = () => {
                                 <tr key={manifest.manifestId}>
                                     <td>{manifest.fileName}</td>
                                     <td>
-                                        <Link to="" className="btn bi-download" onClick={() =>{} }> Install </Link>
+                                        <Link to="/install{$}" className="btn bi-download" onClick={() =>{} }> Install </Link>
                                     </td>
                                     </tr>
                                 
@@ -83,6 +83,8 @@ const ViewExternalTool = () => {
                     </RowCard>                        
                 ))}
             </InnerCardDeck> 
+
+            <br/>
 
             <Alert variant='light'>
                 <div className='container '>

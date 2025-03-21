@@ -15,7 +15,7 @@ const router = createHashRouter([
             index: true,
             element: <MarketplaceHome />,
           },{
-            path: 'install',
+            path: 'install/:id',
             element: <Install />,
           },{
             path: 'addExtTool',
@@ -26,11 +26,7 @@ const router = createHashRouter([
           },{
             path: 'edit/:id',
             element: <EditExtToolForm />,
-          }, {
-            path: 'edit/tools/:id/version/:versionId',
-            element: <EditVersionForm />,
           }
-          
         ],
     },
   ]);
