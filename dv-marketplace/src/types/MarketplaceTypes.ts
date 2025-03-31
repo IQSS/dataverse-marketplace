@@ -4,11 +4,13 @@ export interface Version {
   version: string;
   releaseNote: string;
   dataverseMinVersion: string;
-  manifests: {
-    manifestId: number;
-    storedResourceId: number;
-    fileName: string;
-  }[];
+  manifests: Manifest[];
+}
+
+export interface Manifest {
+  manifestId: number;
+  storedResourceId: number;
+  fileName: string;
 }
 
 export interface Image {

@@ -1,22 +1,29 @@
 import { Link, useParams } from "react-router-dom";
 import axios from "axios";
-import { useContext, useEffect, useState } from "react";
 import type { ExternalTool, Image } from "../../types/MarketplaceTypes";
 import { Alert } from "react-bootstrap";
-import { UserContext } from "../context/UserContextProvider";
 import { InnerCardDeck } from "../UI/CardDeck";
 import { RowCard, MarketplaceCard } from "../UI/MarketplaceCard";
-import useMarketplaceApiRepo from "../../repositories/useMarketplaceApiRepo";
+import InstallExToolFrame from "./InstallExToolFrame";
+import useViewExternalTool from "./useViewExternalTool";
+import { useEffect } from "react";
 
 
 
 const ViewExternalTool = () => {
 
-    const { id } = useParams();
+    const {
+        showModal,
+        setShowModal,
+        id,
+        tool,
+        setTool,
+        userContext,
+        BASE_URL,
+        toolToInstall,
+        setToolToInstall,
+    } = useViewExternalTool();
 
-    const [tool, setTool] = useState<ExternalTool | undefined>();
-    const userContext = useContext(UserContext);
-    const { BASE_URL } = useMarketplaceApiRepo();
     useEffect(() => {
         const fetchTool = async () => {
             try {
@@ -27,7 +34,7 @@ const ViewExternalTool = () => {
             }
         };
         fetchTool();
-    }, [id, BASE_URL]);
+    }, [id, BASE_URL, setTool]);
 
     return (
         <div className="container" style={{ marginTop: "120px" }}>
@@ -72,7 +79,11 @@ const ViewExternalTool = () => {
                                 <tr key={manifest.manifestId}>
                                     <td>{manifest.fileName}</td>
                                     <td>
-                                        <Link to="/install{$}" className="btn bi-download" onClick={() =>{} }> Install </Link>
+                                        <button type="button" className="btn bi-download" onClick={() => {
+                                            setToolToInstall(manifest);
+                                            setShowModal(true);
+                                            }}> Install </button>
+                                        {/* <Link to={`/install/${tool?.id}`} className="btn bi-download" onClick={() => {}}> Install </Link> */}
                                     </td>
                                     </tr>
                                 
@@ -99,12 +110,18 @@ const ViewExternalTool = () => {
 
                 {tool?.images.map((image: Image) => (
                     <MarketplaceCard
-                        key={image.id}
+                        key={image.imageId}
                         imageId={image.storedResourceId}>
                     </MarketplaceCard>
                 ))}  
             </InnerCardDeck>
 
+            <InstallExToolFrame manifest={toolToInstall} showModal={showModal} setShowModal={setShowModal}/>
+            
+                
+
+            
+            
         </div>
     );
 };
