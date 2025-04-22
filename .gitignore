@@ -36,3 +36,4 @@ build/
 
 /storage/*
 docker-dev-volumes
+dv-marketplace/node_modules/

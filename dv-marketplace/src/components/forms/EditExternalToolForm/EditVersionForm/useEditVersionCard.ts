@@ -1,5 +1,4 @@
-import { useContext, useState } from "react";
-import { UserContext } from "../../../context/UserContextProvider";
+import { useState } from "react";
 import useMarketplaceApiRepo from "../../../../repositories/useMarketplaceApiRepo";
 import type { ExternalTool, Version } from "../../../../types/MarketplaceTypes";
 
