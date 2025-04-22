@@ -1,5 +1,6 @@
 package org.dataverse.marketplace.payload;
 
+import java.io.Serializable;
 import java.util.List;
 
 import org.springframework.web.multipart.MultipartFile;
@@ -8,7 +9,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotEmpty;
 
 @Schema(description = "Request to add a new version of an existing external tool")
-public class AddVersionRequest {
+public class AddVersionRequest implements Serializable{
 
     @Schema(description = "A brief note about the current release of the existing external tool.", 
         example = "This release includes a new feature that allows you to ask questions to an LLM.")
@@ -64,4 +65,16 @@ public class AddVersionRequest {
     public void setJsonData(List<MultipartFile> jsonData) {
         this.jsonData = jsonData;
     }
+
+
+    @Override
+    public String toString() {
+        return "{" +
+            " releaseNote='" + getReleaseNote() + "'" +
+            ", version='" + getVersion() + "'" +
+            ", dvMinVersion='" + getDvMinVersion() + "'" +
+            ", jsonData='" + getJsonData() + "'" +
+            "}";
+    }
+
 }

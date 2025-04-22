@@ -261,14 +261,10 @@ public @interface ExternalToolVersionsAPIDocs {
                 required = true,
                 in = ParameterIn.PATH,
                 schema = @Schema(type = "integer"))
-    @RequestBody(description = "The request to add a new manifest to an existing version of the external tool", 
-                required = true, 
+    @RequestBody(description = "The manifest to be added to the version of the external tool",
+                required = true,
                 content = @Content(mediaType = "multipart/form-data",
-                schema = @Schema(name = "jsonData", 
-                                example = "[\"ask-the-data.json\"]",
-                                type = "array",
-                                contentMediaType = "application/octet-stream",
-                                implementation = MultipartFile[].class)))
+                schema = @Schema(type = "string", format = "binary")))
     public @interface AddVersionManifestDoc{}
 
     @Target({ElementType.METHOD})    

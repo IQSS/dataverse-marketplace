@@ -1,0 +1,62 @@
+
+#loginButton {
+	background-color: #c55b28;
+    color: white;
+    padding: 7px;
+    border-radius: 0.2rem;
+    border: 1px solid lightgray;
+    margin-bottom: 1rem;
+    margin-left: 1rem;
+}
+
+.header-logo {
+	align-items: center;
+	display: flex;
+	color: #c55b28;
+}
+
+.header-logo span {
+	background: url("./assets/img/dv.xhtml");
+	margin-right: 8px;
+	width: 26px;
+	height: 32px;
+}
+
+.nav-options {
+	display: flex;
+	align-items: right;
+	margin-left: auto;
+}
+
+.mkt-container {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	margin-top: 15px;
+}
+
+.card {
+	margin-top: 15px; 
+	margin-left: 5px;
+	margin-right: 5%;
+	min-width: none;
+	flex-wrap: wrap;
+	
+	justify-content: center;
+}
+
+.mkt-card {
+	background-color: #f0f0f0;
+    padding: 20px;
+    text-align: center;
+    height: 100%;
+	
+}
+
+.dv-carousel {
+	display: 'flex';
+	flex-direction: 'row';
+	flex-wrap: 'wrap';
+	justify-content: 'center';
+	margin-top: 15px;
+}

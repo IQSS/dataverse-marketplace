@@ -46,7 +46,7 @@ public class ResourceStorageService {
         throw new NoSuchFileException("File not found for resource id: " + storedResource.getId());
     }    
 
-    public Long storeResource(MultipartFile multipartFile, StoredResourceStorageTypeEnum storageTypeEnum) throws IOException {
+    public StoredResource storeResource(MultipartFile multipartFile, StoredResourceStorageTypeEnum storageTypeEnum) throws IOException {
 
         StoredResourceStorageType storageType = new StoredResourceStorageType();
         storageType.setId(storageTypeEnum.getId());
@@ -64,14 +64,16 @@ public class ResourceStorageService {
             dbResourceStorage.setStoredResourceId(storedResource.getId());
             dbResourceStorage.setResourceData(multipartFile.getBytes());
             databaseResourceStorageRepo.save(dbResourceStorage);
-            return dbResourceStorage.getStoredResourceId();
+            //return dbResourceStorage.getStoredResourceId();
         } else if (storageTypeEnum == StoredResourceStorageTypeEnum.FILESYSTEM) {
             Path filePath = Paths.get(diskStoragePath, storedResource.getId().toString());
             Files.copy(multipartFile.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
-            return storedResource.getId();
+            //return storedResource.getId();
+        } else {
+            throw new IllegalArgumentException("Unsupported storage type: " + storageType);
         }
 
-        throw new IllegalArgumentException("Unsupported storage type: " + storageType);
+        return storedResource;
     }
 
     /**

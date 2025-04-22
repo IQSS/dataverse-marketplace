@@ -92,13 +92,6 @@
 			<artifactId>flyway-database-postgresql</artifactId>
         </dependency>
 
-		<dependency>
-			<groupId>org.junit.jupiter</groupId>
-			<artifactId>junit-jupiter</artifactId>
-			<version>5.11.3</version>
-			<scope>test</scope>
-		</dependency>
-
 		<!-- JWT -->
 		<dependency>
 			<groupId>io.jsonwebtoken</groupId>

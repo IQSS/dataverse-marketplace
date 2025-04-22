@@ -2,11 +2,13 @@ package org.dataverse.marketplace.model;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 
@@ -21,6 +23,10 @@ public class MarketplaceItemImage {
         sequenceName = "mkt_item_image_id_seq", 
         allocationSize = 1)
     private Integer id;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "image_stored_resource_id", referencedColumnName = "id", insertable = false, updatable = false)
+    private StoredResource storedResource;
 
     @ManyToOne
     @JoinColumn(name = "mkt_item_id")
@@ -53,6 +59,14 @@ public class MarketplaceItemImage {
 
     public void setImageStoredResourceId(Long imageStoredResourceId) {
         this.imageStoredResourceId = imageStoredResourceId;
+    }
+
+    public StoredResource getStoredResource() {
+        return this.storedResource;
+    }
+
+    public void setStoredResource(StoredResource storedResource) {
+        this.storedResource = storedResource;
     }
     
 }

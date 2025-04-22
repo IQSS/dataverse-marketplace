@@ -12,6 +12,7 @@ import org.dataverse.marketplace.payload.MarketplaceItemImageDTO;
 import org.dataverse.marketplace.payload.ServerMessageResponse;
 import org.dataverse.marketplace.payload.UpdateToolRequest;
 import org.dataverse.marketplace.payload.auth.UserDTO;
+import org.springframework.web.multipart.MultipartFile;
 import org.dataverse.marketplace.openapi.samples.AuthAPISamples;
 import org.dataverse.marketplace.openapi.samples.ExternalToolSamples;
 
@@ -190,11 +191,7 @@ public @interface ExternalToolsAPIDocs {
                 description = "the id of the external tool to add the image",
                 required = true,
                 in = ParameterIn.PATH,
-                schema = @Schema(type = "integer"))
-    @RequestBody(description = "The image to be added to the external tool",
-                required = true,
-                content = @Content(mediaType = "multipart/form-data",
-                schema = @Schema(type = "string", format = "binary")))
+                schema = @Schema(type = "integer")) 
     public @interface AddToolImagesDoc{}
     
     @Target({ElementType.METHOD})    

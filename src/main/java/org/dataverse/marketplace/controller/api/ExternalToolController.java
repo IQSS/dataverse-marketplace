@@ -13,6 +13,7 @@ import org.dataverse.marketplace.security.ApplicationRoles;
 import org.dataverse.marketplace.service.ExternalToolService;
 import org.dataverse.marketplace.service.ResourceStorageService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.http.*;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -72,7 +73,8 @@ public class ExternalToolController {
     @PreAuthorize(ApplicationRoles.ADMIN_ROLE)
     @PutMapping("/{toolId}")
     @ExternalToolsAPIDocs.UpdateExternalToolDoc
-    public ResponseEntity<?> updateTool(@PathVariable("toolId") Integer toolId, @Valid UpdateToolRequest updateToolRequest) {
+    public ResponseEntity<?> updateTool(@PathVariable("toolId") Integer toolId, 
+                                        @Valid @RequestBody UpdateToolRequest updateToolRequest) {
 
         ExternalTool tool = externalToolService.getToolById(toolId);
 
@@ -127,11 +129,12 @@ public class ExternalToolController {
      * Method to add images to an external tool.
      */
     @PreAuthorize(ApplicationRoles.ADMIN_ROLE)
+    @CacheEvict(value = "externalTools", allEntries = true)
     @PostMapping(path = "/{toolId}/images", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @ExternalToolsAPIDocs.AddToolImagesDoc
     public ResponseEntity<?> addToolImages(
             @PathVariable("toolId") Integer toolId, 
-            @RequestBody List<MultipartFile> images) throws IOException {
+            @RequestPart("images") List<MultipartFile> images) throws IOException {
 
         ExternalTool tool = externalToolService.getToolById(toolId);
 
@@ -141,14 +144,22 @@ public class ExternalToolController {
                     String.format("The requested external tool with ID %d was not found.", toolId));
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(messageResponse);
         }
+        
+        try {
+            List<MarketplaceItemImage> addedImages = externalToolService.addItemImages(tool, images);
+            ArrayList<MarketplaceItemImageDTO> imagesList = new ArrayList<>();
+            for (MarketplaceItemImage image : addedImages) {
+                imagesList.add(new MarketplaceItemImageDTO(image));
+            }
+            return ResponseEntity.ok(imagesList);
+            
+        } catch (Exception e) {
+            ServerMessageResponse messageResponse = new ServerMessageResponse(HttpStatus.INTERNAL_SERVER_ERROR,
+                    "Error adding images",
+                    e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(messageResponse);
 
-        externalToolService.addItemImages(tool, images);
-
-        ServerMessageResponse messageResponse = new ServerMessageResponse(HttpStatus.OK,
-                "Images added",
-                String.format("The images were added to the tool with ID %d.", toolId));    
-
-        return ResponseEntity.ok(messageResponse);
+        }
     }
 
     /**

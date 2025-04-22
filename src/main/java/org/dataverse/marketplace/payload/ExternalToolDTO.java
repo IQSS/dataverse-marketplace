@@ -31,7 +31,7 @@ public class ExternalToolDTO implements Serializable {
     @Schema(description = "The list of storage id for the images of the external tool", 
             implementation = Long[].class,
             example = "[1, 2, 3]")
-    private List<Long> imagesResourceId;
+    private List<MarketplaceItemImageDTO> images;
 
     public ExternalToolDTO() {
     }
@@ -46,11 +46,11 @@ public class ExternalToolDTO implements Serializable {
             versions.add(new ExternalToolVersionDTO(version));
         }
 
-        this.imagesResourceId = new ArrayList<>();
+        this.images = new ArrayList<>();
 
         if(externalTool.getImages() != null){
             for(MarketplaceItemImage image : externalTool.getImages()){
-                this.imagesResourceId.add(image.getImageStoredResourceId());
+                this.images.add(new MarketplaceItemImageDTO(image));
             }    
         }
         
@@ -90,12 +90,12 @@ public class ExternalToolDTO implements Serializable {
         this.versions = versions;
     }
 
-    public List<Long> getImagesResourceId() {
-        return this.imagesResourceId;
+    public List<MarketplaceItemImageDTO> getImages() {
+        return this.images;
     }
-
-    public void setImagesResourceId(List<Long> imagesResourceId) {
-        this.imagesResourceId = imagesResourceId;
+    
+    public void setImages(List<MarketplaceItemImageDTO> images) {
+        this.images = images;
     }
 
     
