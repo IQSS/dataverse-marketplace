@@ -6,9 +6,10 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import org.dataverse.marketplace.payload.*;
 import org.dataverse.marketplace.payload.auth.*;
+import org.dataverse.marketplace.payload.auth.request.RoleCreationRequest;
+import org.dataverse.marketplace.payload.auth.request.SignupRequest;
 import org.dataverse.marketplace.payload.auth.response.*;
 import org.dataverse.marketplace.openapi.samples.*;
-import java.lang.annotation.*;
 import io.swagger.v3.oas.annotations.*;
 import io.swagger.v3.oas.annotations.enums.*;
 import io.swagger.v3.oas.annotations.media.*;
@@ -82,7 +83,7 @@ public @interface AuthAPIDocs {
     @RequestBody(description = "The signup request", 
                 required = true, 
                 content = @Content(mediaType = "application/json",
-                schema = @Schema(implementation = org.dataverse.marketplace.payload.auth.request.SignupRequest.class),
+                schema = @Schema(implementation = SignupRequest.class),
                 examples = @ExampleObject(AuthAPISamples.SIGNUP_REQUEST)))
     public @interface Signup {}
 
@@ -116,9 +117,9 @@ public @interface AuthAPIDocs {
     @RequestBody(description = "The role creation request", 
                 required = true, 
                 content = @Content(mediaType = "application/json",
-                schema = @Schema(implementation = org.dataverse.marketplace.payload.auth.request.RoleCreationRequest.class),
+                schema = @Schema(implementation = RoleCreationRequest.class),
                 examples = @ExampleObject(AuthAPISamples.ROLE_CREATION_REQUEST)))
-    public @interface RoleCreationRequest{}
+    public @interface RoleCreationRequestDoc{}
 
     @Target({ElementType.METHOD})    
     @Retention(RetentionPolicy.RUNTIME)

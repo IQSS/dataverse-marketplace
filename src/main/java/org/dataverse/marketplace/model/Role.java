@@ -23,6 +23,8 @@ public class Role {
     @Column(name="role_name")
     private String name;
 
+    /* Getters & Setters */
+
     public Integer getId() {
         return this.id;
     }

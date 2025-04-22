@@ -16,7 +16,9 @@ CREATE TABLE IF NOT EXISTS roles (
 CREATE TABLE IF NOT EXISTS user_roles (
     user_id bigint NOT NULL,
     role_id integer NOT NULL,
-    PRIMARY KEY (user_id, role_id)
+    PRIMARY KEY (user_id, role_id),
+    CONSTRAINT fk_user FOREIGN KEY (user_id) REFERENCES users (id),
+    CONSTRAINT fk_role FOREIGN KEY (role_id) REFERENCES roles (id)
 );
 
 insert into users (id, username, email, password) values (nextval('user_id_seq'), 'admin', 'admin@localhost', '$2a$10$ZGbgWue/D39CfwwStB.qWe5hWqvSU8qi4DVZDzKt3ZK3374KSFP8q');
