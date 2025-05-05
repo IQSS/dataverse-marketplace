@@ -42,11 +42,12 @@ const ViewExternalTool = () => {
 
         <Alert variant='light'>
         <div className='container '>
-            
             <div className='row'>
                 <h1 className='col-6'>{tool?.name}:</h1>
                 <div className='col-6 d-flex justify-content-end align-items-center'>
-                    {userContext.user &&
+                    {userContext.user && 
+                    ( userContext.user.roles.includes("ADMIN") ||
+                    (userContext.user.roles.includes("EDITOR")  && tool?.owner.id == userContext.user.id))  &&
                         <Link to ={`/edit/${id}`} className="btn btn-secondary bi-pen" > Edit</Link>
                     }
                 </div>

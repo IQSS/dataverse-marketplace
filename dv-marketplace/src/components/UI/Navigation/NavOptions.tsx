@@ -12,7 +12,7 @@ const NavOptions = () => {
         {userContext.user && (
             <Dropdown className="theme-switcher">
             <Dropdown.Toggle variant="{theme}" id="dropdown-basic">
-                Admin
+                {userContext.user.username}
             </Dropdown.Toggle>
             <Dropdown.Menu>
                 <Dropdown.Item >            
