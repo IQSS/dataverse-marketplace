@@ -1,15 +1,12 @@
-import { useContext, useState } from "react";
+import { useState } from "react";
 import useMarketplaceApiRepo from "../../../../repositories/useMarketplaceApiRepo";
 import type { ExternalTool } from "../../../../types/MarketplaceTypes";
-import { UserContext } from "../../../context/UserContextProvider";
 
 export default function useEditVersionForm({ tool }: { tool: ExternalTool | undefined }) {
 
     const {
         postFormRequest,
     } = useMarketplaceApiRepo();
-
-    const userContext = useContext(UserContext);
     
     const [addVersionFormIsOpen, setAddVersionFormIsOpen] = useState(false);
 
@@ -25,9 +22,6 @@ export default function useEditVersionForm({ tool }: { tool: ExternalTool | unde
            console.error("Failed to add version");
        }
     };
-
-    
-
 
     return {
         handleVersionSubmit,

@@ -1,7 +1,6 @@
 import Container from 'react-bootstrap/Container';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
-import Search from './Search';
 import ThemeSwitcher from './ThemeSwitcher/ThemeSwitcher';
 import LoginForm from '../../forms/LoginForm/LoginForm';
 import LoginButton from '../LoginButton/LoginButton';

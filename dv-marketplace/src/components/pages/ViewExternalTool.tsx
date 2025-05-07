@@ -1,4 +1,4 @@
-import { Link, useParams } from "react-router-dom";
+import { Link } from "react-router-dom";
 import axios from "axios";
 import type { ExternalTool, Image } from "../../types/MarketplaceTypes";
 import { Alert } from "react-bootstrap";
