@@ -14,12 +14,14 @@ const NavOptions = () => {
             <Dropdown.Toggle variant="{theme}" id="dropdown-basic">
                 {userContext.user.username}
             </Dropdown.Toggle>
-            <Dropdown.Menu>
-                <Dropdown.Item >            
-                    {/* <Link to="/install" className="nav-link">Install</Link> */}
-                    <Link to="/addExtTool" className="nav-link">Add External Tool</Link>    
-                </Dropdown.Item>
-            </Dropdown.Menu>
+            <Dropdown.Menu>            
+                {userContext.user.roles.includes("EDITOR") && (
+                    <Dropdown.Item >            
+                        {/* <Link to="/install" className="nav-link">Install</Link> */}
+                        <Link to="/addExtTool" className="nav-link">Add External Tool</Link>    
+                    </Dropdown.Item>
+                )}
+                </Dropdown.Menu>
             </Dropdown>
         )}                    
         </>
