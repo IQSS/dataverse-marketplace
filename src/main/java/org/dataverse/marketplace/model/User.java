@@ -1,6 +1,7 @@
 package org.dataverse.marketplace.model;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import jakarta.persistence.*;
@@ -31,8 +32,12 @@ public class User {
     @JoinTable(name = "user_roles", joinColumns = @jakarta.persistence.JoinColumn(name = "user_id"), inverseJoinColumns = @jakarta.persistence.JoinColumn(name = "role_id"))
     private Set<Role> roles = new HashSet<>();
     
+    @OneToMany(mappedBy = "owner")
+    private List<MarketplaceItem> marketplaceItems;    
 
     public User() {
+
+
     }
 
     public User(String username, String email, String password) {
@@ -81,6 +86,15 @@ public class User {
 
     public void setRoles(Set<Role> roles) {
         this.roles = roles;
+    }
+
+
+    public List<MarketplaceItem> getMarketplaceItems() {
+        return this.marketplaceItems;
+    }
+
+    public void setMarketplaceItems(List<MarketplaceItem> marketplaceItems) {
+        this.marketplaceItems = marketplaceItems;
     }
 
 }

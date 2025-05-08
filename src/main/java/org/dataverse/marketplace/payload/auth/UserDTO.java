@@ -1,10 +1,12 @@
 package org.dataverse.marketplace.payload.auth;
 
+import java.io.Serializable;
+
 import org.dataverse.marketplace.model.User;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 @Schema(name = "User", description = "A representation of the user")
-public class UserDTO {
+public class UserDTO implements Serializable{
 
     @Schema(description = "The id of the user", example = "1")
     private Long id;

@@ -33,6 +33,10 @@ public class MarketplaceItem implements Serializable{
     )
     private Set<ItemTag> tags;
 
+    @ManyToOne (optional = false)
+    @JoinColumn(name = "owner_id", nullable = false) 
+    User owner;    
+
     /* Getters & Setters */
 
     public Integer getId() {
@@ -75,6 +79,12 @@ public class MarketplaceItem implements Serializable{
         this.tags = tags;
     }
 
+    public User getOwner() {
+        return owner;
+    }
     
-
+    public void setOwner(User owner) {
+        this.owner = owner;
+    }    
+    
 }
