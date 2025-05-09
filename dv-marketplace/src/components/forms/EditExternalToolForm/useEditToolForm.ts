@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { useParams } from "react-router-dom";
-import { BASE_URL } from "/config";
 import type { ExternalTool } from "../../../types/MarketplaceTypes";
 import useMarketplaceApiRepo from "../../../repositories/useMarketplaceApiRepo";
 
@@ -11,7 +10,7 @@ export default function useEditToolForm() {
     
     const [tool, setTool] = useState<ExternalTool | undefined>();
     const { id } = useParams();
-
+    const { BASE_URL } = useMarketplaceApiRepo();
     const {putBodyRequest} = useMarketplaceApiRepo();
 
     useEffect(() => {
@@ -24,7 +23,7 @@ export default function useEditToolForm() {
             }
         };
         fetchTool();
-    }, [id]);
+    }, [id, BASE_URL]);
 
 
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
