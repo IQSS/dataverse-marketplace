@@ -2,10 +2,12 @@ import { useContext } from "react";
 import { UserContext } from "../components/context/UserContextProvider";
 import axios from "axios";
 
+
 export default function useMarketplaceApiRepo() {
 
     const userContext = useContext(UserContext);
-    const BASE_URL = '';
+    //CHANGE THIS FOR DEPLOYMENT
+    const BASE_URL = 'http://localhost:8081';
     const jwtToken = userContext.user ? userContext.user.accessToken : '';
 
     const deleteBodyRequest = async (url: string) => {
