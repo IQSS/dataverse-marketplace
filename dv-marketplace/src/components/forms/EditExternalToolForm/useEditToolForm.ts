@@ -3,7 +3,7 @@ import axios from "axios";
 import { useParams } from "react-router-dom";
 import type { ExternalTool } from "../../../types/MarketplaceTypes";
 import useMarketplaceApiRepo from "../../../repositories/useMarketplaceApiRepo";
-
+import { toast } from "react-toastify";
 
 export default function useEditToolForm() {
 
@@ -19,7 +19,7 @@ export default function useEditToolForm() {
                 const response = await axios.get(`${BASE_URL}/api/tools/${id}`);
                 setTool(response.data as ExternalTool);
             } catch (error) {
-                console.error("Error fetching the tool:", error);
+                toast.error(`Error fetching the tool: ${error}`);
             }
         };
         fetchTool();
@@ -34,6 +34,7 @@ export default function useEditToolForm() {
             tool.name = formData.get("name") as string;
             tool.description = formData.get("description") as string;
         }
+        
     };
 
 
