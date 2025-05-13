@@ -1,3 +1,4 @@
+import { types } from "storybook/internal/babel";
 
 export interface Version {
   id: number;
@@ -8,9 +9,27 @@ export interface Version {
 }
 
 export interface Manifest {
+  [key: string]: any; // Add index signature
+
+  toolId: number;
+  versionId: number;
   manifestId: number;
   storedResourceId: number;
   fileName: string;
+  
+  displayName: string;
+  description: string;
+  scope: string;
+  toolUrl: string;
+  httpMethod: string;
+  toolName: string;  
+  contentType: string;
+  contentTypes: string[];
+  types: string[];
+  toolParameters: {
+    queryParameters: { [key: string]: string }[];
+  manifestSet: Manifest[];
+  };
 }
 
 export interface Image {

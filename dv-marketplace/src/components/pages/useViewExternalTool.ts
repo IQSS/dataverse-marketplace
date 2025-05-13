@@ -13,6 +13,18 @@ export default function useViewExternalTool() {
     const { BASE_URL } = useMarketplaceApiRepo();
     const [toolToInstall, setToolToInstall] = useState<Manifest | undefined>();
 
+    const downloadManifest = (subManifest: Manifest): void => {
+        const blob = new Blob([JSON.stringify(subManifest, null, 2)], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+      
+        const link = document.createElement('a');
+        link.href = url;
+        link.download  = (subManifest?.toolName ?? 'manifest') + "__" + subManifest?.contentType + ".json";
+        link.click();
+      
+        URL.revokeObjectURL(url);
+    }
+
     return {
         showModal,
         setShowModal,
@@ -23,5 +35,6 @@ export default function useViewExternalTool() {
         BASE_URL,
         toolToInstall,
         setToolToInstall,
+        downloadManifest
     };
 }

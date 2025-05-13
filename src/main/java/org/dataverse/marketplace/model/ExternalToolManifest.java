@@ -1,27 +1,26 @@
 package org.dataverse.marketplace.model;
 
-import java.io.Serializable;
-import java.util.Objects;
+import java.util.Set;
+
 import jakarta.persistence.*;
 
 @Entity
-@IdClass(ExternalToolManifest.ExternalToolManifestId.class)
 @Table(name = "external_tool_manifest", uniqueConstraints = {
         @UniqueConstraint(columnNames = { "version_id", "mkt_item_id", "manifest_id" })
 })
 public class ExternalToolManifest {
 
-    @Id
+    
     @Column(name = "version_id")
-    Integer versionId;
+    Long versionId;
 
-    @Id
+    
     @Column(name = "mkt_item_id")
-    private Integer mkItemId;
+    private Long mkItemId;
 
     @Id
     @Column(name = "manifest_id")
-    private Integer manifestId;
+    private Long manifestId;
     
     @Column(name = "manifest_stored_resource_id")
     private Long manifestStoredResourceId;
@@ -40,30 +39,66 @@ public class ExternalToolManifest {
     })
     private ExternalToolVersion externalToolVersion;
 
+
+    // Manifest details
+    @Column(name = "display_name")
+    private String displayName;
+
+    @Column(name = "description")
+    private String description;
+
+    @Column(name = "scope")//enum?
+    private String scope;
+
+    @Column(name = "tool_url")
+    private String toolUrl;
+
+    @Column(name = "tool_name")
+    private String toolName;
+    
+    @Column(name = "http_method")
+    private String httpMethod;
+
+    @OneToMany(mappedBy = "manifest", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<QueryParameter> queryParameters;    
+
+    @OneToMany(mappedBy = "manifest", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<ExternalToolType> externalToolTypes;
+
+    @OneToMany(mappedBy = "manifest", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<ContentType> contentTypes;      
+
+    //allow api calls
+    //requirements
+
+
+
+
+
     /* Getters and Setters */
 
 
-    public Integer getVersionId() {
+    public Long getVersionId() {
         return this.versionId;
     }
 
-    public void setVersionId(Integer versionId) {
+    public void setVersionId(Long versionId) {
         this.versionId = versionId;
     }
 
-    public Integer getMkItemId() {
+    public Long getMkItemId() {
         return this.mkItemId;
     }
 
-    public void setMkItemId(Integer mkItemId) {
+    public void setMkItemId(Long mkItemId) {
         this.mkItemId = mkItemId;
     }
 
-    public Integer getManifestId() {
+    public Long getManifestId() {
         return this.manifestId;
     }
 
-    public void setManifestId(Integer manifestId) {
+    public void setManifestId(Long manifestId) {
         this.manifestId = manifestId;
     }
 
@@ -99,54 +134,70 @@ public class ExternalToolManifest {
         this.storedResource = storedResource;
     }
     
-    @Embeddable
-    public static class ExternalToolManifestId implements Serializable {
 
-        private Integer versionId;
-        private Integer mkItemId;
-        private Integer manifestId;
 
-        // Default constructor
-        public ExternalToolManifestId() {
-        }
+    public String getDisplayName() {
+        return displayName;
+    }
 
-        // Parameterized constructor
-        public ExternalToolManifestId(Integer versionId, Integer mkItemId, Integer manifestId) {
-            this.versionId = versionId;
-            this.mkItemId = mkItemId;
-            this.manifestId = manifestId;
-        }
+    public void setDisplayName(String displayName) {
+        this.displayName = displayName;
+    }
 
-        // Getters and setters
+    public String getDescription() {
+        return description;
+    }
 
-        @Override
-        public boolean equals(Object o) {
-            if (this == o)
-                return true;
-            if (o == null || getClass() != o.getClass())
-                return false;
-                ExternalToolManifestId that = (ExternalToolManifestId) o;
-            return Objects.equals(versionId, that.versionId) 
-                && Objects.equals(mkItemId, that.mkItemId)
-                && Objects.equals(manifestId, that.manifestId);
-        }
+    public void setDescription(String description) {
+        this.description = description;
+    }
 
-        @Override
-        public int hashCode() {
-            return Objects.hash(versionId, mkItemId, manifestId);
-        }
+    public String getScope() {
+        return scope;
+    }
+    public void setScope(String scope) {
+        this.scope = scope;
+    }
 
-        public void setVersionId(Integer versionId) {
-            this.versionId = versionId;
-        }
+    public String getToolUrl() {
+        return toolUrl;
+    }
+    
+    public void setToolUrl(String toolUrl) {
+        this.toolUrl = toolUrl;
+    }
 
-        public void setMkItemId(Integer mkItemId) {
-            this.mkItemId = mkItemId;
-        }
+    public String getToolName() {
+        return toolName;
+    }
+    public void setToolName(String toolName) {
+        this.toolName = toolName;
+    }
+    public String getHttpMethod() {
+        return httpMethod;
+    }
+    public void setHttpMethod(String httpMethod) {
+        this.httpMethod = httpMethod;
+    }
 
-        public void setManifestId(Integer manifestId) {
-            this.manifestId = manifestId;
-        }
+    public Set<ExternalToolType> getExternalToolTypes() {
+        return externalToolTypes;
+    }
+    public void setExternalToolTypes(Set<ExternalToolType> externalToolTypes) {
+        this.externalToolTypes = externalToolTypes;
+    }
+
+    public Set<QueryParameter> getQueryParameters() {
+        return queryParameters;
+    }
+    public void setQueryParameters(Set<QueryParameter> queryParameters) {
+        this.queryParameters = queryParameters;
+    }
+    public Set<ContentType> getContentTypes() {
+        return contentTypes;
+    }
+    public void setContentTypes(Set<ContentType> contentTypes) {
+        this.contentTypes = contentTypes;
     }
 
 }

@@ -61,10 +61,10 @@ export default function useMarketplaceApiRepo() {
     const makeApiFormRequest = async (url: string, method: string, formData: FormData) => {
          return handleRequest(url, method, formData, false);
     }
-    
+
     const handleRequest = async (url: string, method: string, formData: FormData, bodyRequest: boolean) => {
         try {
-            const data = bodyRequest ? JSON.stringify(Object.fromEntries(formData.entries())) : formData;
+            const data = bodyRequest ? convertFormDataToJson(formData) : formData;
             const headers = bodyRequest ? {
                     "Content-Type": "application/json",
                     "Authorization": `Bearer ${jwtToken}`
@@ -123,6 +123,52 @@ export default function useMarketplaceApiRepo() {
 
 }
 
+  function convertFormDataToJson(formData: FormData): any {
+    const obj: any = {};
+  
+    for (const [key, value] of formData.entries()) {
+      setNestedValue(obj, key, value);
+    }
+  
+    return obj;
+  }
+  
+  function setNestedValue(obj: any, path: string, value: any) {
+    const keys = path
+      .replace(/\[(\w+)\]/g, '.$1')  // convert [0] to .0
+      .replace(/^\./, '')            // strip leading dot
+      .split('.');
+  
+    let current = obj;
+  
+    for (let i = 0; i < keys.length; i++) {
+      const key = keys[i];
+      const nextKey = keys[i + 1];
+  
+      const isLast = i === keys.length - 1;
+      const isArrayIndex = /^\d+$/.test(nextKey || "");
+  
+      if (isLast) {
+        if (key in current) {
+          // Convert to array if multiple values under same key
+          if (!Array.isArray(current[key])) {
+            current[key] = [current[key]];
+          }
+          current[key].push(value);
+        } else {
+          current[key] = value;
+        }
+      } else {
+        if (!(key in current)) {
+          current[key] = isArrayIndex ? [] : {};
+        }
+        current = current[key];
+      }
+    }
+  }
+  
+  
+
 export async function fetchFromApi<T>(url: string): Promise<T> {
     try {
         const response = await axios.get(`${BASE_URL}${url}`);
@@ -131,4 +177,6 @@ export async function fetchFromApi<T>(url: string): Promise<T> {
         console.error('Error fetching data:', error);
         throw error;
     }
+
+    
 }

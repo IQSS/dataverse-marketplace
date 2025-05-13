@@ -51,5 +51,36 @@ public class ExternalToolVersionSamples {
         ]
     """;
 
+    public static final String EXTERNAL_TOOL_VERSION_MANIFEST_REQUEST_SAMPLE = """
+            {
+            "displayName": "Ask the Data",
+            "description": "A tool that allows you to ask questions about Dataverse tabular data.",
+            "toolName": "AskTheData",
+            "scope": "file",
+            "types": [
+                "query"
+            ],
+            "toolUrl": "https://askdataverse.shinyapps.io/askthedata",
+            "contentTypes": [
+                "text/tab-separated-values",
+                "application/pdf"
+            ],
+            "httpMethod":"GET",
+            "toolParameters": {
+                "queryParameters": [
+                {
+                    "fileId": "{fileId}"
+                },
+                {
+                    "datasetPid": "{datasetPid}"
+                },
+                {
+                    "siteUrl": "{siteUrl}"
+                }
+                ]
+            }
+            }
+    """; 
+
 
 }

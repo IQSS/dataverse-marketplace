@@ -48,8 +48,14 @@ export default function useInstallExToolFrame(
         console.log(manifest?.storedResourceId)
         console.log("Sending data to:", url);
 
-        axios.get(`${BASE_URL}/api/stored-resource/${manifest?.storedResourceId}`)
+        const blob =JSON.parse(JSON.stringify(manifest, null, 2));
+
+
+        axios.get(`${BASE_URL}/api/tools/${manifest?.toolId}/versions/${manifest?.versionId}/manifests/${manifest?.manifestId}`)
         .then((response) => {
+          console.log(response.data);
+          console.log("--------------------")
+          console.log(blob);
             axios.post(url, response.data, {
                 headers: {
                 "Content-Type": "application/json",

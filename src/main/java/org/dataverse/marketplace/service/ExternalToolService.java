@@ -58,6 +58,10 @@ public class ExternalToolService {
         return externalToolManifestRepo.findByMkItemIdAndVersionId(toolId, versionId);
     }
 
+    public ExternalToolManifest getToolManifestById(Integer toolId, Integer versionId, Integer manifestId) {
+        return externalToolManifestRepo.findByMkItemIdAndVersionIdAndManifestId(toolId, versionId, manifestId);
+    }    
+
     @CacheEvict(value = "externalTools", allEntries = true)
     @Transactional
     public ExternalToolDTO addTool(AddToolRequest addToolRequest) throws IOException {

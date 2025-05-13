@@ -72,7 +72,7 @@ CREATE TABLE IF NOT EXISTS external_tool_manifest (
     manifest_id integer NOT NULL,
     mime_type  varchar NOT NULL,
     manifest_stored_resource_id bigint NOT NULL,
-    PRIMARY KEY (version_id, mkt_item_id, manifest_id),
+    PRIMARY KEY (manifest_id),
     CONSTRAINT fk_item FOREIGN KEY (version_id, mkt_item_id) REFERENCES external_tool_version (id, mkt_item_id),
     CONSTRAINT fk_manifest FOREIGN KEY (manifest_stored_resource_id) REFERENCES stored_resource (id)
 );

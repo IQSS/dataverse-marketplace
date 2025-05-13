@@ -1,4 +1,4 @@
-import { Link, useParams } from "react-router-dom";
+import { Link } from "react-router-dom";
 import axios from "axios";
 import type { ExternalTool, Image } from "../../types/MarketplaceTypes";
 import { Alert } from "react-bootstrap";
@@ -7,6 +7,7 @@ import { RowCard, MarketplaceCard } from "../UI/MarketplaceCard";
 import InstallExToolFrame from "./InstallExToolFrame";
 import useViewExternalTool from "./useViewExternalTool";
 import { useEffect } from "react";
+import { Manifest } from "vite";
 
 
 
@@ -22,6 +23,7 @@ const ViewExternalTool = () => {
         BASE_URL,
         toolToInstall,
         setToolToInstall,
+        downloadManifest
     } = useViewExternalTool();
 
     useEffect(() => {
@@ -40,19 +42,19 @@ const ViewExternalTool = () => {
         <div className="container" style={{ marginTop: "120px" }}>
 
 
-        <Alert variant='light'>
-        <div className='container '>
-            
-            <div className='row'>
-                <h1 className='col-6'>{tool?.name}:</h1>
-                <div className='col-6 d-flex justify-content-end align-items-center'>
-                    {userContext.user &&
-                        <Link to ={`/edit/${id}`} className="btn btn-secondary bi-pen" > Edit</Link>
-                    }
+            <Alert variant='light'>
+                <div className='container '>
+
+                    <div className='row'>
+                        <h1 className='col-6'>{tool?.name}:</h1>
+                        <div className='col-6 d-flex justify-content-end align-items-center'>
+                            {userContext.user &&
+                                <Link to={`/edit/${id}`} className="btn btn-secondary bi-pen" > Edit</Link>
+                            }
+                        </div>
+                    </div>
                 </div>
-            </div>
-        </div>
-        </Alert>
+            </Alert>
 
             <div>
                 <p className='col-12 d-flex '>
@@ -62,7 +64,7 @@ const ViewExternalTool = () => {
             <Alert variant='light'>
                 <div className='container '>
                     <div className='row'>
-                    <h3 className='col-6'>Releases:</h3>
+                        <h3 className='col-6'>Releases:</h3>
                     </div>
                 </div>
             </Alert>
@@ -75,34 +77,52 @@ const ViewExternalTool = () => {
                         <p>Manifests:</p>
                         <table className="table">
                             <tbody>
-                            {version.manifests.map((manifest) => (
-                                <tr key={manifest.manifestId}>
-                                    <td>{manifest.fileName}</td>
-                                    <td>
-                                        <button type="button" className="btn bi-download" onClick={() => {
-                                            setToolToInstall(manifest);
-                                            setShowModal(true);
-                                            }}> Install </button>
-                                        {/* <Link to={`/install/${tool?.id}`} className="btn bi-download" onClick={() => {}}> Install </Link> */}
-                                    </td>
-                                    </tr>
-                                
-                            ))}
-                            </tbody>                            
-                        </table>
-                        
-                    </RowCard>                        
-                ))}
-            </InnerCardDeck> 
+                                {version.manifests.map((manifest) =>
+                                    manifest.manifestSet?.map((subManifest) => (
+                                        <tr key={manifest.manifestId}>
+                                            <td>
+                                                {subManifest.displayName} ({manifest.toolId}.{manifest.versionId}.{manifest.manifestId}): {subManifest.contentType}
+                                            </td>
+                                            <td>
+                                                <button
+                                                    type="button"
+                                                    className="btn bi-rocket-takeoff"
+                                                    onClick={() => {
+                                                        setToolToInstall(subManifest);
+                                                        setShowModal(true);
+                                                    }}
+                                                >
+                                                    <span className="me-1"></span>Install
+                                                </button>
 
-            <br/>
+                                                <button
+                                                    type="button"
+                                                    className="btn bi-download"
+                                                    onClick={() => {
+                                                        downloadManifest(subManifest);
+                                                    }}
+                                                >
+                                                   <span className="me-1"></span>Download
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    ))
+                                )}
+                            </tbody>
+                        </table>
+
+                    </RowCard>
+                ))}
+            </InnerCardDeck>
+
+            <br />
 
             <Alert variant='light'>
                 <div className='container '>
                     <div className='row'>
-                    <h3 className='col-6'>Images:</h3>
+                        <h3 className='col-6'>Images:</h3>
                         <div className='col-6 d-flex justify-content-end align-items-center'>
-                    </div>
+                        </div>
                     </div>
                 </div>
             </Alert>
@@ -113,15 +133,15 @@ const ViewExternalTool = () => {
                         key={image.imageId}
                         imageId={image.storedResourceId}>
                     </MarketplaceCard>
-                ))}  
+                ))}
             </InnerCardDeck>
 
-            <InstallExToolFrame manifest={toolToInstall} showModal={showModal} setShowModal={setShowModal}/>
-            
-                
+            <InstallExToolFrame manifest={toolToInstall} showModal={showModal} setShowModal={setShowModal} />
 
-            
-            
+
+
+
+
         </div>
     );
 };
