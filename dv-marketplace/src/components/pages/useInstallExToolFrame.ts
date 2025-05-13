@@ -63,19 +63,13 @@ export default function useInstallExToolFrame(
         userContext.setModalMessage(error.message || "Error installing external tool.");
         userContext.setShowMessage(true);
       });
-  })
-        .catch ((error) => {
-    userContext.setModalTitle(error.code || "Error");
-    userContext.setModalMessage(error.message || "Error installing external tool.");
-    userContext.setShowMessage(true);
-  });
 
-}
+  }
 
-return {
-  handleClose,
-  hostnames,
-  setHostnames,
-  sendData,
-};
+  return {
+    handleClose,
+    hostnames,
+    setHostnames,
+    sendData,
+  };
 }
