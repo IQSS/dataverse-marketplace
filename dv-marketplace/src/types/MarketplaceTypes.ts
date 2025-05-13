@@ -43,6 +43,7 @@ export interface ExternalTool {
   description: string;
   versions: Version[];
   images: Image[];
+  owner: User;
 }
 
 export type User = {

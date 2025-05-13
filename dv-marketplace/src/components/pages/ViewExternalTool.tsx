@@ -1,13 +1,12 @@
 import { Link } from "react-router-dom";
 import axios from "axios";
-import type { ExternalTool, Image } from "../../types/MarketplaceTypes";
+import type { ExternalTool, Manifest,Image } from "../../types/MarketplaceTypes";
 import { Alert } from "react-bootstrap";
 import { InnerCardDeck } from "../UI/CardDeck";
 import { RowCard, MarketplaceCard } from "../UI/MarketplaceCard";
 import InstallExToolFrame from "./InstallExToolFrame";
 import useViewExternalTool from "./useViewExternalTool";
 import { useEffect } from "react";
-import { Manifest } from "vite";
 
 
 
@@ -79,8 +78,8 @@ const ViewExternalTool = () => {
                         <table className="table">
                             <tbody>
                                 {version.manifests.map((manifest) =>
-                                    manifest.manifestSet?.map((subManifest) => (
-                                        <tr key={manifest.manifestId}>
+                                    manifest.manifestSet?.map((subManifest: Manifest) => (
+                                        <tr key={manifest.manifestId + "_" + subManifest.contentType}>
                                             <td>
                                                 {subManifest.displayName} ({manifest.toolId}.{manifest.versionId}.{manifest.manifestId}): {subManifest.contentType}
                                             </td>
