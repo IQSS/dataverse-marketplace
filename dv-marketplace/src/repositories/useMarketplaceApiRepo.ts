@@ -2,11 +2,11 @@ import { useContext } from "react";
 import { UserContext } from "../components/context/UserContextProvider";
 import axios from "axios";
 
-const BASE_URL = 'http://localhost:8081';
 
 export default function useMarketplaceApiRepo() {
 
     const userContext = useContext(UserContext);
+    // Change this for deployment
     const BASE_URL = 'http://localhost:8081';
     const jwtToken = userContext.user ? userContext.user.accessToken : '';
 
