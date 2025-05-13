@@ -9,6 +9,7 @@ import java.util.List;
 import org.dataverse.marketplace.model.*;
 import org.dataverse.marketplace.openapi.annotations.ExternalToolsAPIDocs;
 import org.dataverse.marketplace.payload.*;
+import org.dataverse.marketplace.repository.UserRepo;
 import org.dataverse.marketplace.security.ApplicationRoles;
 import org.dataverse.marketplace.service.ExternalToolService;
 import org.dataverse.marketplace.service.ResourceStorageService;
@@ -16,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.http.*;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -30,6 +32,9 @@ public class ExternalToolController {
     @Autowired
     private ResourceStorageService resourceStorageService;
 
+    @Autowired
+    private UserRepo userRepository;    
+
     /**
      * Method to retrieve all external tools     
      */
@@ -41,26 +46,7 @@ public class ExternalToolController {
     }
 
     /**
-     * Method to add a new external tool
-     */
-    @PreAuthorize(ApplicationRoles.ADMIN_ROLE)
-    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    @ExternalToolsAPIDocs.AddExternalToolsRequestDoc
-    public ResponseEntity<?> addNewTool(@Valid AddToolRequest addToolRequest) {
-
-        try {
-            return ResponseEntity.ok(externalToolService.addTool(addToolRequest));
-        } catch (IOException e) {
-            ServerMessageResponse messageResponse 
-                = new ServerMessageResponse(HttpStatus.INTERNAL_SERVER_ERROR,
-                                            "Error adding tool",
-                                            e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(messageResponse);
-        }
-    }
-
-    /**
-     * Method to retrieve all external tools     
+     * Method to retrieve an external tool by id   
      */
     @GetMapping("/{toolId}")
     @ExternalToolsAPIDocs.GetExternalToolByIdDoc
@@ -70,7 +56,41 @@ public class ExternalToolController {
         return ResponseEntity.ok(new ExternalToolDTO(tool));
     }
 
-    @PreAuthorize(ApplicationRoles.ADMIN_ROLE)
+    /**
+     * Method to retrieve all external tools by owner_id   
+     */
+    @GetMapping("/owner/{ownerId}")
+    @ExternalToolsAPIDocs.GetExternalToolByOwnerIdDoc
+    public ResponseEntity<?> getToolByOwnerId(@PathVariable("ownerId") Integer ownerId) {
+
+        return ResponseEntity.ok(externalToolService.getAllToolsByOwnerId(ownerId));
+
+    }
+
+    /**
+     * Method to add a new external tool
+     */
+    @PreAuthorize(ApplicationRoles.EDITOR_ROLE)
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @ExternalToolsAPIDocs.AddExternalToolsRequestDoc
+    public ResponseEntity<?> addNewTool(@Valid AddToolRequest addToolRequest) {
+
+        try {
+            String authenticatedUser = SecurityContextHolder.getContext().getAuthentication().getName();
+            User user = userRepository.findByUsername(authenticatedUser).orElse(null);
+            return ResponseEntity.ok(externalToolService.addTool(addToolRequest, user));
+        } catch (IOException e) {
+            ServerMessageResponse messageResponse 
+                = new ServerMessageResponse(HttpStatus.INTERNAL_SERVER_ERROR,
+                                            "Error adding tool",
+                                            e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(messageResponse);
+        }
+    }
+
+
+    @PreAuthorize(ApplicationRoles.ADMIN_ROLE 
+      + " or (" + ApplicationRoles.EDITOR_ROLE + " and @externalToolService.getToolById(#toolId).getOwner().getId() == authentication.getPrincipal().getId)")
     @PutMapping("/{toolId}")
     @ExternalToolsAPIDocs.UpdateExternalToolDoc
     public ResponseEntity<?> updateTool(@PathVariable("toolId") Integer toolId, 
@@ -128,7 +148,8 @@ public class ExternalToolController {
     /**
      * Method to add images to an external tool.
      */
-    @PreAuthorize(ApplicationRoles.ADMIN_ROLE)
+    @PreAuthorize(ApplicationRoles.ADMIN_ROLE 
+      + " or (" + ApplicationRoles.EDITOR_ROLE + " and @externalToolService.getToolById(#toolId).getOwner().getId() == authentication.getPrincipal().getId)")
     @CacheEvict(value = "externalTools", allEntries = true)
     @PostMapping(path = "/{toolId}/images", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @ExternalToolsAPIDocs.AddToolImagesDoc
@@ -165,7 +186,8 @@ public class ExternalToolController {
     /**
      * Method to delete an image from an external tool.
      */
-    @PreAuthorize(ApplicationRoles.ADMIN_ROLE)
+    @PreAuthorize(ApplicationRoles.ADMIN_ROLE 
+      + " or (" + ApplicationRoles.EDITOR_ROLE + " and @externalToolService.getToolById(#toolId).getOwner().getId() == authentication.getPrincipal().getId)")
     @DeleteMapping("/{toolId}/images/{imageId}")
     @ExternalToolsAPIDocs.DeleteToolImageDoc
     public ResponseEntity<?> deleteToolImage(

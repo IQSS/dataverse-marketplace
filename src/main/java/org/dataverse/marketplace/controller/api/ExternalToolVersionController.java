@@ -45,7 +45,8 @@ public class ExternalToolVersionController {
     /**
      * Method to update a specific external tool version
      */
-    @PreAuthorize(ApplicationRoles.ADMIN_ROLE)
+    @PreAuthorize(ApplicationRoles.ADMIN_ROLE 
+      + " or (" + ApplicationRoles.EDITOR_ROLE + " and @externalToolService.getToolById(#toolId).getOwner().getId() == authentication.getPrincipal().getId)")
     @CacheEvict(value = "externalTools", allEntries = true)
     @PutMapping("/{toolId}/versions/{versionId}")
     @ExternalToolVersionsAPIDocs.UpdateVersionByIdDoc
@@ -70,7 +71,8 @@ public class ExternalToolVersionController {
     /**
      * Method to delete a specific external tool version
      */
-    @PreAuthorize(ApplicationRoles.ADMIN_ROLE)
+    @PreAuthorize(ApplicationRoles.ADMIN_ROLE 
+      + " or (" + ApplicationRoles.EDITOR_ROLE + " and @externalToolService.getToolById(#toolId).getOwner().getId() == authentication.getPrincipal().getId)")
     @CacheEvict(value = "externalTools", allEntries = true)
     @DeleteMapping("/{toolId}/versions/{versionId}")
     @ExternalToolVersionsAPIDocs.DeleteExternalToolVersionByIdDoc
@@ -104,7 +106,8 @@ public class ExternalToolVersionController {
     /**
      * Method to add a new version to an existing external tool
      */
-    @PreAuthorize(ApplicationRoles.ADMIN_ROLE)
+    @PreAuthorize(ApplicationRoles.ADMIN_ROLE 
+      + " or (" + ApplicationRoles.EDITOR_ROLE + " and @externalToolService.getToolById(#toolId).getOwner().getId() == authentication.getPrincipal().getId)")
     @CacheEvict(value = "externalTools", allEntries = true)
     @PostMapping(path = "/{toolId}/versions", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @ExternalToolVersionsAPIDocs.AddExternalToolVersionDoc
@@ -160,7 +163,8 @@ public class ExternalToolVersionController {
     /**
      * Method to add manifests to an existing external tool version
      */
-    @PreAuthorize(ApplicationRoles.ADMIN_ROLE)
+    @PreAuthorize(ApplicationRoles.ADMIN_ROLE 
+      + " or (" + ApplicationRoles.EDITOR_ROLE + " and @externalToolService.getToolById(#toolId).getOwner().getId() == authentication.getPrincipal().getId)")
     @CacheEvict(value = "externalTools", allEntries = true)    
     @PostMapping(path = "/{toolId}/versions/{versionId}/manifests")
     @ExternalToolVersionsAPIDocs.AddVersionManifestDoc
@@ -244,7 +248,8 @@ public class ExternalToolVersionController {
     /**
      * Method to delete a specific manifest of an external tool version
      */
-    @PreAuthorize(ApplicationRoles.ADMIN_ROLE)
+    @PreAuthorize(ApplicationRoles.ADMIN_ROLE 
+      + " or (" + ApplicationRoles.EDITOR_ROLE + " and @externalToolService.getToolById(#toolId).getOwner().getId() == authentication.getPrincipal().getId)")
     @CacheEvict(value = "externalTools", allEntries = true)
     @ExternalToolVersionsAPIDocs.DeleteVersionManifestDoc
     @DeleteMapping("/{toolId}/versions/{versionId}/manifests/{manifestId}")
