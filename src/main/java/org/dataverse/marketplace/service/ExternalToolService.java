@@ -46,6 +46,15 @@ public class ExternalToolService {
         return toolDTOs;
     }
 
+    public List<ExternalToolDTO> getAllToolsByOwnerId(Integer ownerId) {
+        List<ExternalTool> tools = externalToolRepo.findByOwnerId(ownerId);
+        ArrayList<ExternalToolDTO> toolDTOs = new ArrayList<>();
+        for (ExternalTool tool : tools) {
+            toolDTOs.add(new ExternalToolDTO(tool));
+        }
+        return toolDTOs;
+    }    
+
     public ExternalTool getToolById(Integer toolId) {
         return externalToolRepo.findById(toolId).orElse(null);
     }
@@ -60,9 +69,10 @@ public class ExternalToolService {
 
     @CacheEvict(value = "externalTools", allEntries = true)
     @Transactional
-    public ExternalToolDTO addTool(AddToolRequest addToolRequest) throws IOException {
+    public ExternalToolDTO addTool(AddToolRequest addToolRequest, User owner) throws IOException {
 
         ExternalTool newTool = new ExternalTool();
+        newTool.setOwner(owner);
         newTool.setName(addToolRequest.getName());
         newTool.setDescription(addToolRequest.getDescription());
         externalToolRepo.save(newTool);
@@ -128,5 +138,6 @@ public class ExternalToolService {
     public void deleteToolImage(MarketplaceItemImage image) {
         marketplaceItemImageRepo.delete(image);
     }
+    
 
 }
