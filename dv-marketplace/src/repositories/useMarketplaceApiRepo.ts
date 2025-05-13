@@ -7,6 +7,7 @@ export default function useMarketplaceApiRepo() {
 
     const userContext = useContext(UserContext);
     // Change this for deployment
+    // const BASE_URL = '';
     const BASE_URL = 'http://localhost:8081';
     const jwtToken = userContext.user ? userContext.user.accessToken : '';
 
