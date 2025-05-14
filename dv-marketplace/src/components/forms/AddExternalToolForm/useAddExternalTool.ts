@@ -2,7 +2,7 @@ import { useContext, useState } from "react";
 import { UserContext } from "../../context/UserContextProvider";
 import axios from "axios";
 import useMarketplaceApiRepo from "../../../repositories/useMarketplaceApiRepo";
-
+import { toast } from "react-toastify";
 
 export default function useAddExternalTool() {
 
@@ -16,35 +16,31 @@ export default function useAddExternalTool() {
         event.preventDefault();
         const formData = new FormData(event.currentTarget);
 
-        try {
-            const response = await axios.post(`${BASE_URL}/api/tools`, formData, {
-                headers: {
-                    'Authorization': `Bearer ${jwtToken}`
-                }
-            });
-            console.log(response.data);
-            setModalMessage("Tool added successfully");
-        } catch (error) {
-            if (axios.isAxiosError(error)) {
-                setModalMessage(error.response?.data?.message || error.message);
-            } else {
-                setModalMessage(String(error));
+       
+        const response = await axios.post(`${BASE_URL}/api/tools`, formData, {
+            headers: {
+                'Authorization': `Bearer ${jwtToken}`
             }
-        } finally {
-            setModalIsOpen(true);
-        }
+        }).then(() => {
+            toast.success("Tool added successfully");
+        }).catch((error) => {
+            if (error.response) {
+                toast.error(error.response.data.message);
+            } else {
+                toast.error("An error occurred");
+            }
+        });
+            
+            
     };
 
-    const closeModal = () => {
-        setModalIsOpen(false);
-    };
+   
 
     return {
         userContext,
         handleSubmit,
         modalIsOpen,
-        modalMessage,
-        closeModal
+        modalMessage
     };
 
 }

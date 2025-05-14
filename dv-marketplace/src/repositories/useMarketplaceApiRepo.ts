@@ -1,14 +1,16 @@
-import { useContext } from "react";
+import { use, useContext } from "react";
 import { UserContext } from "../components/context/UserContextProvider";
 import axios from "axios";
+import { toast } from "react-toastify";
 
+const BASE_URL = 'http://localhost:8081';
 
 export default function useMarketplaceApiRepo() {
 
     const userContext = useContext(UserContext);
     // Change this for deployment
     // const BASE_URL = '';
-    const BASE_URL = 'http://localhost:8081';
+    
     const jwtToken = userContext.user ? userContext.user.accessToken : '';
 
     const deleteBodyRequest = async (url: string) => {
@@ -80,26 +82,21 @@ export default function useMarketplaceApiRepo() {
                 headers: headers
             });
 
-            userContext.setModalTitle("Success");
             if (response.data.message) {
-                userContext.setModalMessage(response.data.message);
+                
+                toast.success(response.data.message);
             } else {
-                userContext.setModalMessage("Operation successful");
+                toast.success("Operation successful");
             }
-            
-            userContext.setShowMessage(true);
-
             return response.data;
 
         } catch (error) {
             if (axios.isAxiosError(error)) {
-                userContext.setModalMessage(error.response?.data?.message || error.message);
+                toast.error(error.response?.data?.message || error.message);
             }
             else {
-                userContext.setModalMessage(String(error));
+                toast.error("An error occurred");
             }
-            userContext.setModalTitle("Error");
-            userContext.setShowMessage(true);
         }
     }
 
@@ -177,7 +174,5 @@ export async function fetchFromApi<T>(url: string): Promise<T> {
     } catch (error) {
         console.error('Error fetching data:', error);
         throw error;
-    }
-
-    
+    }    
 }
