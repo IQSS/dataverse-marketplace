@@ -5,49 +5,30 @@ import java.util.Set;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "external_tool_manifest", uniqueConstraints = {
-        @UniqueConstraint(columnNames = { "version_id", "mkt_item_id", "manifest_id" })
-})
+@Table(name = "external_tool_manifest")
 public class ExternalToolManifest {
 
-    
-    @Column(name = "version_id")
-    Long versionId;
-
-    
-    @Column(name = "mkt_item_id")
-    private Long mkItemId;
-
     @Id
-    @Column(name = "manifest_id")
-    private Long manifestId;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
     
 
     @ManyToOne
-    @JoinColumns({
-        @JoinColumn(name = "version_id", referencedColumnName = "id", insertable = false, updatable = false),
-        @JoinColumn(name = "mkt_item_id", referencedColumnName = "mkt_item_id", insertable = false, updatable = false)
-    })
+    @JoinColumn(name = "version_id")
     private ExternalToolVersion externalToolVersion;
 
 
     // Manifest details
-    @Column(name = "display_name")
     private String displayName;
 
-    @Column(name = "description")
     private String description;
 
-    @Column(name = "scope")//enum?
     private String scope;
 
-    @Column(name = "tool_url")
     private String toolUrl;
 
-    @Column(name = "tool_name")
     private String toolName;
     
-    @Column(name = "http_method")
     private String httpMethod;
 
     @OneToMany(mappedBy = "manifest", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -63,34 +44,13 @@ public class ExternalToolManifest {
     //requirements
 
 
-
-
-
     /* Getters and Setters */
-
-
-    public Long getVersionId() {
-        return this.versionId;
+    public Long getId() {
+        return this.id;
     }
 
-    public void setVersionId(Long versionId) {
-        this.versionId = versionId;
-    }
-
-    public Long getMkItemId() {
-        return this.mkItemId;
-    }
-
-    public void setMkItemId(Long mkItemId) {
-        this.mkItemId = mkItemId;
-    }
-
-    public Long getManifestId() {
-        return this.manifestId;
-    }
-
-    public void setManifestId(Long manifestId) {
-        this.manifestId = manifestId;
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public ExternalToolVersion getExternalToolVersion() {

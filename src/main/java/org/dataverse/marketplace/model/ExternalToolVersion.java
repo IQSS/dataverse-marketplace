@@ -3,52 +3,39 @@ package org.dataverse.marketplace.model;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import jakarta.persistence.*;
 
 @Entity
-@IdClass(ExternalToolVersion.ExternalToolVersionId.class)
-@Table(name = "external_tool_version", uniqueConstraints = {
-        @UniqueConstraint(columnNames = { "id", "mkt_item_id" })
-})
+@Table(name = "external_tool_version")
 public class ExternalToolVersion implements Serializable {
 
     @Id
-    Integer id;
-
-    @Id
-    @Column(name = "mkt_item_id")
-    private Integer mkItemId;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "mkt_item_id", insertable = false, updatable = false)
+    @JoinColumn(name = "external_tool_id")
     private ExternalTool externalTool;
-
-    @OneToOne(cascade = CascadeType.REMOVE)
-    @JoinColumn(name = "v_metadata_id")
-    private VersionMetadata versionMetadata;
 
     @OneToMany(mappedBy = "externalToolVersion", cascade = CascadeType.REMOVE)
     private List<ExternalToolManifest> manifests = new ArrayList<ExternalToolManifest>();
-    
+
+    private String releaseNote;
+
+    @Column(name = "item_version")
+    private String version;
+
+    @Column(name = "dv_min_version")
+    private String dataverseMinVersion;
 
     /* Getters and Setters */
 
-
-    public Integer getId() {
+    public Long getId() {
         return this.id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
-    }
-
-    public Integer getMkItemId() {
-        return this.mkItemId;
-    }
-
-    public void setMkItemId(Integer mkItemId) {
-        this.mkItemId = mkItemId;
     }
 
     public ExternalTool getExternalTool() {
@@ -59,14 +46,6 @@ public class ExternalToolVersion implements Serializable {
         this.externalTool = externalTool;
     }
 
-    public VersionMetadata getVersionMetadata() {
-        return this.versionMetadata;
-    }
-
-    public void setVersionMetadata(VersionMetadata versionMetadata) {
-        this.versionMetadata = versionMetadata;
-    }
-
     public List<ExternalToolManifest> getManifests() {
         return this.manifests;
     }
@@ -74,39 +53,29 @@ public class ExternalToolVersion implements Serializable {
     public void setManifests(List<ExternalToolManifest> manifests) {
         this.manifests = manifests;
     }
-    
-    @Embeddable
-    public static class ExternalToolVersionId implements Serializable {
 
-        private Integer id;
-        private Integer mkItemId;
+    public String getReleaseNote() {
+        return this.releaseNote;
+    }
 
-        // Default constructor
-        public ExternalToolVersionId() {
-        }
+    public void setReleaseNote(String releaseNote) {
+        this.releaseNote = releaseNote;
+    }
 
-        // Parameterized constructor
-        public ExternalToolVersionId(Integer id, Integer mkItemId) {
-            this.id = id;
-            this.mkItemId = mkItemId;
-        }
+    public String getVersion() {
+        return this.version;
+    }
 
-        // Getters and setters
+    public void setVersion(String version) {
+        this.version = version;
+    }
 
-        @Override
-        public boolean equals(Object o) {
-            if (this == o)
-                return true;
-            if (o == null || getClass() != o.getClass())
-                return false;
-            ExternalToolVersionId that = (ExternalToolVersionId) o;
-            return Objects.equals(id, that.id) && Objects.equals(mkItemId, that.mkItemId);
-        }
+    public String getDataverseMinVersion() {
+        return this.dataverseMinVersion;
+    }
 
-        @Override
-        public int hashCode() {
-            return Objects.hash(id, mkItemId);
-        }
+    public void setDataverseMinVersion(String dataverseMinVersion) {
+        this.dataverseMinVersion = dataverseMinVersion;
     }
 
 }

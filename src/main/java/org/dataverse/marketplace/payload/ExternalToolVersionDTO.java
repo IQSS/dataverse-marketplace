@@ -14,7 +14,7 @@ public class ExternalToolVersionDTO implements Serializable{
 
     @Schema(description = "The unique identifier of the external tool version", 
             example = "1")
-    private Integer id;
+    private Long id;
 
     @Schema(description = "The version of the external tool", 
             example = "\"1.0\"")
@@ -39,9 +39,9 @@ public class ExternalToolVersionDTO implements Serializable{
     public ExternalToolVersionDTO(ExternalToolVersion version) {
 
         this.id = version.getId();
-        this.version = version.getVersionMetadata().getVersion();
-        this.releaseNote = version.getVersionMetadata().getReleaseNote();
-        this.dataverseMinVersion = version.getVersionMetadata().getDataverseMinVersion();
+        this.version = version.getVersion();
+        this.releaseNote = version.getReleaseNote();
+        this.dataverseMinVersion = version.getDataverseMinVersion();
 
         this.manifests = new ArrayList<>();
 
@@ -54,11 +54,11 @@ public class ExternalToolVersionDTO implements Serializable{
 
     /* Getters and Setters */
 
-    public Integer getId() {
+    public Long getId() {
         return this.id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

@@ -46,7 +46,7 @@ public class ExternalToolService {
         return toolDTOs;
     }
 
-    public List<ExternalToolDTO> getAllToolsByOwnerId(Integer ownerId) {
+    public List<ExternalToolDTO> getAllToolsByOwnerId(Long ownerId) {
         List<ExternalTool> tools = externalToolRepo.findByOwnerId(ownerId);
         ArrayList<ExternalToolDTO> toolDTOs = new ArrayList<>();
         for (ExternalTool tool : tools) {
@@ -55,20 +55,20 @@ public class ExternalToolService {
         return toolDTOs;
     }    
 
-    public ExternalTool getToolById(Integer toolId) {
+    public ExternalTool getToolById(Long toolId) {
         return externalToolRepo.findById(toolId).orElse(null);
     }
 
-    public ExternalToolVersion getToolVersionById(Integer toolId, Integer versionId) {
-        return externalToolVersionRepo.findByMkItemIdAndId(toolId, versionId);
+    public ExternalToolVersion getToolVersionById(Long versionId) {
+        return externalToolVersionRepo.findById(versionId).orElse(null);
     }
 
-    public List<ExternalToolManifest> getToolManifests(Integer toolId, Integer versionId) {
-        return externalToolManifestRepo.findByMkItemIdAndVersionId(toolId, versionId);
+    public List<ExternalToolManifest> getToolManifests(Long versionId) {
+        return externalToolManifestRepo.findByExternalToolVersionId(versionId);
     }
 
-    public ExternalToolManifest getToolManifestById(Integer toolId, Integer versionId, Integer manifestId) {
-        return externalToolManifestRepo.findByMkItemIdAndVersionIdAndManifestId(toolId, versionId, manifestId);
+    public ExternalToolManifest getToolManifestById(Long manifestId) {
+        return externalToolManifestRepo.findById(manifestId).orElse(null);
     }    
 
     @CacheEvict(value = "externalTools", allEntries = true)
@@ -89,7 +89,7 @@ public class ExternalToolService {
         
         List<ExternalToolVersion> versions = new ArrayList<ExternalToolVersion>();
         ExternalToolVersion newVersion =
-            externalToolVersionService.addToolVersion(addVersionRequest, newTool.getId());
+            externalToolVersionService.addToolVersion(addVersionRequest, newTool);
         versions.add(newVersion);
         newTool.setExternalToolVersions(versions);
         if(addToolRequest.getItemImages() != null){
@@ -122,9 +122,8 @@ public class ExternalToolService {
                                         StoredResourceStorageTypeEnum.FILESYSTEM);
 
             MarketplaceItemImage newImage = new MarketplaceItemImage();
-            
+            System.out.println("TEST HERE");
             newImage.setMarketplaceItem(item);
-            newImage.setImageStoredResourceId(storedResource.getId());  
             newImage.setStoredResource(storedResource);          
             marketplaceItemImageRepo.save(newImage);
             newImages.add(newImage);
@@ -134,8 +133,8 @@ public class ExternalToolService {
         return newImages;
     }
 
-    public MarketplaceItemImage getItemImage(Integer imageId, Integer marketplaceItemId) {
-        return marketplaceItemImageRepo.findByMarketplaceItemId(imageId, marketplaceItemId);
+    public MarketplaceItemImage getItemImage(Long imageId) {
+        return marketplaceItemImageRepo.findById(imageId).orElse(null);
     }
 
     @CacheEvict(value = "externalTools", allEntries = true)

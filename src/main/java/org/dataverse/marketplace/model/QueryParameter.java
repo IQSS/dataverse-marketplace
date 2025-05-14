@@ -7,9 +7,8 @@ import jakarta.persistence.*;
 public class QueryParameter {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "query_parameter_id_seq")
-    @SequenceGenerator(name = "query_parameter_id_seq", sequenceName = "query_parameter_id_seq", allocationSize = 1)
-    private Integer id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
     String key;
     String value;
@@ -18,11 +17,11 @@ public class QueryParameter {
     @JoinColumn(name = "manifest_id", nullable = false)
     private ExternalToolManifest manifest;
 
-    public Integer getId() {
+    public Long getId() {
         return this.id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

@@ -1,11 +1,7 @@
 package org.dataverse.marketplace.model;
 
-import org.dataverse.marketplace.model.enums.StoredResourceStorageTypeEnum;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -16,18 +12,18 @@ import jakarta.persistence.Table;
 public class StoredResourceStorageType {
 
     @Id
-    private Integer id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
     
-    @Column(name = "type_name")
     private String typeName;
 
     /* Getters and Setters */
 
-    public Integer getId() {
+    public Long getId() {
         return this.id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

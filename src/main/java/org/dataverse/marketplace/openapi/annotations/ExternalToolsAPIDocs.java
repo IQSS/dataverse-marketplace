@@ -12,7 +12,6 @@ import org.dataverse.marketplace.payload.MarketplaceItemImageDTO;
 import org.dataverse.marketplace.payload.ServerMessageResponse;
 import org.dataverse.marketplace.payload.UpdateToolRequest;
 import org.dataverse.marketplace.payload.auth.UserDTO;
-import org.springframework.web.multipart.MultipartFile;
 import org.dataverse.marketplace.openapi.samples.AuthAPISamples;
 import org.dataverse.marketplace.openapi.samples.ExternalToolSamples;
 

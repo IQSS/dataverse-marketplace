@@ -7,16 +7,15 @@ import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
 import org.dataverse.marketplace.model.ContentType;
+import org.dataverse.marketplace.model.ExternalTool;
 import org.dataverse.marketplace.model.ExternalToolManifest;
 import org.dataverse.marketplace.model.ExternalToolType;
 import org.dataverse.marketplace.model.ExternalToolVersion;
 import org.dataverse.marketplace.model.QueryParameter;
-import org.dataverse.marketplace.model.VersionMetadata;
 import org.dataverse.marketplace.payload.AddVersionRequest;
 import org.dataverse.marketplace.payload.ExternalToolManifestDTO;
 import org.dataverse.marketplace.repository.ExternalToolManifestRepo;
 import org.dataverse.marketplace.repository.ExternalToolVersionRepo;
-import org.dataverse.marketplace.repository.VersionMetadataRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -29,17 +28,14 @@ public class ExternalToolVersionService {
     private ExternalToolVersionRepo externalToolVersionRepo;
 
     @Autowired
-    private VersionMetadataRepo versionMetadataRepo;
-
-    @Autowired
     private ExternalToolManifestRepo externalToolManifestRepo;
 
     public ExternalToolVersion updateToolVersion(ExternalToolVersion externalToolVersion) {
         return externalToolVersionRepo.save(externalToolVersion);
     }
 
-    public Integer getVersionCount(Integer toolId) {
-        return externalToolVersionRepo.getVersionCount(toolId);
+    public Long getVersionCount(Long toolId) {
+        return externalToolVersionRepo.countByExternalToolId(toolId);
     }
 
     @Transactional
@@ -48,22 +44,13 @@ public class ExternalToolVersionService {
     }
 
     @Transactional
-    public ExternalToolVersion addToolVersion(AddVersionRequest externalToolVersion, Integer toolId)
+    public ExternalToolVersion addToolVersion(AddVersionRequest externalToolVersion, ExternalTool externalTool)
             throws IOException {
-
-        VersionMetadata versionMetadata = new VersionMetadata();
-        versionMetadata.setVersion(externalToolVersion.getVersion());
-        versionMetadata.setReleaseNote(externalToolVersion.getReleaseNote());
-        versionMetadata.setDataverseMinVersion(externalToolVersion.getDvMinVersion());
-        versionMetadataRepo.save(versionMetadata);
-
-        Integer externalToolNextVersion = externalToolVersionRepo.getNextIdForItemVersion(toolId);
-        externalToolNextVersion = externalToolNextVersion == null ? 1 : externalToolNextVersion + 1;
-
         ExternalToolVersion newVersion = new ExternalToolVersion();
-        newVersion.setId(externalToolNextVersion);
-        newVersion.setMkItemId(toolId);
-        newVersion.setVersionMetadata(versionMetadata);
+        newVersion.setExternalTool(externalTool);
+        newVersion.setVersion(externalToolVersion.getVersion());
+        newVersion.setReleaseNote(externalToolVersion.getReleaseNote());
+        newVersion.setDataverseMinVersion(externalToolVersion.getDvMinVersion());        
         externalToolVersionRepo.save(newVersion);
 
         return newVersion;
@@ -73,16 +60,8 @@ public class ExternalToolVersionService {
     public ExternalToolManifest addVersionManifest(ExternalToolVersion externalToolVersion,
             ExternalToolManifestDTO manifestDTO) throws IOException {
 
-        Long externalToolManifestId = externalToolManifestRepo.getNextIdForManifest(
-                externalToolVersion.getMkItemId(), externalToolVersion.getId());
-
-        externalToolManifestId = externalToolManifestId == null ? 1 : externalToolManifestId + 1;
-
         ExternalToolManifest newManifest = new ExternalToolManifest();
-        newManifest.setManifestId(externalToolManifestId);
-        newManifest.setMkItemId(Long.valueOf(externalToolVersion.getMkItemId()));
-        newManifest.setVersionId(Long.valueOf(externalToolVersion.getId()));
-
+        newManifest.setExternalToolVersion(externalToolVersion);
         convertDTOtoEntity(manifestDTO, newManifest);
         return externalToolManifestRepo.save(newManifest);
 
@@ -90,8 +69,6 @@ public class ExternalToolVersionService {
 
     public ExternalToolManifestDTO updateExternalToolManifest(
             ExternalToolManifestDTO externalToolManifestDTO,
-            Integer toolId,
-            Integer versionId,
             Long manifestId) throws IOException {
 
         ExternalToolManifest manifest = externalToolManifestRepo.findById(manifestId).get();

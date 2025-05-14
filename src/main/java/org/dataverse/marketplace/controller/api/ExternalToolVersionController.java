@@ -35,10 +35,10 @@ public class ExternalToolVersionController {
     @GetMapping("/{toolId}/versions/{versionId}")
     @ExternalToolVersionsAPIDocs.GetExternalToolVersionByIdDoc
     public ResponseEntity<?> getVersionById(
-            @PathVariable("toolId") Integer toolId,
-            @PathVariable("versionId") Integer versionId) {
+            @PathVariable("toolId") Long toolId,
+            @PathVariable("versionId") Long versionId) {
 
-        ExternalToolVersion version = externalToolService.getToolVersionById(toolId, versionId);
+        ExternalToolVersion version = externalToolService.getToolVersionById(versionId);
         return ResponseEntity.ok(new ExternalToolVersionDTO(version));
     }
 
@@ -51,17 +51,15 @@ public class ExternalToolVersionController {
     @PutMapping("/{toolId}/versions/{versionId}")
     @ExternalToolVersionsAPIDocs.UpdateVersionByIdDoc
     public ResponseEntity<?> updateVersionById(
-            @PathVariable("toolId") Integer toolId,
-            @PathVariable("versionId") Integer versionId,
+            @PathVariable("toolId") Long toolId,
+            @PathVariable("versionId") Long versionId,
             @Valid @RequestBody ToolVersionMetadataUpdateRequest updateToolVersionRequest) {
 
         System.out.println(updateToolVersionRequest);
-        ExternalToolVersion version = externalToolService.getToolVersionById(toolId, versionId);
-
-        VersionMetadata metadata = version.getVersionMetadata();
-        metadata.setDataverseMinVersion(updateToolVersionRequest.getDvMinVersion());
-        metadata.setReleaseNote(updateToolVersionRequest.getReleaseNote());
-        metadata.setVersion(updateToolVersionRequest.getVersion());
+        ExternalToolVersion version = externalToolService.getToolVersionById(versionId);
+        version.setDataverseMinVersion(updateToolVersionRequest.getDvMinVersion());
+        version.setReleaseNote(updateToolVersionRequest.getReleaseNote());
+        version.setVersion(updateToolVersionRequest.getVersion());
 
         externalToolVersionService.updateToolVersion(version);
 
@@ -77,12 +75,12 @@ public class ExternalToolVersionController {
     @DeleteMapping("/{toolId}/versions/{versionId}")
     @ExternalToolVersionsAPIDocs.DeleteExternalToolVersionByIdDoc
     public ResponseEntity<?> deleteVersionById(
-            @PathVariable("toolId") Integer toolId,
-            @PathVariable("versionId") Integer versionId) {
+            @PathVariable("toolId") Long toolId,
+            @PathVariable("versionId") Long versionId) {
 
         try{
             if (externalToolVersionService.getVersionCount(toolId) > 1) {
-                ExternalToolVersion version = externalToolService.getToolVersionById(toolId, versionId);
+                ExternalToolVersion version = externalToolService.getToolVersionById(versionId);
                 externalToolVersionService.deleteToolVersion(version);
                 ServerMessageResponse messageResponse = new ServerMessageResponse(HttpStatus.OK,
                         "Version deleted",
@@ -112,7 +110,7 @@ public class ExternalToolVersionController {
     @PostMapping(path = "/{toolId}/versions", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @ExternalToolVersionsAPIDocs.AddExternalToolVersionDoc
     public ResponseEntity<?> addNewExternalToolVersion(
-            @PathVariable("toolId") Integer toolId,
+            @PathVariable("toolId") Long toolId,
             AddVersionRequest addVersionRequest) { 
         
         ExternalTool tool = externalToolService.getToolById(toolId);
@@ -124,7 +122,8 @@ public class ExternalToolVersionController {
         } else {
 
             try {
-                ExternalToolVersion newVersion = externalToolVersionService.addToolVersion(addVersionRequest, toolId);
+                ExternalTool externalTool = externalToolService.getToolById(toolId);
+                ExternalToolVersion newVersion = externalToolVersionService.addToolVersion(addVersionRequest, externalTool);
                 return ResponseEntity.ok(new ExternalToolVersionDTO(newVersion));
             } catch (IOException e) {
                 ServerMessageResponse messageResponse = new ServerMessageResponse(HttpStatus.INTERNAL_SERVER_ERROR,
@@ -143,7 +142,7 @@ public class ExternalToolVersionController {
     @GetMapping("/{toolId}/versions")
     @ExternalToolVersionsAPIDocs.GetExternalToolVersionsByToolIdDoc
     public ResponseEntity<?> getVersionsToolByToolId(
-            @PathVariable("toolId") Integer toolId) {
+            @PathVariable("toolId") Long toolId) {
 
         ExternalTool tool = externalToolService.getToolById(toolId);
         if(tool == null){
@@ -169,11 +168,11 @@ public class ExternalToolVersionController {
     @PostMapping(path = "/{toolId}/versions/{versionId}/manifests")
     @ExternalToolVersionsAPIDocs.AddVersionManifestDoc
     public ResponseEntity<?> addVersionManifest(
-            @PathVariable("toolId") Integer toolId,
-            @PathVariable("versionId") Integer versionId,
+            @PathVariable("toolId") Long toolId,
+            @PathVariable("versionId") Long versionId,
             @Valid @RequestBody ExternalToolManifestDTO manifestDTO) throws IOException {
         
-        ExternalToolVersion version = externalToolService.getToolVersionById(toolId, versionId);
+        ExternalToolVersion version = externalToolService.getToolVersionById(versionId);
         
         if(version == null){
             ServerMessageResponse messageResponse = new ServerMessageResponse(HttpStatus.NOT_FOUND,
@@ -192,10 +191,10 @@ public class ExternalToolVersionController {
     @GetMapping("/{toolId}/versions/{versionId}/manifests")
     @ExternalToolVersionsAPIDocs.GetVersionManifestsDoc
     public ResponseEntity<?> getVersionManifestsById(
-        @PathVariable("toolId") Integer toolId,
-        @PathVariable("versionId") Integer versionId) {
+        @PathVariable("toolId") Long toolId,
+        @PathVariable("versionId") Long versionId) {
 
-        List<ExternalToolManifest> manifests = externalToolService.getToolManifests(toolId, versionId);
+        List<ExternalToolManifest> manifests = externalToolService.getToolManifests(versionId);
         List<ExternalToolManifestDTO> manifestStoredResourceId = new ArrayList<>();
         for (ExternalToolManifest manifest : manifests) {
             ExternalToolManifestDTO manifestDTO = new ExternalToolManifestDTO(manifest);
@@ -210,11 +209,11 @@ public class ExternalToolVersionController {
     @GetMapping("/{toolId}/versions/{versionId}/manifests/{manifestId}")
     @ExternalToolVersionsAPIDocs.GetVersionManifestDoc
     public ResponseEntity<?> getVersionManifestById(
-        @PathVariable("toolId") Integer toolId,
-        @PathVariable("versionId") Integer versionId,
-        @PathVariable("manifestId") Integer manifestId){
+        @PathVariable("toolId") Long toolId,
+        @PathVariable("versionId") Long versionId,
+        @PathVariable("manifestId") Long manifestId){
 
-        ExternalToolManifest manifest = externalToolService.getToolManifestById(toolId, versionId, manifestId);
+        ExternalToolManifest manifest = externalToolService.getToolManifestById(manifestId);
         return ResponseEntity.ok(new ExternalToolManifestDTO(manifest));
     }    
 
@@ -226,13 +225,13 @@ public class ExternalToolVersionController {
     @PutMapping(path = "/{toolId}/versions/{versionId}/manifests/{manifestId}")
     @ExternalToolVersionsAPIDocs.UpdateVersionManifestDoc
     public ResponseEntity<?> updateVersionManifest(
-            @PathVariable("toolId") Integer toolId,
-            @PathVariable("versionId") Integer versionId,
+            @PathVariable("toolId") Long toolId,
+            @PathVariable("versionId") Long versionId,
             @PathVariable("manifestId") Long manifestId,
             @Valid @RequestBody ExternalToolManifestDTO manifestDTO) throws IOException {
 
         try {
-            ExternalToolManifestDTO retManifestDTO = externalToolVersionService.updateExternalToolManifest(manifestDTO, toolId, versionId, manifestId);
+            ExternalToolManifestDTO retManifestDTO = externalToolVersionService.updateExternalToolManifest(manifestDTO, manifestId);
             return ResponseEntity.ok(retManifestDTO);
         } catch (IOException e) {
             ServerMessageResponse messageResponse = new ServerMessageResponse(HttpStatus.INTERNAL_SERVER_ERROR,

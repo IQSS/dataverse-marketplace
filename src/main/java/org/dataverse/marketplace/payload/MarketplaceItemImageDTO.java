@@ -8,7 +8,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 public class MarketplaceItemImageDTO implements Serializable {
 
     @Schema(description = "The image ID", example = "1")
-    private Integer imageId;
+    private Long imageId;
 
     @Schema(description = "The stored resource ID", example = "1")
     private Long storedResourceId;
@@ -18,16 +18,16 @@ public class MarketplaceItemImageDTO implements Serializable {
 
     public MarketplaceItemImageDTO(MarketplaceItemImage marketplaceItemImage) {
         this.imageId = marketplaceItemImage.getId();
-        this.storedResourceId = marketplaceItemImage.getImageStoredResourceId();
+        this.storedResourceId = marketplaceItemImage.getStoredResource().getId();
     }
 
     /* Getters and Setters */
 
-    public Integer getImageId() {
+    public Long getImageId() {
         return this.imageId;
     }
 
-    public void setImageId(Integer imageId) {
+    public void setImageId(Long imageId) {
         this.imageId = imageId;
     }
 

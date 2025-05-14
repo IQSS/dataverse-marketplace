@@ -21,10 +21,6 @@ public class ExternalToolManifestDTO implements Serializable {
     @Schema(description = "The manifest ID", example = "1")
     public Long manifestId;
 
-    // currently needed for install
-    public Long toolId;
-    public Long versionId;
-
     // Manifest details
     @Schema(description = "The manifest's display name", example = "My External Tool")
     private String displayName;
@@ -60,10 +56,7 @@ public class ExternalToolManifestDTO implements Serializable {
     }
 
     public ExternalToolManifestDTO(ExternalToolManifest externalToolManifest) {
-        this.manifestId = externalToolManifest.getManifestId();
-        this.toolId = externalToolManifest.getMkItemId();
-        this.versionId = externalToolManifest.getVersionId();
-
+        this.manifestId = externalToolManifest.getId();
         this.displayName = externalToolManifest.getDisplayName();
         this.description = externalToolManifest.getDescription();
         this.scope = externalToolManifest.getScope();
@@ -120,23 +113,6 @@ public class ExternalToolManifestDTO implements Serializable {
     public void setManifestId(Long manifestId) {
         this.manifestId = manifestId;
     }
-
-    public Long getToolId() {
-        return this.toolId;
-    }
-
-    public void setToolId(Long toolId) {
-        this.toolId = toolId;
-    }
-
-    public Long getVersionId() {
-        return this.versionId;
-    }
-
-    public void setVersionId(Long versionId) {
-        this.versionId = versionId;
-    }
-
 
     public String getDisplayName() {
         return this.displayName;

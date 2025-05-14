@@ -10,11 +10,7 @@ export interface Version {
 
 export interface Manifest {
   [key: string]: any; // Add index signature
-
-  toolId: number;
-  versionId: number;
-  manifestId: number;
-  
+  manifestId: number;  
   displayName: string;
   description: string;
   scope: string;

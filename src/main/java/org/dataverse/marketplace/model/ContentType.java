@@ -7,9 +7,8 @@ import jakarta.persistence.*;
 public class ContentType {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "content_type_id_seq")
-    @SequenceGenerator(name = "content_type_id_seq", sequenceName = "content_type_id_seq", allocationSize = 1)
-    private Integer id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
     String contentType;
 
@@ -17,11 +16,11 @@ public class ContentType {
     @JoinColumn(name = "manifest_id", nullable = false)
     private ExternalToolManifest manifest;
 
-    public Integer getId() {
+    public Long getId() {
         return this.id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

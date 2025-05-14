@@ -3,7 +3,6 @@ package org.dataverse.marketplace.model;
 import org.hibernate.annotations.JdbcType;
 import org.hibernate.type.descriptor.jdbc.VarbinaryJdbcType;
 
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
@@ -13,12 +12,10 @@ import jakarta.persistence.Table;
 public class DatabaseResourceStorage {
 
     @Id
-    @Column(name = "stored_resource_id")
     private Long storedResourceId;
     
 
     @JdbcType(VarbinaryJdbcType.class)
-    @Column(name = "resource_data")
     private byte[] resourceData;
 
     /* Getters and Setters */

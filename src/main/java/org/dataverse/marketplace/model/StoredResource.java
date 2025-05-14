@@ -8,24 +8,17 @@ import jakarta.persistence.*;
 public class StoredResource {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "resource_storage_id_seq")    
-    @SequenceGenerator(
-        name = "resource_storage_id_seq", 
-        sequenceName = "resource_storage_id_seq", 
-        allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     
-    @OneToOne
-    @JoinColumn(name = "storage_type_id")
+    @ManyToOne
+    @JoinColumn(name = "storage_type_id", nullable = false)
     private StoredResourceStorageType type;
 
-    @Column(name = "file_name")
     String fileName;
 
-    @Column(name = "mime_type")
     String mimeType;
 
-    @Column(name = "file_size")
     Long fileSize;
 
     /* Getters and Setters */

@@ -5,18 +5,15 @@ import java.util.List;
 import java.util.Set;
 
 import jakarta.persistence.*;
+
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
 @Table(name = "marketplace_item")
 public class MarketplaceItem implements Serializable{
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "mkt_item_id_seq")    
-    @SequenceGenerator(
-        name = "mkt_item_id_seq", 
-        sequenceName = "mkt_item_id_seq", 
-        allocationSize = 1)
-    private Integer id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
     private String name;
 
@@ -39,11 +36,11 @@ public class MarketplaceItem implements Serializable{
 
     /* Getters & Setters */
 
-    public Integer getId() {
+    public Long getId() {
         return this.id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

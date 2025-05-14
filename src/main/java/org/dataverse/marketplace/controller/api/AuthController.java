@@ -109,7 +109,7 @@ public class AuthController {
     @PreAuthorize(ApplicationRoles.ADMIN_ROLE)
     @PostMapping("/roles/{roleId}/user/{userId}")
     @AuthAPIDocs.AssignRole
-    public ResponseEntity<?> assignRole(@PathVariable("roleId") Integer roleId, @PathVariable("userId") Long userId) {
+    public ResponseEntity<?> assignRole(@PathVariable("roleId") Long roleId, @PathVariable("userId") Long userId) {
         
         try {
 
@@ -145,7 +145,7 @@ public class AuthController {
     @PreAuthorize(ApplicationRoles.ADMIN_ROLE)
     @DeleteMapping("/roles/{roleId}/user/{userId}")
     @AuthAPIDocs.RemoveRole
-    public ResponseEntity<?> removeRole(@PathVariable("roleId") Integer roleId, @PathVariable("userId") Long userId) {
+    public ResponseEntity<?> removeRole(@PathVariable("roleId") Long roleId, @PathVariable("userId") Long userId) {
 
         try {
 

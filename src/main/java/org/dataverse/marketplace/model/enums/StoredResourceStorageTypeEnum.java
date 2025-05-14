@@ -2,14 +2,14 @@ package org.dataverse.marketplace.model.enums;
 
 public enum StoredResourceStorageTypeEnum {
 
-    DATABASE("DATABASE", 1),
-    FILESYSTEM("FILESYSTEM", 2),
-    CLOUD_S3("CLOUD_S3", 3),;
+    DATABASE("DATABASE", Long.valueOf(1)),
+    FILESYSTEM("FILESYSTEM", Long.valueOf(2)),
+    CLOUD_S3("CLOUD_S3", Long.valueOf(3)),;
 
     private final String name;
-    private final Integer id;
+    private final Long id;
 
-    private StoredResourceStorageTypeEnum(String name, Integer id) {
+    private StoredResourceStorageTypeEnum(String name, Long id) {
         this.name = name;
         this.id = id;
     }
@@ -18,11 +18,11 @@ public enum StoredResourceStorageTypeEnum {
         return name;
     }
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public static StoredResourceStorageTypeEnum fromId(Integer id) {
+    public static StoredResourceStorageTypeEnum fromId(Long id) {
         for (StoredResourceStorageTypeEnum type : StoredResourceStorageTypeEnum.values()) {
             if (type.getId().equals(id)) {
                 return type;
