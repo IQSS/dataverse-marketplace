@@ -49,7 +49,6 @@ const EditVersionCard = ({ version, tool }: EditVersionCardProps) => {
                     <p>
                         Manifests:{" "}
                         <>
-                            {/* + button to show alert panel */}
                             <button
                                 type="button"
                                 className="btn bi-plus px-0"

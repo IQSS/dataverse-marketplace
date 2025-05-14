@@ -18,7 +18,7 @@ public class RoleCreationResponse {
     @NotNull
     @Schema(description = "The id of the role succesfully created.", 
             example = "1")
-    Integer roleId;
+    Long roleId;
 
     public RoleCreationResponse(Role role) {
         this.roleName = role.getName();
@@ -36,11 +36,11 @@ public class RoleCreationResponse {
         this.roleName = roleName;
     }
 
-    public Integer getRoleId() {
+    public Long getRoleId() {
         return roleId;
     }
 
-    public void setRoleId(Integer roleId) {
+    public void setRoleId(Long roleId) {
         this.roleId = roleId;
     }
 

@@ -89,40 +89,6 @@ public @interface AuthAPIDocs {
 
     @Target({ElementType.METHOD})    
     @Retention(RetentionPolicy.RUNTIME)
-    @Tag(name = "Security")    
-    @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", 
-                        description = "Role successfully created",
-                        content = @Content(mediaType = "application/json",
-                        schema = @Schema(implementation = RoleCreationResponse.class),
-                        examples = @ExampleObject(AuthAPISamples.ROLE_CREATION_RESPONSE))),
-        @ApiResponse(responseCode = "400", 
-                        description = "Bad request on role creation",
-                        content = @Content(mediaType = "application/json",
-                        schema = @Schema(implementation = ServerMessageResponse.class),
-                        examples = @ExampleObject(GenericBusinessSamples.SERVER_MESSAGE_RESPONSE))),
-        @ApiResponse(responseCode = "401", 
-                        description = "Access Denied for role creation",
-                        content = @Content(mediaType = "application/json",
-                        schema = @Schema(implementation = ServerMessageResponse.class),
-                        examples = @ExampleObject(GenericBusinessSamples.SERVER_MESSAGE_RESPONSE))),
-        @ApiResponse(responseCode = "500", 
-                        description = "Internal Server Error during role creation",
-                        content = @Content(mediaType = "application/json",
-                        schema = @Schema(implementation = ServerMessageResponse.class),
-                        examples = @ExampleObject(GenericBusinessSamples.SERVER_MESSAGE_RESPONSE)))                        
-    })
-    @Operation(summary = "Creates a new role.",
-                description = "This endpoint creates a new role in the system.")
-    @RequestBody(description = "The role creation request", 
-                required = true, 
-                content = @Content(mediaType = "application/json",
-                schema = @Schema(implementation = RoleCreationRequest.class),
-                examples = @ExampleObject(AuthAPISamples.ROLE_CREATION_REQUEST)))
-    public @interface RoleCreationRequestDoc{}
-
-    @Target({ElementType.METHOD})    
-    @Retention(RetentionPolicy.RUNTIME)
     @Tag(name = "Security")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", 
@@ -152,12 +118,12 @@ public @interface AuthAPIDocs {
                 description = "The user id to assign the role to", 
                 required = true, 
                 in = ParameterIn.PATH, 
-                schema = @Schema(type = "integer", format = "int64"))
+                schema = @Schema(type = "long", format = "int64"))
     @Parameter(name = "roleId",
                 description = "The role id to assign to the user.",
                 required = true,
                 in = ParameterIn.PATH,
-                schema = @Schema(type = "integer"))
+                schema = @Schema(type = "long"))
     public @interface AssignRole{}
 
     @Target({ElementType.METHOD})    
@@ -191,12 +157,12 @@ public @interface AuthAPIDocs {
                 description = "The user id to remove the role from", 
                 required = true, 
                 in = ParameterIn.PATH, 
-                schema = @Schema(type = "integer", format = "int64"))
+                schema = @Schema(type = "long", format = "int64"))
     @Parameter(name = "roleId",
                 description = "The role id to be removed from the user",
                 required = true,
                 in = ParameterIn.PATH,
-                schema = @Schema(type = "integer"))
+                schema = @Schema(type = "long"))
     public @interface RemoveRole{}
 
     @Target({ElementType.METHOD})    
@@ -323,7 +289,7 @@ public @interface AuthAPIDocs {
                 description = "The id of the user to be retrieved",
                 required = true,
                 in = ParameterIn.PATH,
-                schema = @Schema(type = "integer", format = "int64"))
+                schema = @Schema(type = "long", format = "int64"))
     public @interface GetUser{}
 
 }

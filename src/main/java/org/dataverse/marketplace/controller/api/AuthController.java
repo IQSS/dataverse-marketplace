@@ -106,24 +106,6 @@ public class AuthController {
         return ResponseEntity.ok(messageResponse);
     }
 
-    
-    @PreAuthorize(ApplicationRoles.ADMIN_ROLE)
-    @PostMapping("/roles")
-    @AuthAPIDocs.RoleCreationRequestDoc
-    public ResponseEntity<?> createRole(@Valid @RequestBody RoleCreationRequest roleCreationRequest) {
-        
-        if(roleRepository.existsByName(roleCreationRequest.getRoleName().toUpperCase())) {
-            return ResponseEntity.badRequest().body(new ServerMessageResponse(HttpStatus.BAD_REQUEST,
-                    "Role already exists.",
-                    "Error during the creation of the role, a role with this name already exist."));
-        }
-        
-        Role role = new Role();
-        role.setName(roleCreationRequest.getRoleName().toUpperCase());
-        roleRepository.save(role);
-        return ResponseEntity.ok(new RoleCreationResponse(role));
-    }
-
     @PreAuthorize(ApplicationRoles.ADMIN_ROLE)
     @PostMapping("/roles/{roleId}/user/{userId}")
     @AuthAPIDocs.AssignRole
