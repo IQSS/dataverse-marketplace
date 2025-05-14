@@ -14,8 +14,6 @@ export interface Manifest {
   toolId: number;
   versionId: number;
   manifestId: number;
-  storedResourceId: number;
-  fileName: string;
   
   displayName: string;
   description: string;

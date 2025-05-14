@@ -3,11 +3,16 @@ CREATE SEQUENCE IF NOT EXISTS mkt_item_image_id_seq;
 CREATE SEQUENCE IF NOT EXISTS version_metadata_id_seq;
 CREATE SEQUENCE IF NOT EXISTS resource_storage_id_seq;
 CREATE SEQUENCE IF NOT EXISTS db_storage_id_seq;
+CREATE SEQUENCE IF NOT EXISTS query_parameter_id_seq;
+CREATE SEQUENCE IF NOT EXISTS external_tool_type_id_seq;
+CREATE SEQUENCE IF NOT EXISTS content_type_id_seq;
 
 CREATE TABLE IF NOT EXISTS marketplace_item (
     id integer NOT NULL PRIMARY KEY,
     name varchar NOT NULL,
-    description varchar NOT NULL
+    owner_id integer NOT NULL,
+    description varchar NOT NULL,
+    CONSTRAINT fk_marketplace_item_owner FOREIGN KEY (owner_id) REFERENCES "users"(id)    
 );
 
 CREATE TABLE IF NOT EXISTS external_tool (
@@ -70,12 +75,14 @@ CREATE TABLE IF NOT EXISTS external_tool_manifest (
     mkt_item_id integer NOT NULL,
     version_id integer NOT NULL,
     manifest_id integer NOT NULL,
-    mime_type  varchar NOT NULL,
-    manifest_stored_resource_id bigint NOT NULL,
+    display_name varchar, 
+    description varchar,
+    scope varchar,
+    tool_url varchar,
+    tool_name varchar,
+    http_method varchar,
     PRIMARY KEY (manifest_id),
-    CONSTRAINT fk_item FOREIGN KEY (version_id, mkt_item_id) REFERENCES external_tool_version (id, mkt_item_id),
-    CONSTRAINT fk_manifest FOREIGN KEY (manifest_stored_resource_id) REFERENCES stored_resource (id)
-);
+    CONSTRAINT fk_item FOREIGN KEY (version_id, mkt_item_id) REFERENCES external_tool_version (id, mkt_item_id));
 
 CREATE TABLE IF NOT EXISTS tags (
     id integer NOT NULL PRIMARY KEY,    
@@ -96,4 +103,27 @@ CREATE TABLE IF NOT EXISTS database_resource_storage (
     CONSTRAINT fk_resource FOREIGN KEY (stored_resource_id) REFERENCES stored_resource (id)
 
 );
+
+CREATE TABLE IF NOT EXISTS query_parameter (
+    id integer NOT NULL PRIMARY KEY,
+    key varchar NOT NULL,
+    value varchar NOT NULL,
+    manifest_id integer NOT NULL,    
+    CONSTRAINT fk_manifest FOREIGN KEY (manifest_id) REFERENCES external_tool_manifest (manifest_id)
+);
+
+CREATE TABLE IF NOT EXISTS content_type (
+    id integer NOT NULL PRIMARY KEY,
+    content_type varchar NOT NULL,
+    manifest_id integer NOT NULL,    
+    CONSTRAINT fk_manifest FOREIGN KEY (manifest_id) REFERENCES external_tool_manifest (manifest_id)
+);
+
+CREATE TABLE IF NOT EXISTS external_tool_type (
+    id integer NOT NULL PRIMARY KEY,
+    type varchar NOT NULL,
+    manifest_id integer NOT NULL,    
+    CONSTRAINT fk_manifest FOREIGN KEY (manifest_id) REFERENCES external_tool_manifest (manifest_id)
+);
+
 

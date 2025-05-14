@@ -1,6 +1,7 @@
 package org.dataverse.marketplace.model;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import jakarta.persistence.*;
@@ -28,7 +29,7 @@ public class ExternalToolVersion implements Serializable {
     private VersionMetadata versionMetadata;
 
     @OneToMany(mappedBy = "externalToolVersion", cascade = CascadeType.REMOVE)
-    private List<ExternalToolManifest> manifests;
+    private List<ExternalToolManifest> manifests = new ArrayList<ExternalToolManifest>();
     
 
     /* Getters and Setters */

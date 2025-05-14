@@ -22,15 +22,6 @@ public class ExternalToolManifest {
     @Column(name = "manifest_id")
     private Long manifestId;
     
-    @Column(name = "manifest_stored_resource_id")
-    private Long manifestStoredResourceId;
-
-    @Column(name = "mime_type")
-    private String mimeType;
-
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "manifest_stored_resource_id", referencedColumnName = "id", insertable = false, updatable = false)
-    private StoredResource storedResource;
 
     @ManyToOne
     @JoinColumns({
@@ -102,22 +93,6 @@ public class ExternalToolManifest {
         this.manifestId = manifestId;
     }
 
-    public Long getManifestStoredResourceId() {
-        return this.manifestStoredResourceId;
-    }
-
-    public void setManifestStoredResourceId(Long manifestStoredResourceId) {
-        this.manifestStoredResourceId = manifestStoredResourceId;
-    }
-
-    public String getMimeType() {
-        return this.mimeType;
-    }
-
-    public void setMimeType(String mimeType) {
-        this.mimeType = mimeType;
-    }
-
     public ExternalToolVersion getExternalToolVersion() {
         return this.externalToolVersion;
     }
@@ -125,16 +100,6 @@ public class ExternalToolManifest {
     public void setExternalToolVersion(ExternalToolVersion externalToolVersion) {
         this.externalToolVersion = externalToolVersion;
     }
-
-    public StoredResource getStoredResource() {
-        return this.storedResource;
-    }
-
-    public void setStoredResource(StoredResource storedResource) {
-        this.storedResource = storedResource;
-    }
-    
-
 
     public String getDisplayName() {
         return displayName;

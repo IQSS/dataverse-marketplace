@@ -23,4 +23,6 @@ CREATE TABLE IF NOT EXISTS user_roles (
 
 insert into users (id, username, email, password) values (nextval('user_id_seq'), 'admin', 'admin@localhost', '$2a$10$ZGbgWue/D39CfwwStB.qWe5hWqvSU8qi4DVZDzKt3ZK3374KSFP8q');
 insert into roles (id, role_name) values (nextval('role_id_seq'), 'ADMIN');
+insert into roles (id, role_name) values (nextval('role_id_seq'), 'EDITOR');
 insert into user_roles (user_id, role_id) values (1, 1);
+insert into user_roles (user_id, role_id) values (1, 2); --temp

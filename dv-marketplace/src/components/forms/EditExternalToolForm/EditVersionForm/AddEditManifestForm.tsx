@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { Modal, Button, Form, FormSelect, Row, Col } from "react-bootstrap";
+import React from 'react';
+import { Modal, Button, Form, FormSelect } from "react-bootstrap";
 import { FormInput, FormInputTextArea, FormInputTextField } from "../../../UI/FormInputFields";
 import type { Manifest } from "../../../../types/MarketplaceTypes";
 import MultiInputGroup from './MultiInputGroup';

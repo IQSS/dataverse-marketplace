@@ -1,20 +1,17 @@
 package org.dataverse.marketplace.service;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.commons.lang3.StringUtils;
 import org.dataverse.marketplace.model.ContentType;
 import org.dataverse.marketplace.model.ExternalToolManifest;
 import org.dataverse.marketplace.model.ExternalToolType;
 import org.dataverse.marketplace.model.ExternalToolVersion;
 import org.dataverse.marketplace.model.QueryParameter;
-import org.dataverse.marketplace.model.StoredResource;
 import org.dataverse.marketplace.model.VersionMetadata;
-import org.dataverse.marketplace.model.enums.StoredResourceStorageTypeEnum;
 import org.dataverse.marketplace.payload.AddVersionRequest;
 import org.dataverse.marketplace.payload.ExternalToolManifestDTO;
 import org.dataverse.marketplace.repository.ExternalToolManifestRepo;
@@ -22,10 +19,6 @@ import org.dataverse.marketplace.repository.ExternalToolVersionRepo;
 import org.dataverse.marketplace.repository.VersionMetadataRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
-
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 import jakarta.transaction.Transactional;
 
@@ -34,9 +27,6 @@ public class ExternalToolVersionService {
 
     @Autowired
     private ExternalToolVersionRepo externalToolVersionRepo;
-
-    @Autowired
-    private ResourceStorageService resourceStorageService;
 
     @Autowired
     private VersionMetadataRepo versionMetadataRepo;
@@ -54,9 +44,6 @@ public class ExternalToolVersionService {
 
     @Transactional
     public void deleteToolVersion(ExternalToolVersion externalToolVersion) throws IOException {
-        for (ExternalToolManifest manifest : externalToolVersion.getManifests()) {
-            resourceStorageService.deleteResourceContent(manifest.getManifestStoredResourceId());
-        }
         externalToolVersionRepo.delete(externalToolVersion);
     }
 
@@ -78,8 +65,6 @@ public class ExternalToolVersionService {
         newVersion.setMkItemId(toolId);
         newVersion.setVersionMetadata(versionMetadata);
         externalToolVersionRepo.save(newVersion);
-
-        newVersion.setManifests(addVersionManifests(newVersion, externalToolVersion.getJsonData()));
 
         return newVersion;
     }
@@ -103,42 +88,6 @@ public class ExternalToolVersionService {
 
     }
 
-    @Transactional
-    public List<ExternalToolManifest> addVersionManifests(ExternalToolVersion externalToolVersion,
-            List<MultipartFile> manifests) throws IOException {
-
-        List<ExternalToolManifest> newManifests = new ArrayList<ExternalToolManifest>();
-
-        for (MultipartFile manifest : manifests) {
-
-            StoredResource storedResource = resourceStorageService
-                    .storeResource(manifest,
-                            StoredResourceStorageTypeEnum.FILESYSTEM);
-
-            Long externalToolManifestId = externalToolManifestRepo.getNextIdForManifest(
-                    externalToolVersion.getMkItemId(), externalToolVersion.getId());
-
-            externalToolManifestId = externalToolManifestId == null ? 1 : externalToolManifestId + 1;
-
-            ExternalToolManifest newManifest = new ExternalToolManifest();
-            newManifest.setManifestId(externalToolManifestId);
-            newManifest.setMkItemId(Long.valueOf(externalToolVersion.getMkItemId()));
-            newManifest.setVersionId(Long.valueOf(externalToolVersion.getId()));
-            newManifest.setManifestStoredResourceId(storedResource.getId());
-            newManifest.setStoredResource(storedResource);
-
-            String jsonString = new String(manifest.getBytes());
-            ObjectMapper objectMapper = new ObjectMapper();
-            JsonNode jsonNode = objectMapper.readTree(jsonString);
-            String contentType = jsonNode.get("contentType").asText();
-            newManifest.setMimeType(contentType);
-            externalToolManifestRepo.save(newManifest);
-
-            newManifests.add(newManifest);
-        }
-        return newManifests;
-    }
-
     public ExternalToolManifestDTO updateExternalToolManifest(
             ExternalToolManifestDTO externalToolManifestDTO,
             Integer toolId,
@@ -157,9 +106,6 @@ public class ExternalToolVersionService {
             Long manifestId) throws IOException {
 
         ExternalToolManifest manifest = externalToolManifestRepo.findById(manifestId).get();
-        if (manifest.getManifestStoredResourceId() != null) {
-            resourceStorageService.deleteResourceContent(manifest.getManifestStoredResourceId());
-        }
         externalToolManifestRepo.delete(manifest);
     }
 
@@ -172,7 +118,6 @@ public class ExternalToolVersionService {
         manifest.setToolUrl(manifestDTO.getToolUrl());
         manifest.setToolName(manifestDTO.getToolName());
         manifest.setHttpMethod(manifestDTO.getHttpMethod());
-        manifest.setMimeType(manifestDTO.getContentType());
 
         Set<ContentType> existingContentTypes = manifest.getContentTypes();
 
@@ -184,17 +129,16 @@ public class ExternalToolVersionService {
         }
         if (manifestDTO.getContentTypes() != null) {
             for (String contentType : manifestDTO.getContentTypes()) {
-                ContentType newContentType = new ContentType();
-                newContentType.setManifest(manifest);
-                newContentType.setContentType(contentType);
-                existingContentTypes.add(newContentType);
-
-                if (manifest.getMimeType() == null) {
-                    manifest.setMimeType(contentType);
-                }   
+                if (StringUtils.isNotBlank(contentType)) {
+                    ContentType newContentType = new ContentType();
+                    newContentType.setManifest(manifest);
+                    newContentType.setContentType(contentType);
+                    existingContentTypes.add(newContentType);
+                }
             }
         }
-        if (existingContentTypes.isEmpty()) {
+        // we are uploading a manifest that uses the single content type
+        if (existingContentTypes.isEmpty() && StringUtils.isNotBlank(manifestDTO.getContentType())) {
             ContentType newContentType = new ContentType();
             newContentType.setManifest(manifest);
             newContentType.setContentType(manifestDTO.getContentType());

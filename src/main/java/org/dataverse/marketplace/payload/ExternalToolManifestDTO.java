@@ -25,12 +25,6 @@ public class ExternalToolManifestDTO implements Serializable {
     public Long toolId;
     public Long versionId;
 
-    @Schema(description = "The manifest's stored resource ID", example = "1")
-    public Long storedResourceId;
-
-    @Schema(description = "The manifest's file name", example = "manifest.json")
-    public String fileName;
-
     // Manifest details
     @Schema(description = "The manifest's display name", example = "My External Tool")
     private String displayName;
@@ -70,17 +64,12 @@ public class ExternalToolManifestDTO implements Serializable {
         this.toolId = externalToolManifest.getMkItemId();
         this.versionId = externalToolManifest.getVersionId();
 
-        this.storedResourceId = externalToolManifest.getManifestStoredResourceId();
-        this.fileName = externalToolManifest.getStoredResource() != null
-                ? externalToolManifest.getStoredResource().getFileName()
-                : "none";
         this.displayName = externalToolManifest.getDisplayName();
         this.description = externalToolManifest.getDescription();
         this.scope = externalToolManifest.getScope();
         this.toolUrl = externalToolManifest.getToolUrl();
         this.toolName = externalToolManifest.getToolName();
         this.httpMethod = externalToolManifest.getHttpMethod();
-        this.contentType = externalToolManifest.getMimeType();
 
         if (externalToolManifest.getExternalToolTypes() != null) {
             this.types = new HashSet<String>();
@@ -91,8 +80,8 @@ public class ExternalToolManifestDTO implements Serializable {
 
         if (externalToolManifest.getContentTypes() != null) {
             this.contentTypes = new HashSet<String>();
-            for (ContentType type : externalToolManifest.getContentTypes()) {
-                this.contentTypes.add(type.getContentType());
+            for (ContentType contentType : externalToolManifest.getContentTypes()) {
+                this.contentTypes.add(contentType.getContentType());
             }
         }
 
@@ -148,21 +137,6 @@ public class ExternalToolManifestDTO implements Serializable {
         this.versionId = versionId;
     }
 
-    public Long getStoredResourceId() {
-        return this.storedResourceId;
-    }
-
-    public void setStoredResourceId(Long storedResourceId) {
-        this.storedResourceId = storedResourceId;
-    }
-
-    public String getFileName() {
-        return this.fileName;
-    }
-
-    public void setFileName(String fileName) {
-        this.fileName = fileName;
-    }
 
     public String getDisplayName() {
         return this.displayName;
@@ -249,7 +223,6 @@ public class ExternalToolManifestDTO implements Serializable {
     public String toString() {
         return "{" +
                 " manifestId='" + getManifestId() + "'" +
-                ", storedResourceId='" + getStoredResourceId() + "'" +
                 ", ctype='" + getContentType() + "'" +
                 "}";
     }
