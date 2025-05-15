@@ -35,7 +35,7 @@ export default function useMarketplaceApiRepo() {
 
     const deleteFormRequest = async (url: string) => {
         const confirmed = window.confirm("Are you sure you want to delete this item?");
-        if (!confirmed) {
+        if (!confirmed) {            
             toast.error("Operation cancelled by user.");
         } else {
             return makeApiFormRequest(url, 'DELETE', new FormData());
@@ -77,14 +77,15 @@ export default function useMarketplaceApiRepo() {
             });
 
             if (response.data.message) {
-                
                 toast.success(response.data.message);
             } else {
                 toast.success("Operation successful");
             }
+            
             return response.data;
 
         } catch (error) {
+            
             if (axios.isAxiosError(error)) {
                 toast.error(error.response?.data?.message || error.message);
             }

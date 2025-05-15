@@ -22,10 +22,7 @@ const UserContextProvider = ({ children }: { children: React.ReactNode }) => {
     
     const [user, setUser] = useState<User | null>(null);
     const [showLogin, setShowLogin] = useState(false);
-    //App message dialog
-    const [showMessage, setShowMessage] = useState(false);
-    const [modalMessage, setModalMessage] = useState('');
-    const [modalTitle, setModalTitle] = useState('');
+    //App message dialog    
     const [theme, setTheme] = useState<Theme>();
 
     useEffect((): void => {
@@ -60,13 +57,7 @@ const UserContextProvider = ({ children }: { children: React.ReactNode }) => {
                 user, 
                 setUser, 
                 showLogin, 
-                setShowLogin,
-                showMessage,
-                setShowMessage,
-                modalMessage,
-                setModalMessage,
-                modalTitle,
-                setModalTitle,
+                setShowLogin,              
                 theme,
                 setTheme
                 }}>

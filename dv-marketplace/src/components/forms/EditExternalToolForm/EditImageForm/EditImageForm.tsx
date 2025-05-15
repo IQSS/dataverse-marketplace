@@ -3,7 +3,7 @@ import useEditImageForm from "./useEditImageForm";
 import { InnerCardDeck } from "../../../UI/CardDeck";
 import MarketplaceCard from "../../../UI/MarketplaceCard";
 import type { ExternalTool, Image } from "../../../../types/MarketplaceTypes";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { UserContext } from "../../../context/UserContextProvider";
 import SectionHeader from "../../../UI/SectionHeader";
 
@@ -14,10 +14,12 @@ const EditImageForm = ({ tool }: { tool: ExternalTool | undefined }) => {
         addImageFormIsOpen,
         setAddImageFormIsOpen,
         handleImageSubmit,
-        handleImageDelete
+        handleImageDelete,
+        images
     } = useEditImageForm({ tool });
 
     const userContext = useContext(UserContext);
+    
 
     return (
         <>
@@ -37,7 +39,7 @@ const EditImageForm = ({ tool }: { tool: ExternalTool | undefined }) => {
 
         <InnerCardDeck>
 
-            {tool?.images.map((image: Image) => (
+            {images.map((image: Image) => (
                 <MarketplaceCard
                     key={image.imageId}
                     imageId={image.storedResourceId}>
