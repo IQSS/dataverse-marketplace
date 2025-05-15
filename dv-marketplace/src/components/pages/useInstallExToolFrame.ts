@@ -3,6 +3,7 @@ import type { Manifest } from "../../types/MarketplaceTypes";
 import axios from "axios";
 import useMarketplaceApiRepo from "../../repositories/useMarketplaceApiRepo";
 import { UserContext } from "../context/UserContextProvider";
+import { toast } from "react-toastify";
 
 export default function useInstallExToolFrame(
   { setShowModal }: { setShowModal?: (show: boolean) => void } = {}
@@ -53,15 +54,11 @@ export default function useInstallExToolFrame(
       },
     })
       .then(() => {
-        userContext.setModalTitle("Success");
-        userContext.setShowMessage(true);
-        userContext.setModalMessage("External Tool installed successfully.");
+        toast.success("External Tool installed successfully.");
         handleClose();
       })
       .catch((error) => {
-        userContext.setModalTitle(error.code || "Error");
-        userContext.setModalMessage(error.message || "Error installing external tool.");
-        userContext.setShowMessage(true);
+        console.error("Error installing external tool:", error);
       });
 
   }

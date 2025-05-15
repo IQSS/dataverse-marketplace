@@ -60,5 +60,13 @@ export type UserContextType = {
     setModalMessage: (message: string) => void;
     modalTitle: string;
     setModalTitle: (title: string) => void;
+    theme: Theme;
+    setTheme: (theme: Theme) => void;
 };
+
+export enum Theme {
+    LIGHT = "light",
+    DARK = "dark",
+    AUTO = "auto"
+}
 

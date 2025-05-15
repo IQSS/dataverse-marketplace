@@ -45,16 +45,6 @@ const AddExtToolForm = () => {
                 </div>
                 <button type="submit" className="btn btn-primary">Submit</button>
             </form>    
-
-            <Modal show={modalIsOpen} onHide={closeModal}>
-                <Modal.Header closeButton>
-                    <Modal.Title>Response</Modal.Title>
-                </Modal.Header>
-                <Modal.Body>{modalMessage}</Modal.Body>
-                <Modal.Footer>
-                    <button type="button" className="btn btn-secondary" onClick={closeModal}>Close</button>
-                </Modal.Footer>
-            </Modal>
         </div>
     );
 };

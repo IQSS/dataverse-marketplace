@@ -16,9 +16,8 @@ const NavOptions = () => {
             </Dropdown.Toggle>
             <Dropdown.Menu>            
                 {userContext.user.roles.includes("EDITOR") && (
-                    <Dropdown.Item >            
-                        {/* <Link to="/install" className="nav-link">Install</Link> */}
-                        <Link to="/addExtTool" className="nav-link">Add External Tool</Link>    
+                    <Dropdown.Item as={Link} to="/addExtTool" className="nav-link">            
+                        Add External Tool  
                     </Dropdown.Item>
                 )}
                 </Dropdown.Menu>
