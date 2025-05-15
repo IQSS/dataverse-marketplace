@@ -77,18 +77,17 @@ const ViewExternalTool = () => {
                         <p>Manifests:</p>
                         <table className="table">
                             <tbody>
-                                {version.manifests.map((manifest) =>
-                                    manifest.manifestSet?.map((subManifest: Manifest) => (
-                                        <tr key={manifest.manifestId + "_" + subManifest.contentType}>
+                                {version.manifestSet.map((manifest : Manifest) =>
+                                        <tr key={version.id + "_" + manifest.contentType}>
                                             <td>
-                                                {subManifest.displayName} ({manifest.toolId}.{manifest.versionId}.{manifest.manifestId}): {subManifest.contentType}
+                                                {manifest.displayName}: {manifest.contentType}
                                             </td>
                                             <td>
                                                 <button
                                                     type="button"
                                                     className="btn bi-rocket-takeoff"
                                                     onClick={() => {
-                                                        setToolToInstall(subManifest);
+                                                        setToolToInstall(manifest);
                                                         setShowModal(true);
                                                     }}
                                                 >
@@ -99,14 +98,13 @@ const ViewExternalTool = () => {
                                                     type="button"
                                                     className="btn bi-download"
                                                     onClick={() => {
-                                                        downloadManifest(subManifest);
+                                                        downloadManifest(manifest);
                                                     }}
                                                 >
                                                    <span className="me-1"></span>Download
                                                 </button>
                                             </td>
                                         </tr>
-                                    ))
                                 )}
                             </tbody>
                         </table>

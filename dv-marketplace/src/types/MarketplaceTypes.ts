@@ -5,12 +5,12 @@ export interface Version {
   version: string;
   releaseNote: string;
   dataverseMinVersion: string;
-  manifests: Manifest[];
+  manifest: Manifest;
+  manifestSet: Manifest[];
 }
 
 export interface Manifest {
   [key: string]: any; // Add index signature
-  manifestId: number;  
   displayName: string;
   description: string;
   scope: string;
@@ -22,7 +22,6 @@ export interface Manifest {
   types: string[];
   toolParameters: {
     queryParameters: { [key: string]: string }[];
-  manifestSet: Manifest[];
   };
 }
 

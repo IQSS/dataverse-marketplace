@@ -22,12 +22,6 @@ public class ExternalToolService {
     private ExternalToolRepo externalToolRepo;
 
     @Autowired
-    private ExternalToolVersionRepo externalToolVersionRepo;
-
-    @Autowired
-    private ExternalToolManifestRepo externalToolManifestRepo;
-
-    @Autowired
     private ExternalToolVersionService externalToolVersionService;
 
     @Autowired
@@ -59,18 +53,6 @@ public class ExternalToolService {
         return externalToolRepo.findById(toolId).orElse(null);
     }
 
-    public ExternalToolVersion getToolVersionById(Long versionId) {
-        return externalToolVersionRepo.findById(versionId).orElse(null);
-    }
-
-    public List<ExternalToolManifest> getToolManifests(Long versionId) {
-        return externalToolManifestRepo.findByExternalToolVersionId(versionId);
-    }
-
-    public ExternalToolManifest getToolManifestById(Long manifestId) {
-        return externalToolManifestRepo.findById(manifestId).orElse(null);
-    }    
-
     @CacheEvict(value = "externalTools", allEntries = true)
     @Transactional
     public ExternalToolDTO addTool(AddToolRequest addToolRequest, User owner) throws IOException {
@@ -85,7 +67,6 @@ public class ExternalToolService {
         addVersionRequest.setVersion(addToolRequest.getVersion());
         addVersionRequest.setReleaseNote(addToolRequest.getReleaseNote());
         addVersionRequest.setDvMinVersion(addToolRequest.getDvMinVersion());
-        addVersionRequest.setJsonData(addToolRequest.getJsonData());
         
         List<ExternalToolVersion> versions = new ArrayList<ExternalToolVersion>();
         ExternalToolVersion newVersion =
@@ -109,6 +90,9 @@ public class ExternalToolService {
         return tool;
     }
 
+
+    // image related methods
+
     @CacheEvict(value = "externalTools", allEntries = true)
     @Transactional
     public List<MarketplaceItemImage> addItemImages(MarketplaceItem item, List<MultipartFile> images) throws IOException {
@@ -122,7 +106,6 @@ public class ExternalToolService {
                                         StoredResourceStorageTypeEnum.FILESYSTEM);
 
             MarketplaceItemImage newImage = new MarketplaceItemImage();
-            System.out.println("TEST HERE");
             newImage.setMarketplaceItem(item);
             newImage.setStoredResource(storedResource);          
             marketplaceItemImageRepo.save(newImage);

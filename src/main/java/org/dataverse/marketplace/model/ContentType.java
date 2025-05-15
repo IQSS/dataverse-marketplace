@@ -12,8 +12,8 @@ public class ContentType {
     String contentType;
 
     @ManyToOne
-    @JoinColumn(name = "manifest_id", nullable = false)
-    private ExternalToolManifest manifest;
+    @JoinColumn(name = "external_tool_version_id", nullable = false)
+    private ExternalToolVersion externalToolVersion;
 
     public Long getId() {
         return this.id;
@@ -30,12 +30,11 @@ public class ContentType {
         this.contentType = contentType;
     }
 
-    public ExternalToolManifest getManifest() {
-        return manifest;
+    public ExternalToolVersion getExternalToolVersion() {
+        return externalToolVersion;
     }
-
-    public void setManifest(ExternalToolManifest manifest) {
-        this.manifest = manifest;
+    public void setExternalToolVersion(ExternalToolVersion externalToolVersion) {
+        this.externalToolVersion = externalToolVersion;
     }
 
 }

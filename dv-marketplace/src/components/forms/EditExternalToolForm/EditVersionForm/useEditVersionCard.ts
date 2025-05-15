@@ -8,16 +8,12 @@ export default function useEditVersionCard({ tool }: { tool: ExternalTool | unde
     const {
         deleteBodyRequest,
         putBodyRequest,
-        postBodyRequest,
     } = useMarketplaceApiRepo();
 
-    const defaultManifest = {}
 
     const [showVersionEdit, setShowVersionEdit] = useState(0);
-    const [showManifestAdd, setShowManifestAdd] = useState(0);
     const [showManifestEdit, setShowManifestEdit] = useState(0);
-    const [newManifest, setNewManifest] = useState(defaultManifest);
-    const [showAddPanel, setShowAddPanel] = useState(false);
+    const [showEditPanel, setShowEditPanel] = useState(false);
 
 
 
@@ -27,16 +23,6 @@ export default function useEditVersionCard({ tool }: { tool: ExternalTool | unde
         const data = await deleteBodyRequest(`/api/tools/${tool?.id}/versions/${versionId}`);
         if (data && tool?.versions) {
             tool.versions = tool.versions.filter((version: Version) => version.id !== versionId);
-        }
-    }
-
-    const handleManifestDelete = async (versionId: number, manifestId: number) => {
-        const data = await deleteBodyRequest(`/api/tools/${tool?.id}/versions/${versionId}/manifests/${manifestId}`);
-        if (data) {
-            const version = tool?.versions.find((version) => version.id === versionId);
-            if (version) {
-                version.manifests = version.manifests.filter((manifest) => manifest.manifestId !== manifestId);
-            }
         }
     }
 
@@ -56,8 +42,28 @@ export default function useEditVersionCard({ tool }: { tool: ExternalTool | unde
         setShowVersionEdit(0);
     }
 
+    const handleManifestEdit = async (event: React.FormEvent<HTMLFormElement>, versionId: number) => {
+        event.preventDefault();
+        const formData = new FormData(event.currentTarget);
+        processManifestFormData(formData);
+
+        const data = await putBodyRequest(`/api/tools/${tool?.id}/versions/${versionId}/manifest`, formData);
+
+        // todo: do we need to go through tool to get the version?
+        if (data) {
+            const version = tool?.versions.find((version) => version.id === versionId);
+            if (version) {
+                // assign new values from data
+                Object.assign(version, data);
+
+            }
+        }
+
+        setShowManifestEdit(0);
+    }
+
     const handleJsonUpload = (event: React.ChangeEvent<HTMLInputElement>,
-        versionId: number
+        version: Version
     ) => {
         const file = event.target.files?.[0];
         if (!file) return;
@@ -73,13 +79,10 @@ export default function useEditVersionCard({ tool }: { tool: ExternalTool | unde
                 if (data.contentType && !data.contentTypes) {
                     data.contentTypes = [data.contentType];
                 }
-                
-                setNewManifest(() => ({
-                    ...data,
-                }));
+                Object.assign(version.manifest, data);
 
-                setShowManifestAdd(versionId);
-                setShowAddPanel(false);
+                setShowManifestEdit(version.id);
+                setShowEditPanel(false);
 
             } catch (err) {
                 console.error("Invalid JSON file", err);
@@ -88,62 +91,6 @@ export default function useEditVersionCard({ tool }: { tool: ExternalTool | unde
 
         reader.readAsText(file);
     };
-
-    const handleManifestAdd = async (event: React.FormEvent<HTMLFormElement>, versionId: number) => {
-        event.preventDefault();
-        const formData = new FormData(event.currentTarget);
-        processManifestFormData(formData);
-        const data = await postBodyRequest(`/api/tools/${tool?.id}/versions/${versionId}/manifests`, formData);
-        if (data) {
-            const version = tool?.versions.find((version) => version.id === versionId);
-            if (version) {
-                version.manifests.push(data);
-            }
-        }
-
-        setShowManifestAdd(0);
-    }
-
-    const handleManifestEdit = async (event: React.FormEvent<HTMLFormElement>, versionId: number, manifestId: number) => {
-        event.preventDefault();
-        const formData = new FormData(event.currentTarget);
-        processManifestFormData(formData);
-
-        const data = await putBodyRequest(`/api/tools/${tool?.id}/versions/${versionId}/manifests/${manifestId}`, formData);
-
-        // todo: do we need to go through tool / version to get the manifest?
-        if (data) {
-            const version = tool?.versions.find((version) => version.id === versionId);
-            if (version) {
-                const manifest = version.manifests.find((manifest) => manifest.manifestId === manifestId);
-                if (manifest) {
-                    // clear out the manifest first
-                    for (const key in manifest) {
-                        if (Object.prototype.hasOwnProperty.call(manifest, key)) {
-                            manifest[key] = null;
-                            // alt 1
-                            //manifest[key as keyof Manifest] = null;
-
-                        }
-                    }
-                    // */
-                    // alt 2 
-                    /*
-                    (Object.keys(manifest) as (keyof Manifest)[]).forEach((key) => {
-                        manifest[key] = null;
-                      });
-                    // */
-
-
-                    // assign new values from data
-                    Object.assign(manifest, data);
-
-                }
-            }
-        }
-
-        setShowManifestEdit(0);
-    }
 
 
     function processManifestFormData(formData: FormData) {
@@ -172,22 +119,15 @@ export default function useEditVersionCard({ tool }: { tool: ExternalTool | unde
     }
 
     return {
-        handleVersionDelete,
-        handleManifestDelete,
-        showManifestEdit,
-        handleManifestEdit,
-        setShowManifestEdit,
-        handleVersionEdit,
-        handleManifestAdd,
         showVersionEdit,
-        setShowVersionEdit,
-        showManifestAdd,
-        setShowManifestAdd,
-        defaultManifest,
-        newManifest,
-        setNewManifest,
-        showAddPanel,
-        setShowAddPanel,
+        setShowVersionEdit,        
+        showManifestEdit,
+        setShowManifestEdit,
+        showEditPanel,
+        setShowEditPanel,
+        handleVersionDelete,
+        handleVersionEdit,
+        handleManifestEdit,
         handleJsonUpload
     };
 

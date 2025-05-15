@@ -1,8 +1,9 @@
 package org.dataverse.marketplace.payload;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
+
 import org.dataverse.marketplace.model.*;
 import org.dataverse.marketplace.openapi.samples.ExternalToolVersionSamples;
 
@@ -28,10 +29,10 @@ public class ExternalToolVersionDTO implements Serializable{
             example = "\"6.0\"")
     private String dataverseMinVersion;
 
-    @Schema(description = "The list of storage id for the manifests of the external tool",   
-            implementation = ExternalToolManifestDTO[].class,              
+    @Schema(description = "The manifest metadata of the external tool",   
+            implementation = ExternalToolManifestDTO.class,              
             example = ExternalToolVersionSamples.EXTERNAL_TOOL_VERSION_MANIFESTS_SAMPLE)
-    private List<ExternalToolManifestDTO> manifests;
+    private ExternalToolManifestDTO manifest;
 
     public ExternalToolVersionDTO() {
     }
@@ -43,14 +44,25 @@ public class ExternalToolVersionDTO implements Serializable{
         this.releaseNote = version.getReleaseNote();
         this.dataverseMinVersion = version.getDataverseMinVersion();
 
-        this.manifests = new ArrayList<>();
-
-        for (ExternalToolManifest manifest : version.getManifests()){
-            ExternalToolManifestDTO manifestDTO = new ExternalToolManifestDTO(manifest);
-            this.manifests.add(manifestDTO);
-        }
-        
+        this.manifest = new ExternalToolManifestDTO(version);
     }
+
+    public Set<ExternalToolManifestDTO> getManifestSet() {
+
+        Set<ExternalToolManifestDTO> manifestDTOs = new HashSet<ExternalToolManifestDTO>();
+
+        if (this.manifest.getContentTypes() != null) {
+            for (String contentType : this.manifest.getContentTypes()) {
+                ExternalToolManifestDTO manifestDTO = new ExternalToolManifestDTO(manifest,contentType);
+                manifestDTOs.add(manifestDTO);
+            }
+        } else {
+            manifestDTOs.add(this.manifest);
+        }
+
+        return manifestDTOs;
+    }
+  
 
     /* Getters and Setters */
 
@@ -86,12 +98,11 @@ public class ExternalToolVersionDTO implements Serializable{
         this.dataverseMinVersion = dataverseMinVersion;
     }
 
-    public List<ExternalToolManifestDTO> getManifests() {
-        return this.manifests;
+    public ExternalToolManifestDTO getManifest() {
+        return this.manifest;
     }
-
-    public void setManifests(List<ExternalToolManifestDTO> manifests) {
-        this.manifests = manifests;
+    public void setManifest(ExternalToolManifestDTO manifest) {
+        this.manifest = manifest;
     }
 
 
@@ -102,7 +113,7 @@ public class ExternalToolVersionDTO implements Serializable{
             ", version='" + getVersion() + "'" +
             ", releaseNote='" + getReleaseNote() + "'" +
             ", dataverseMinVersion='" + getDataverseMinVersion() + "'" +
-            ", manifests='" + getManifests() + "'" +
+            ", manifest='" + manifest.toString() + "'" +
             "}";
     }
 

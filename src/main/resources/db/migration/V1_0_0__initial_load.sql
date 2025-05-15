@@ -14,8 +14,8 @@ CREATE TABLE IF NOT EXISTS user_roles (
     user_id bigint NOT NULL,
     role_id bigint NOT NULL,
     PRIMARY KEY (user_id, role_id),
-    CONSTRAINT fk_user FOREIGN KEY (user_id) REFERENCES users (id),
-    CONSTRAINT fk_role FOREIGN KEY (role_id) REFERENCES roles (id)
+    CONSTRAINT fk_user_roles_user FOREIGN KEY (user_id) REFERENCES users (id),
+    CONSTRAINT fk_user_roles_role FOREIGN KEY (role_id) REFERENCES roles (id)
 );
 
 insert into users (username, email, password) values ('admin', 'admin@localhost', '$2a$10$ZGbgWue/D39CfwwStB.qWe5hWqvSU8qi4DVZDzKt3ZK3374KSFP8q');

@@ -5,7 +5,7 @@ import type { Manifest } from "../../../../types/MarketplaceTypes";
 import MultiInputGroup from './MultiInputGroup';
 
 
-const AddEditManifestForm = ({
+const EditManifestForm = ({
     show,
     onCancel,
     onSubmit,
@@ -25,7 +25,7 @@ const AddEditManifestForm = ({
     return (
         <Modal show={show} onHide={handleCancel} size="lg" centered backdrop="static">
             <Modal.Header closeButton>
-                <Modal.Title>Add/Edit Manifest</Modal.Title>
+                <Modal.Title>Edit Manifest</Modal.Title>
             </Modal.Header>
             <Modal.Body>
 
@@ -113,5 +113,5 @@ const AddEditManifestForm = ({
     );
 }
 
-export default AddEditManifestForm;
+export default EditManifestForm;
 

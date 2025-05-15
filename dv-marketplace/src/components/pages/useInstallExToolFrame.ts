@@ -1,8 +1,7 @@
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import type { Manifest } from "../../types/MarketplaceTypes";
 import axios from "axios";
-import useMarketplaceApiRepo from "../../repositories/useMarketplaceApiRepo";
-import { UserContext } from "../context/UserContextProvider";
+
 import { toast } from "react-toastify";
 
 export default function useInstallExToolFrame(
@@ -11,8 +10,6 @@ export default function useInstallExToolFrame(
 
   const handleClose = () => setShowModal?.(false);
   const [hostnames, setHostnames] = useState<string[]>([]);
-  const { BASE_URL } = useMarketplaceApiRepo();
-  const userContext = useContext(UserContext);
 
   useEffect(() => {
     const fetchHostnames = async () => {

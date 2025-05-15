@@ -13,8 +13,8 @@ public class QueryParameter {
     String value;
 
     @ManyToOne
-    @JoinColumn(name = "manifest_id", nullable = false)
-    private ExternalToolManifest manifest;
+    @JoinColumn(name = "external_tool_version_id", nullable = false)
+    private ExternalToolVersion externalToolVersion;
 
     public Long getId() {
         return this.id;
@@ -40,12 +40,12 @@ public class QueryParameter {
         this.value = value;
     }
 
-    public ExternalToolManifest getManifest() {
-        return manifest;
+    public ExternalToolVersion getExternalToolVersion() {
+        return externalToolVersion;
     }
 
-    public void setManifest(ExternalToolManifest manifest) {
-        this.manifest = manifest;
+    public void setExternalToolVersion(ExternalToolVersion externalToolVersion) {
+        this.externalToolVersion = externalToolVersion;
     }
 
 }

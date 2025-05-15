@@ -5,8 +5,9 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.commons.lang3.StringUtils;
 import org.dataverse.marketplace.model.ContentType;
-import org.dataverse.marketplace.model.ExternalToolManifest;
+import org.dataverse.marketplace.model.ExternalToolVersion;
 import org.dataverse.marketplace.model.ExternalToolType;
 import org.dataverse.marketplace.model.QueryParameter;
 
@@ -17,9 +18,6 @@ import io.swagger.v3.oas.annotations.media.Schema;
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 @Schema(description = "External tool manifest data transfer object")
 public class ExternalToolManifestDTO implements Serializable {
-
-    @Schema(description = "The manifest ID", example = "1")
-    public Long manifestId;
 
     // Manifest details
     @Schema(description = "The manifest's display name", example = "My External Tool")
@@ -55,34 +53,33 @@ public class ExternalToolManifestDTO implements Serializable {
     public ExternalToolManifestDTO() {
     }
 
-    public ExternalToolManifestDTO(ExternalToolManifest externalToolManifest) {
-        this.manifestId = externalToolManifest.getId();
-        this.displayName = externalToolManifest.getDisplayName();
-        this.description = externalToolManifest.getDescription();
-        this.scope = externalToolManifest.getScope();
-        this.toolUrl = externalToolManifest.getToolUrl();
-        this.toolName = externalToolManifest.getToolName();
-        this.httpMethod = externalToolManifest.getHttpMethod();
+    public ExternalToolManifestDTO(ExternalToolVersion externalToolVersion) {
+        this.displayName = externalToolVersion.getDisplayName();
+        this.description = externalToolVersion.getDescription();
+        this.scope = externalToolVersion.getScope();
+        this.toolUrl = externalToolVersion.getToolUrl();
+        this.toolName = externalToolVersion.getToolName();
+        this.httpMethod = externalToolVersion.getHttpMethod();
 
-        if (externalToolManifest.getExternalToolTypes() != null) {
+        if (externalToolVersion.getExternalToolTypes() != null) {
             this.types = new HashSet<String>();
-            for (ExternalToolType type : externalToolManifest.getExternalToolTypes()) {
+            for (ExternalToolType type : externalToolVersion.getExternalToolTypes()) {
                 this.types.add(type.getType());
             }
         }
 
-        if (externalToolManifest.getContentTypes() != null) {
+        if (externalToolVersion.getContentTypes() != null) {
             this.contentTypes = new HashSet<String>();
-            for (ContentType contentType : externalToolManifest.getContentTypes()) {
+            for (ContentType contentType : externalToolVersion.getContentTypes()) {
                 this.contentTypes.add(contentType.getContentType());
             }
         }
 
-        if (externalToolManifest.getQueryParameters() != null
-                && !externalToolManifest.getQueryParameters().isEmpty()) {
+        if (externalToolVersion.getQueryParameters() != null
+                && !externalToolVersion.getQueryParameters().isEmpty()) {
             this.toolParameters = new ToolParameterDTO();
             Set<Map<String, String>> queryParameters = new HashSet<Map<String, String>>();
-            for (QueryParameter qp : externalToolManifest.getQueryParameters()) {
+            for (QueryParameter qp : externalToolVersion.getQueryParameters()) {
                 Map<String, String> qpMap = new java.util.HashMap<String, String>();
                 qpMap.put(qp.getKey(), qp.getValue());
                 queryParameters.add(qpMap);
@@ -90,30 +87,100 @@ public class ExternalToolManifestDTO implements Serializable {
             toolParameters.setQueryParameters(queryParameters);
         }
 
-        /*
-         * if(externalToolManifest.getQueryParameters() != null){
-         * this.toolParameters = new ToolParameterDTO();
-         * Set<QueryParameterDTO> queryParameterDTOs = new HashSet<QueryParameterDTO>();
-         * for(QueryParameter qp : externalToolManifest.getQueryParameters()){
-         * queryParameterDTOs.add(new QueryParameterDTO(qp));
-         * }
-         * toolParameters.setQueryParameters(queryParameterDTOs);
-         * 
-         * }
-         */
-
     }
+
+    public ExternalToolManifestDTO(ExternalToolManifestDTO manifestDTO, String contentType) {
+            this.setDisplayName(manifestDTO.displayName);
+            this.setDescription(manifestDTO.description);
+            this.setScope(manifestDTO.scope);
+            this.setToolUrl(manifestDTO.toolUrl);
+            this.setToolName(manifestDTO.toolName);
+            this.setHttpMethod(manifestDTO.httpMethod);
+
+            // specific content type
+            this.setContentType(contentType);
+
+            this.setTypes(manifestDTO.types);
+            this.setToolParameters(manifestDTO.toolParameters);
+    }
+
+    public void convertDTOtoEntity(ExternalToolVersion version) {
+
+        version.setDisplayName(this.getDisplayName());
+        version.setDescription(this.getDescription());
+        version.setScope(this.getScope());
+        version.setToolUrl(this.getToolUrl());
+        version.setToolName(this.getToolName());
+        version.setHttpMethod(this.getHttpMethod());
+
+        Set<ContentType> existingContentTypes = version.getContentTypes();
+
+        if (existingContentTypes != null) {
+            existingContentTypes.clear();
+        } else {
+            existingContentTypes = new HashSet<>();
+            version.setContentTypes(existingContentTypes);
+        }
+        if (this.getContentTypes() != null) {
+            for (String contentType : this.getContentTypes()) {
+                if (StringUtils.isNotBlank(contentType)) {
+                    ContentType newContentType = new ContentType();
+                    newContentType.setExternalToolVersion(version);
+                    newContentType.setContentType(contentType);
+                    existingContentTypes.add(newContentType);
+                }
+            }
+        }
+        // we are uploading a manifest that uses the single content type
+        if (existingContentTypes.isEmpty() && StringUtils.isNotBlank(this.getContentType())) {
+            ContentType newContentType = new ContentType();
+            newContentType.setExternalToolVersion(version);
+            newContentType.setContentType(this.getContentType());
+            existingContentTypes.add(newContentType);   
+        }
+       
+        Set<ExternalToolType> existingTypes = version.getExternalToolTypes();
+
+        if (existingTypes != null) {
+            existingTypes.clear();
+        } else {
+            existingTypes = new HashSet<>();
+            version.setExternalToolTypes(existingTypes);
+        }
+        if (this.getTypes() != null) {
+            for (String type : this.getTypes()) {
+                ExternalToolType newType = new ExternalToolType();
+                newType.setExternalToolVersion(version);
+                newType.setType(type);
+                existingTypes.add(newType);
+            }
+        }
+
+        Set<QueryParameter> existingQueryParameters = version.getQueryParameters();
+
+        if (existingQueryParameters != null) {
+            existingQueryParameters.clear();  
+        } else {
+            existingQueryParameters = new HashSet<>();
+            version.setQueryParameters(existingQueryParameters);
+        }      
+        if (this.getToolParameters() != null &&
+                this.getToolParameters().getQueryParameters() != null
+                && !this.getToolParameters().getQueryParameters().isEmpty()) {
+            for (Map<String, String> qpMap : this.getToolParameters().getQueryParameters()) {
+                QueryParameter qp = new QueryParameter();
+                qp.setExternalToolVersion(version);
+                qp.setKey(qpMap.keySet().iterator().next());
+                qp.setValue(qpMap.get(qp.getKey()));
+                existingQueryParameters.add(qp);
+            }
+        }
+    }
+
+
+
 
     /* Getters and Setters */
-
-    public Long getManifestId() {
-        return this.manifestId;
-    }
-
-    public void setManifestId(Long manifestId) {
-        this.manifestId = manifestId;
-    }
-
     public String getDisplayName() {
         return this.displayName;
     }
@@ -198,7 +265,6 @@ public class ExternalToolManifestDTO implements Serializable {
     @Override
     public String toString() {
         return "{" +
-                " manifestId='" + getManifestId() + "'" +
                 ", ctype='" + getContentType() + "'" +
                 "}";
     }
@@ -214,45 +280,5 @@ public class ExternalToolManifestDTO implements Serializable {
         public void setQueryParameters(Set<Map<String, String>> queryParameters) {
             this.queryParameters = queryParameters;
         }
-
-        /*
-         * private Set<QueryParameterDTO> queryParameters;
-         * 
-         * public Set<QueryParameterDTO> getQueryParameters() {
-         * return queryParameters;
-         * }
-         * 
-         * public void setQueryParameters(Set<QueryParameterDTO> queryParameters) {
-         * this.queryParameters = queryParameters;
-         * }
-         */
     }
-
-    public Set<ExternalToolManifestDTO> getManifestSet() {
-        if (this.contentTypes != null) {
-
-            Set<ExternalToolManifestDTO> manifestDTOs = new HashSet<>();
-            for (String contentType : this.contentTypes) {
-                ExternalToolManifestDTO manifestDTO = new ExternalToolManifestDTO();
-                manifestDTO.setDisplayName(this.displayName);
-                manifestDTO.setDescription(this.description);
-                manifestDTO.setScope(this.scope);
-                manifestDTO.setToolUrl(this.toolUrl);
-                manifestDTO.setToolName(this.toolName);
-                manifestDTO.setHttpMethod(this.httpMethod);
-
-                // from the loop
-                manifestDTO.setContentType(contentType);
-
-                manifestDTO.setTypes(this.types);
-                manifestDTO.setToolParameters(this.toolParameters);
-
-                manifestDTOs.add(manifestDTO);
-            }
-
-            return manifestDTOs;
-        }
-        return null;
-    }
-
 }
