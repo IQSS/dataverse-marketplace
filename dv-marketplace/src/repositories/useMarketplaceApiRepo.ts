@@ -16,10 +16,7 @@ export default function useMarketplaceApiRepo() {
     const deleteBodyRequest = async (url: string) => {
         const confirmed = window.confirm("Are you sure you want to delete this item?");
         if (!confirmed) {
-            userContext.setModalTitle("Cancelled");
-            userContext.setModalMessage("Operation cancelled by user.");
-            userContext.setShowMessage(true);
-            
+            toast.error("Operation cancelled by user.");
         } else {
             return makeApiBodyRequest(url, 'DELETE', new FormData());
         }
@@ -39,10 +36,7 @@ export default function useMarketplaceApiRepo() {
     const deleteFormRequest = async (url: string) => {
         const confirmed = window.confirm("Are you sure you want to delete this item?");
         if (!confirmed) {
-            userContext.setModalTitle("Cancelled");
-            userContext.setModalMessage("Operation cancelled by user.");
-            userContext.setShowMessage(true);
-            
+            toast.error("Operation cancelled by user.");
         } else {
             return makeApiFormRequest(url, 'DELETE', new FormData());
         }

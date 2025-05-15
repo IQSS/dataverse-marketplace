@@ -28,11 +28,6 @@ const UserContextProvider = ({ children }: { children: React.ReactNode }) => {
     const [modalTitle, setModalTitle] = useState('');
     const [theme, setTheme] = useState<Theme>();
 
-
-
-
-
-
     useEffect((): void => {
         const user = localStorage.getItem('user');
         if (user) {
