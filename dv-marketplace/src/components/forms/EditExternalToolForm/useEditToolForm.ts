@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { useParams } from "react-router-dom";
-import { BASE_URL } from "/config";
 import type { ExternalTool } from "../../../types/MarketplaceTypes";
 import useMarketplaceApiRepo from "../../../repositories/useMarketplaceApiRepo";
 import { toast } from "react-toastify";
@@ -14,6 +13,8 @@ export default function useEditToolForm() {
 
     const {putBodyRequest} = useMarketplaceApiRepo();
 
+    const {BASE_URL} = useMarketplaceApiRepo();
+
     useEffect(() => {
         const fetchTool = async () => {
             try {
@@ -24,7 +25,7 @@ export default function useEditToolForm() {
             }
         };
         fetchTool();
-    }, [id]);
+    }, [id, BASE_URL]);
 
 
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
