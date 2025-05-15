@@ -3,7 +3,6 @@ package org.dataverse.marketplace.model;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "query_parameter")
 public class QueryParameter {
 
     @Id

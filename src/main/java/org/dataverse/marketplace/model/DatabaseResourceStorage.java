@@ -5,10 +5,8 @@ import org.hibernate.type.descriptor.jdbc.VarbinaryJdbcType;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "database_resource_storage")
 public class DatabaseResourceStorage {
 
     @Id

@@ -5,10 +5,8 @@ import java.util.List;
 import jakarta.persistence.Entity;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.PrimaryKeyJoinColumn;
-import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "external_tool")
 @PrimaryKeyJoinColumn(name = "mkt_item_id")
 public class ExternalTool extends MarketplaceItem {
 

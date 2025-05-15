@@ -8,7 +8,6 @@ import jakarta.persistence.*;
 
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
-@Table(name = "marketplace_item")
 public class MarketplaceItem implements Serializable{
 
     @Id

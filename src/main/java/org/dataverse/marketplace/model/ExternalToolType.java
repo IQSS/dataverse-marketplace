@@ -3,7 +3,6 @@ package org.dataverse.marketplace.model;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "external_tool_type")
 public class ExternalToolType {
 
     @Id

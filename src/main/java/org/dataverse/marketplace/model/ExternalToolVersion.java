@@ -6,7 +6,6 @@ import java.util.List;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "external_tool_version")
 public class ExternalToolVersion implements Serializable {
 
     @Id

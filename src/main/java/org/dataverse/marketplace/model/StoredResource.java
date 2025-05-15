@@ -4,7 +4,6 @@ package org.dataverse.marketplace.model;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "stored_resource")
 public class StoredResource {
 
     @Id

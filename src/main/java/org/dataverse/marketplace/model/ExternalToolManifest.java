@@ -5,7 +5,6 @@ import java.util.Set;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "external_tool_manifest")
 public class ExternalToolManifest {
 
     @Id
