@@ -28,7 +28,7 @@ const EditExtToolForm = () => {
                 <Button variant="primary" type="submit">
                     Update
                 </Button>
-                <Button variant="secondary" className="bi bi-arrow-return-left ms-2"
+                <Button variant="secondary" className="bi bi-arrow-bar-left ms-2"
                 as={Link as any} to={`/view/${tool?.id}`}>
                     <span className="me-1"></span>View
                 </Button>
