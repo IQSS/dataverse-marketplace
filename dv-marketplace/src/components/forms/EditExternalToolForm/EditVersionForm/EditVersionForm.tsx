@@ -18,9 +18,9 @@ const EditVersionForm = ({ tool }: { tool: ExternalTool | undefined }) => {
 
 	return (
 		<>
-            <SectionHeader header="Versions:" setAddFormIsOpen={setAddVersionFormIsOpen}/>
-			
-            <Alert variant="info" show={addVersionFormIsOpen}>
+			<SectionHeader header="Versions:" setAddFormIsOpen={setAddVersionFormIsOpen} />
+
+			<Alert variant="info" show={addVersionFormIsOpen}>
 				<Form onSubmit={handleVersionSubmit} encType="multipart/form-data">
 					<FormInputTextArea
 						label="Release Note"
@@ -38,7 +38,11 @@ const EditVersionForm = ({ tool }: { tool: ExternalTool | undefined }) => {
 						<Form.Control type="file" name="jsonData" multiple />
 					</Form.Group>
 					<Button variant="primary" type="submit">
-						Submit
+						Save
+					</Button>
+					<Button variant="outline-secondary" className="ms-2"
+						onClick={() => setAddVersionFormIsOpen(false)}>
+						Cancel
 					</Button>
 				</Form>
 			</Alert>
@@ -46,10 +50,10 @@ const EditVersionForm = ({ tool }: { tool: ExternalTool | undefined }) => {
 				<InnerCardDeck>
 					{tool?.versions.map((version) => (
 						<EditVersionCard
-                            key={version.id}
-                            version={version}
-                            tool={tool}
-                        />
+							key={version.id}
+							version={version}
+							tool={tool}
+						/>
 					))}
 				</InnerCardDeck>
 			</ul>
