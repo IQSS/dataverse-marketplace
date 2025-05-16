@@ -86,7 +86,7 @@ const EditManifestForm = ({
 
                         <MultiInputGroup
                             type="keyValue"
-                            namePrefix="queryParameters"
+                            namePrefix="toolParameters.queryParameters"
                             label="Query Parameters"
                             initialValues={formManifest.toolParameters?.queryParameters || []}
                         />

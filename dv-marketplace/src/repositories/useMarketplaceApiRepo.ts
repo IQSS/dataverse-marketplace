@@ -1,4 +1,4 @@
-import { use, useContext } from "react";
+import { useContext } from "react";
 import { UserContext } from "../components/context/UserContextProvider";
 import axios from "axios";
 import { toast } from "react-toastify";
@@ -116,15 +116,30 @@ export default function useMarketplaceApiRepo() {
 
 }
 
-  function convertFormDataToJson(formData: FormData): any {
-    const obj: any = {};
-  
-    for (const [key, value] of formData.entries()) {
+function convertFormDataToJson(formData: FormData): any {
+  const obj: any = {};
+
+  for (const [key, value] of formData.entries()) {
+    const match = key.match(/^(.*)\[(\d+)\]\.key$/);
+    if (match) {
+      const base = match[1]; // e.g. toolParameters.queryParameters
+      const index = match[2];
+      const keyName = value;
+      const val = formData.get(`${base}[${index}].value`);
+      if (val !== null) {
+        setNestedValue(obj, `${base}[${index}]`, { [keyName as string]: val });
+      }
+      continue; // skip .key entry
+    }
+
+    if (!/\.value$/.test(key)) {
       setNestedValue(obj, key, value);
     }
-  
-    return obj;
   }
+
+  return obj;
+}
+
   
   function setNestedValue(obj: any, path: string, value: any) {
     const keys = path

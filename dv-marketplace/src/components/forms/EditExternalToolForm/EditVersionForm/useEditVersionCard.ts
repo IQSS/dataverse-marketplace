@@ -45,11 +45,13 @@ export default function useEditVersionCard({ tool }: { tool: ExternalTool | unde
     const handleManifestEdit = async (event: React.FormEvent<HTMLFormElement>, versionId: number) => {
         event.preventDefault();
         const formData = new FormData(event.currentTarget);
-        processManifestFormData(formData);
+
+        const values = formData.getAll("types");
+        if (values.length === 1) {
+            formData.append("types", values[0]); // append duplicate to ensure array
+        }
 
         const data = await putBodyRequest(`/api/tools/${tool?.id}/versions/${versionId}/manifest`, formData);
-
-        // todo: do we need to go through tool to get the version?
         if (data) {
             const version = tool?.versions.find((version) => version.id === versionId);
             if (version) {
@@ -91,32 +93,6 @@ export default function useEditVersionCard({ tool }: { tool: ExternalTool | unde
 
         reader.readAsText(file);
     };
-
-
-    function processManifestFormData(formData: FormData) {
-
-        ensureArrayInFormData(formData, "types");
-
-        // iterate through query parameters to send variable keys
-        for (const formKey of formData.keys()) {
-            const match = formKey.match(/^queryParameters\[(\d+)\]\.key$/);
-            if (match) {
-                const index = match[1];
-                const keyName = formData.get(`queryParameters[${index}].key`);
-                const value = formData.get(`queryParameters[${index}].value`);
-                if (keyName && value) {
-                    formData.append(`toolParameters.queryParameters[${index}].${keyName}`, value);
-                }
-            }
-        }
-    }
-
-    function ensureArrayInFormData(formData: FormData, key: string) {
-        const values = formData.getAll(key);
-        if (values.length === 1) {
-            formData.append(key, values[0]); // append duplicate to ensure array-like
-        }
-    }
 
     return {
         showVersionEdit,
