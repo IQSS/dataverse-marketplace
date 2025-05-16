@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext } from "react";
 import { UserContext } from "../../context/UserContextProvider";
 import axios from "axios";
 import useMarketplaceApiRepo from "../../../repositories/useMarketplaceApiRepo";

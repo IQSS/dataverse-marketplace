@@ -22,17 +22,10 @@ const EditVersionForm = ({ tool }: { tool: ExternalTool | undefined }) => {
 
 			<Alert variant="info" show={addVersionFormIsOpen}>
 				<Form onSubmit={handleVersionSubmit} encType="multipart/form-data">
-					<FormInputTextArea
-						label="Release Note"
-						name="releaseNote"
-						id="releaseNote"
-					/>
-					<FormInputTextField
-						label="DV Min Version"
-						name="dvMinVersion"
-						id="dvMinVersion"
-					/>
-					<FormInputTextField label="Version" name="version" id="version" />
+					<FormInputTextField label="Version" name="version" id="version" />				
+					<FormInputTextArea label="Release Note" name="releaseNote" id="releaseNote"/>
+					<FormInputTextField label="DV Min Version" name="dvMinVersion" id="dvMinVersion"/>
+
 					<Form.Group className="mb-3" controlId="formBasicEmail">
 						<Form.Label>Manifests</Form.Label>
 						<Form.Control type="file" name="jsonData" multiple />

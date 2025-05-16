@@ -1,4 +1,3 @@
-import Modal from 'react-bootstrap/Modal';
 import useAddExternalTool from './useAddExternalTool';
 
 const AddExtToolForm = () => {
@@ -6,9 +5,6 @@ const AddExtToolForm = () => {
 
     const {
         handleSubmit,
-        modalIsOpen,
-        modalMessage,
-        closeModal
     } = useAddExternalTool();
 
     return (
@@ -24,12 +20,12 @@ const AddExtToolForm = () => {
                     <textarea className="form-control" id="toolDescription" name="description" />
                 </div>
                 <div className="mb-3">
-                    <label htmlFor="releaseNote" className="form-label">Release Note</label>
-                    <textarea className="form-control" id="releaseNote" name="releaseNote" />
-                </div>
-                <div className="mb-3">
                     <label htmlFor="version" className="form-label">Version</label>
                     <input type="text" className="form-control" id="version" name="version" />
+                </div>                
+                <div className="mb-3">
+                    <label htmlFor="releaseNote" className="form-label">Release Note</label>
+                    <textarea className="form-control" id="releaseNote" name="releaseNote" />
                 </div>
                 <div className="mb-3">
                     <label htmlFor="dataverseMinVersion" className="form-label">Dataverse Min Version</label>
