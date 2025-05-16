@@ -10,7 +10,6 @@ export interface Version {
 }
 
 export interface Manifest {
-  [key: string]: any; // Add index signature
   displayName: string;
   description: string;
   scope: string;
