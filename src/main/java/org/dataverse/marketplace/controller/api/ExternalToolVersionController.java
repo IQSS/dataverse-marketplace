@@ -53,7 +53,7 @@ public class ExternalToolVersionController {
     public ResponseEntity<?> updateVersionById(
             @PathVariable("toolId") Long toolId,
             @PathVariable("versionId") Long versionId,
-            @Valid @RequestBody ToolVersionMetadataUpdateRequest updateToolVersionRequest) {
+            @Valid @RequestBody UpdateVersionRequest updateToolVersionRequest) {
 
         ExternalToolVersion version = externalToolVersionService.getToolVersionById(versionId);
         version.setDataverseMinVersion(updateToolVersionRequest.getDvMinVersion());
@@ -178,7 +178,7 @@ public class ExternalToolVersionController {
 
   
     /**
-     * Method to update a the manifest metadata of an external tool version
+     * Method to update the manifest metadata of an external tool version
      */
     @PreAuthorize(ApplicationRoles.ADMIN_ROLE)
     @CacheEvict(value = "externalTools", allEntries = true)

@@ -11,7 +11,7 @@ import org.dataverse.marketplace.payload.AddVersionRequest;
 import org.dataverse.marketplace.payload.ExternalToolManifestDTO;
 import org.dataverse.marketplace.payload.ExternalToolVersionDTO;
 import org.dataverse.marketplace.payload.ServerMessageResponse;
-import org.dataverse.marketplace.payload.ToolVersionMetadataUpdateRequest;
+import org.dataverse.marketplace.payload.UpdateVersionRequest;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -36,7 +36,7 @@ public @interface ExternalToolVersionsAPIDocs {
             @ApiResponse(responseCode = "500", description = "Internal Server Error during version update", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ServerMessageResponse.class), examples = @ExampleObject(GenericBusinessSamples.SERVER_MESSAGE_RESPONSE)))
     })
     @Operation(summary = "Updates the version of the specified external tool.", description = "This endpoint updates the version of the specified external tool by id.")
-    @RequestBody(description = "The external tool version update request", required = true, content = @Content(mediaType = "application/json", schema = @Schema(implementation = ToolVersionMetadataUpdateRequest.class), examples = @ExampleObject(ExternalToolVersionSamples.EXTERNAL_TOOL_VERSION_REQUEST_SAMPLE)))
+    @RequestBody(description = "The external tool version update request", required = true, content = @Content(mediaType = "application/json", schema = @Schema(implementation = UpdateVersionRequest.class), examples = @ExampleObject(ExternalToolVersionSamples.EXTERNAL_TOOL_VERSION_REQUEST_SAMPLE)))
     @Parameter(name = "toolId", description = "The id of the external tool", required = true, in = ParameterIn.PATH, schema = @Schema(type = "integer"))
     @Parameter(name = "versionId", description = "The id of the version of the external tool to be updated", required = true, in = ParameterIn.PATH, schema = @Schema(type = "integer"))
     public @interface UpdateVersionByIdDoc {
