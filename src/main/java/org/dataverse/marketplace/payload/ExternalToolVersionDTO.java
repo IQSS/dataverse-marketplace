@@ -42,7 +42,7 @@ public class ExternalToolVersionDTO implements Serializable {
         this.manifest = new ExternalToolManifestDTO(version);
     }
 
-    @JsonInclude(JsonInclude.Include.NON_EMPTY) 	
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
     public Set<ExternalToolManifestDTO> getManifestSet() {
 
         if (this.manifest.isValidManifest()) {
@@ -107,13 +107,14 @@ public class ExternalToolVersionDTO implements Serializable {
 
     @Override
     public String toString() {
-        return "{" +
-                " id='" + getId() + "'" +
-                ", version='" + getVersion() + "'" +
-                ", releaseNote='" + getReleaseNote() + "'" +
-                ", dataverseMinVersion='" + getDataverseMinVersion() + "'" +
-                ", manifest='" + manifest.toString() + "'" +
-                "}";
+        StringBuilder sb = new StringBuilder("ExternalToolVersionDTO{");
+        sb.append("id=").append(id);
+        sb.append(", version='").append(version).append('\'');
+        sb.append(", releaseNote='").append(releaseNote).append('\'');
+        sb.append(", dataverseMinVersion='").append(dataverseMinVersion).append('\'');
+        sb.append(", manifest=").append(manifest != null ? manifest.toString() : "null");
+        sb.append('}');
+        return sb.toString();
     }
 
 }

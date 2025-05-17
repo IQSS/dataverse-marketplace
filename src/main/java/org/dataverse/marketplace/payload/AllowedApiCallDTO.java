@@ -7,7 +7,6 @@ import io.swagger.v3.oas.annotations.media.Schema;
 @Schema(description = "Allowed Api Call data transfer object")
 public class AllowedApiCallDTO implements Serializable {
 
-
     String name;
     String httpMethod;
     String urlTemplate;
@@ -15,7 +14,7 @@ public class AllowedApiCallDTO implements Serializable {
 
     public AllowedApiCallDTO() {
     }
-    
+
     public AllowedApiCallDTO(String name, String httpMethod, String urlTemplate, Integer timeOut) {
         this.name = name;
         this.httpMethod = httpMethod;
@@ -26,6 +25,7 @@ public class AllowedApiCallDTO implements Serializable {
     public String getName() {
         return name;
     }
+
     public void setName(String name) {
         this.name = name;
     }
@@ -33,6 +33,7 @@ public class AllowedApiCallDTO implements Serializable {
     public String getHttpMethod() {
         return httpMethod;
     }
+
     public void setHttpMethod(String httpMethod) {
         this.httpMethod = httpMethod;
     }
@@ -40,6 +41,7 @@ public class AllowedApiCallDTO implements Serializable {
     public String getUrlTemplate() {
         return urlTemplate;
     }
+
     public void setUrlTemplate(String urlTemplate) {
         this.urlTemplate = urlTemplate;
     }
@@ -47,8 +49,19 @@ public class AllowedApiCallDTO implements Serializable {
     public Integer getTimeOut() {
         return timeOut;
     }
+
     public void setTimeOut(Integer timeOut) {
         this.timeOut = timeOut;
+    }
+
+    @Override
+    public String toString() {
+        return "AllowedApiCallDTO{" +
+                "name='" + name + '\'' +
+                ", httpMethod='" + httpMethod + '\'' +
+                ", urlTemplate='" + urlTemplate + '\'' +
+                ", timeOut=" + timeOut +
+                '}';
     }
 
 }

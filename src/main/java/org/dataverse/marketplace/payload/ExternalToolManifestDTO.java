@@ -40,9 +40,6 @@ public class ExternalToolManifestDTO implements Serializable {
     @Schema(description = "The manifest's HTTP method", example = "GET")
     private String httpMethod;
 
-    @Schema(description = "The content type for the file the tool will work with", example = "application/pdf")
-    private String contentType;
-
     @Schema(description = "The content types for the file the tool will work with", example = "application/pdf")
     private Set<String> contentTypes;
 
@@ -59,6 +56,10 @@ public class ExternalToolManifestDTO implements Serializable {
     // @Schema(description = "the aux file exists (as part of requirements)",
     // example = "fileid: {fileId}")
     private RequirementsDTO requirements;
+
+    // legacy support
+    @Schema(description = "The content type for the file the tool will work with", example = "application/pdf")
+    private String contentType;
 
     public ExternalToolManifestDTO() {
     }
@@ -255,7 +256,7 @@ public class ExternalToolManifestDTO implements Serializable {
 
     public boolean isValidManifest() {
         return !StringUtils.isBlank(toolUrl);
-}
+    }
 
     /* Getters and Setters */
     public String getDisplayName() {
@@ -357,9 +358,21 @@ public class ExternalToolManifestDTO implements Serializable {
 
     @Override
     public String toString() {
-        return "{" +
-                ", ctype='" + getContentType() + "'" +
-                "}";
+        StringBuilder sb = new StringBuilder("ExternalToolManifestDTO{");
+        sb.append("displayName='").append(displayName).append('\'');
+        sb.append(", description='").append(description).append('\'');
+        sb.append(", scope='").append(scope).append('\'');
+        sb.append(", toolUrl='").append(toolUrl).append('\'');
+        sb.append(", toolName='").append(toolName).append('\'');
+        sb.append(", httpMethod='").append(httpMethod).append('\'');
+        sb.append(", contentType='").append(contentType).append('\'');
+        sb.append(", contentTypes=").append(contentTypes);
+        sb.append(", types=").append(types);
+        sb.append(", toolParameters=").append(toolParameters);
+        sb.append(", allowedApiCalls=").append(allowedApiCalls);
+        sb.append(", requirements=").append(requirements);
+        sb.append('}');
+        return sb.toString();
     }
 
     // Inner class
@@ -373,6 +386,14 @@ public class ExternalToolManifestDTO implements Serializable {
         public void setQueryParameters(Set<Map<String, String>> queryParameters) {
             this.queryParameters = queryParameters;
         }
+
+        @Override
+        public String toString() {
+            return "ToolParameterDTO{" +
+                    "queryParameters=" + queryParameters +
+                    '}';
+        }
+
     }
 
     // Inner class
@@ -382,8 +403,17 @@ public class ExternalToolManifestDTO implements Serializable {
         public Set<AuxFilesExistDTO> getAuxFilesExist() {
             return auxFilesExist;
         }
+
         public void setAuxFilesExist(Set<AuxFilesExistDTO> auxFilesExist) {
             this.auxFilesExist = auxFilesExist;
         }
+
+        @Override
+        public String toString() {
+            return "RequirementsDTO{" +
+                    "auxFilesExist=" + auxFilesExist +
+                    '}';
+        }
+
     }
 }
