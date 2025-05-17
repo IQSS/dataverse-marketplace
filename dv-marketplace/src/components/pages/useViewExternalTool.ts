@@ -16,12 +16,15 @@ export default function useViewExternalTool() {
     const downloadManifest = (manifest: Manifest): void => {
         const blob = new Blob([JSON.stringify(manifest, null, 2)], { type: 'application/json' });
         const url = URL.createObjectURL(blob);
-      
+
         const link = document.createElement('a');
         link.href = url;
-        link.download  = (manifest?.toolName ?? 'manifest') + "__" + manifest?.contentType + ".json";
+        link.download =
+            (manifest?.toolName ?? 'manifest') +
+            (manifest?.contentType ? `__${manifest.contentType}` : '') +
+            '.json';
         link.click();
-      
+
         URL.revokeObjectURL(url);
     }
 
