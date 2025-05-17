@@ -4,7 +4,6 @@ import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.apache.commons.lang3.StringUtils;
 import org.dataverse.marketplace.model.*;
 import org.dataverse.marketplace.openapi.samples.ExternalToolVersionSamples;
 
@@ -46,8 +45,7 @@ public class ExternalToolVersionDTO implements Serializable {
     @JsonInclude(JsonInclude.Include.NON_EMPTY) 	
     public Set<ExternalToolManifestDTO> getManifestSet() {
 
-        // tool URL is required to produce any manifests
-        if (!StringUtils.isBlank(this.manifest.getToolUrl())) {
+        if (this.manifest.isValidManifest()) {
             Set<ExternalToolManifestDTO> manifestDTOs = new HashSet<ExternalToolManifestDTO>();
 
             if (this.manifest.getContentTypes() != null && !this.manifest.getContentTypes().isEmpty()) {

@@ -253,6 +253,10 @@ public class ExternalToolManifestDTO implements Serializable {
         }
     }
 
+    public boolean isValidManifest() {
+        return !StringUtils.isBlank(toolUrl);
+}
+
     /* Getters and Setters */
     public String getDisplayName() {
         return this.displayName;
