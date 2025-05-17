@@ -6,6 +6,8 @@ import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
+import org.dataverse.marketplace.model.AllowedApiCall;
+import org.dataverse.marketplace.model.AuxFilesExist;
 import org.dataverse.marketplace.model.ContentType;
 import org.dataverse.marketplace.model.ExternalToolVersion;
 import org.dataverse.marketplace.model.ExternalToolType;
@@ -47,8 +49,16 @@ public class ExternalToolManifestDTO implements Serializable {
     @Schema(description = "The tool types", example = "query")
     private Set<String> types;
 
-    // @Schema(description = "the query paramters", example = "fileid: {fileId}")
+    // @Schema(description = "the query paramters (as part of toolParameters)",
+    // example = "fileid: {fileId}")
     private ToolParameterDTO toolParameters;
+
+    // @Schema(description = "the allowed api calls", example = "fileid: {fileId}")
+    private Set<AllowedApiCallDTO> allowedApiCalls;
+
+    // @Schema(description = "the aux file exists (as part of requirements)",
+    // example = "fileid: {fileId}")
+    private RequirementsDTO requirements;
 
     public ExternalToolManifestDTO() {
     }
@@ -87,21 +97,48 @@ public class ExternalToolManifestDTO implements Serializable {
             toolParameters.setQueryParameters(queryParameters);
         }
 
+        if (externalToolVersion.getAllowedApiCalls() != null) {
+            this.allowedApiCalls = new HashSet<AllowedApiCallDTO>();
+            for (AllowedApiCall allowedApiCall : externalToolVersion.getAllowedApiCalls()) {
+                AllowedApiCallDTO allowedApiCallDTO = new AllowedApiCallDTO();
+                allowedApiCallDTO.setName(allowedApiCall.getName());
+                allowedApiCallDTO.setHttpMethod(allowedApiCall.getHttpMethod());
+                allowedApiCallDTO.setUrlTemplate(allowedApiCall.getUrlTemplate());
+                allowedApiCallDTO.setTimeOut(allowedApiCall.getTimeOut());
+                this.allowedApiCalls.add(allowedApiCallDTO);
+            }
+        }
+
+        if (externalToolVersion.getAuxFilesExist() != null
+                && !externalToolVersion.getAuxFilesExist().isEmpty()) {
+            this.requirements = new RequirementsDTO();
+            Set<AuxFilesExistDTO> auxFileExistsDTOs = new HashSet<AuxFilesExistDTO>();
+            for (AuxFilesExist auxFileExists : externalToolVersion.getAuxFilesExist()) {
+                AuxFilesExistDTO auxFileExistsDTO = new AuxFilesExistDTO();
+                auxFileExistsDTO.setFormatTag(auxFileExists.getFormatTag());
+                auxFileExistsDTO.setFormatVersion(auxFileExists.getFormatVersion());
+                auxFileExistsDTOs.add(auxFileExistsDTO);
+            }
+            this.requirements.setAuxFilesExist(auxFileExistsDTOs);
+        }
+
     }
 
     public ExternalToolManifestDTO(ExternalToolManifestDTO manifestDTO, String contentType) {
-            this.setDisplayName(manifestDTO.displayName);
-            this.setDescription(manifestDTO.description);
-            this.setScope(manifestDTO.scope);
-            this.setToolUrl(manifestDTO.toolUrl);
-            this.setToolName(manifestDTO.toolName);
-            this.setHttpMethod(manifestDTO.httpMethod);
+        this.setDisplayName(manifestDTO.displayName);
+        this.setDescription(manifestDTO.description);
+        this.setScope(manifestDTO.scope);
+        this.setToolUrl(manifestDTO.toolUrl);
+        this.setToolName(manifestDTO.toolName);
+        this.setHttpMethod(manifestDTO.httpMethod);
 
-            // specific content type
-            this.setContentType(contentType);
+        // specific content type
+        this.setContentType(contentType);
 
-            this.setTypes(manifestDTO.types);
-            this.setToolParameters(manifestDTO.toolParameters);
+        this.setTypes(manifestDTO.types);
+        this.setToolParameters(manifestDTO.toolParameters);
+        this.setAllowedApiCalls(manifestDTO.allowedApiCalls);
+        this.setReqirementsDTO(manifestDTO.requirements);
     }
 
     public void convertDTOtoEntity(ExternalToolVersion version) {
@@ -136,9 +173,9 @@ public class ExternalToolManifestDTO implements Serializable {
             ContentType newContentType = new ContentType();
             newContentType.setExternalToolVersion(version);
             newContentType.setContentType(this.getContentType());
-            existingContentTypes.add(newContentType);   
+            existingContentTypes.add(newContentType);
         }
-       
+
         Set<ExternalToolType> existingTypes = version.getExternalToolTypes();
 
         if (existingTypes != null) {
@@ -159,11 +196,11 @@ public class ExternalToolManifestDTO implements Serializable {
         Set<QueryParameter> existingQueryParameters = version.getQueryParameters();
 
         if (existingQueryParameters != null) {
-            existingQueryParameters.clear();  
+            existingQueryParameters.clear();
         } else {
             existingQueryParameters = new HashSet<>();
             version.setQueryParameters(existingQueryParameters);
-        }      
+        }
         if (this.getToolParameters() != null &&
                 this.getToolParameters().getQueryParameters() != null
                 && !this.getToolParameters().getQueryParameters().isEmpty()) {
@@ -175,10 +212,46 @@ public class ExternalToolManifestDTO implements Serializable {
                 existingQueryParameters.add(qp);
             }
         }
+
+        Set<AllowedApiCall> existingAllowedApiCalls = version.getAllowedApiCalls();
+        if (existingAllowedApiCalls != null) {
+            existingAllowedApiCalls.clear();
+        } else {
+            existingAllowedApiCalls = new HashSet<>();
+            version.setAllowedApiCalls(existingAllowedApiCalls);
+        }
+        if (this.getAllowedApiCalls() != null) {
+            for (AllowedApiCallDTO allowedApiCallDTO : this.getAllowedApiCalls()) {
+                AllowedApiCall allowedApiCall = new AllowedApiCall();
+                allowedApiCall.setExternalToolVersion(version);
+                allowedApiCall.setName(allowedApiCallDTO.getName());
+                allowedApiCall.setHttpMethod(allowedApiCallDTO.getHttpMethod());
+                allowedApiCall.setUrlTemplate(allowedApiCallDTO.getUrlTemplate());
+                allowedApiCall.setTimeOut(allowedApiCallDTO.getTimeOut());
+                existingAllowedApiCalls.add(allowedApiCall);
+            }
+        }
+
+        Set<AuxFilesExist> existingAuxFileExists = version.getAuxFilesExist();
+
+        if (existingAuxFileExists != null) {
+            existingAuxFileExists.clear();
+        } else {
+            existingAuxFileExists = new HashSet<>();
+            version.setAuxFilesExist(existingAuxFileExists);
+        }
+        if (this.getRequirements() != null &&
+                this.getRequirements().getAuxFilesExist() != null
+                && !this.getRequirements().getAuxFilesExist().isEmpty()) {
+            for (AuxFilesExistDTO auxFileExistsDTO : this.getRequirements().getAuxFilesExist()) {
+                AuxFilesExist auxFileExists = new AuxFilesExist();
+                auxFileExists.setExternalToolVersion(version);
+                auxFileExists.setFormatTag(auxFileExistsDTO.getFormatTag());
+                auxFileExists.setFormatVersion(auxFileExistsDTO.getFormatVersion());
+                existingAuxFileExists.add(auxFileExists);
+            }
+        }
     }
-
-
-
 
     /* Getters and Setters */
     public String getDisplayName() {
@@ -262,6 +335,22 @@ public class ExternalToolManifestDTO implements Serializable {
         this.toolParameters = toolParameters;
     }
 
+    public Set<AllowedApiCallDTO> getAllowedApiCalls() {
+        return this.allowedApiCalls;
+    }
+
+    public void setAllowedApiCalls(Set<AllowedApiCallDTO> allowedApiCalls) {
+        this.allowedApiCalls = allowedApiCalls;
+    }
+
+    public RequirementsDTO getRequirements() {
+        return this.requirements;
+    }
+
+    public void setReqirementsDTO(RequirementsDTO requirements) {
+        this.requirements = requirements;
+    }
+
     @Override
     public String toString() {
         return "{" +
@@ -279,6 +368,18 @@ public class ExternalToolManifestDTO implements Serializable {
 
         public void setQueryParameters(Set<Map<String, String>> queryParameters) {
             this.queryParameters = queryParameters;
+        }
+    }
+
+    // Inner class
+    public class RequirementsDTO implements Serializable {
+        private Set<AuxFilesExistDTO> auxFilesExist;
+
+        public Set<AuxFilesExistDTO> getAuxFilesExist() {
+            return auxFilesExist;
+        }
+        public void setAuxFilesExist(Set<AuxFilesExistDTO> auxFilesExist) {
+            this.auxFilesExist = auxFilesExist;
         }
     }
 }

@@ -44,10 +44,13 @@ public class ExternalToolVersion implements Serializable {
     private Set<ExternalToolType> externalToolTypes;
 
     @OneToMany(mappedBy = "externalToolVersion", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<ContentType> contentTypes;      
+    private Set<ContentType> contentTypes;
+    
+    @OneToMany(mappedBy = "externalToolVersion", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<AllowedApiCall> allowedApiCalls;
 
-    //allow api calls
-    //requirements
+    @OneToMany(mappedBy = "externalToolVersion", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<AuxFilesExist> auxFilesExist;
 
 
     /* Getters and Setters */
@@ -156,5 +159,17 @@ public class ExternalToolVersion implements Serializable {
         this.contentTypes = contentTypes;
     }
 
+    public Set<AllowedApiCall> getAllowedApiCalls() {
+        return allowedApiCalls;
+    }
+    public void setAllowedApiCalls(Set<AllowedApiCall> allowedApiCalls) {
+        this.allowedApiCalls = allowedApiCalls;
+    }
 
+    public Set<AuxFilesExist> getAuxFilesExist() {
+        return auxFilesExist;
+    }
+    public void setAuxFilesExist(Set<AuxFilesExist> auxFilesExist) {
+        this.auxFilesExist = auxFilesExist;
+    }
 }
