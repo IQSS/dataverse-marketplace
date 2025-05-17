@@ -4,39 +4,35 @@ import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.apache.commons.lang3.StringUtils;
 import org.dataverse.marketplace.model.*;
 import org.dataverse.marketplace.openapi.samples.ExternalToolVersionSamples;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+
 import io.swagger.v3.oas.annotations.media.Schema;
 
-@Schema(description = "A representation of a version of an external tool", 
-        name = "Version")
-public class ExternalToolVersionDTO implements Serializable{
+@Schema(description = "A representation of a version of an external tool", name = "Version")
+public class ExternalToolVersionDTO implements Serializable {
 
-    @Schema(description = "The unique identifier of the external tool version", 
-            example = "1")
+    @Schema(description = "The unique identifier of the external tool version", example = "1")
     private Long id;
 
-    @Schema(description = "The version of the external tool", 
-            example = "\"1.0\"")
+    @Schema(description = "The version of the external tool", example = "\"1.0\"")
     private String version;
 
-    @Schema(description = "The release note of the external tool", 
-            example = "This is a release note")
+    @Schema(description = "The release note of the external tool", example = "This is a release note")
     private String releaseNote;
 
-    @Schema(description = "The minimum version of Dataverse required for the external tool", 
-            example = "\"6.0\"")
+    @Schema(description = "The minimum version of Dataverse required for the external tool", example = "\"6.0\"")
     private String dataverseMinVersion;
 
-    @Schema(description = "The manifest metadata of the external tool",   
-            implementation = ExternalToolManifestDTO.class,              
-            example = ExternalToolVersionSamples.EXTERNAL_TOOL_VERSION_MANIFESTS_SAMPLE)
+    @Schema(description = "The manifest metadata of the external tool", implementation = ExternalToolManifestDTO.class, example = ExternalToolVersionSamples.EXTERNAL_TOOL_VERSION_MANIFESTS_SAMPLE)
     private ExternalToolManifestDTO manifest;
 
     public ExternalToolVersionDTO() {
     }
-    
+
     public ExternalToolVersionDTO(ExternalToolVersion version) {
 
         this.id = version.getId();
@@ -47,22 +43,27 @@ public class ExternalToolVersionDTO implements Serializable{
         this.manifest = new ExternalToolManifestDTO(version);
     }
 
+    @JsonInclude(JsonInclude.Include.NON_EMPTY) 	
     public Set<ExternalToolManifestDTO> getManifestSet() {
 
-        Set<ExternalToolManifestDTO> manifestDTOs = new HashSet<ExternalToolManifestDTO>();
+        // tool URL is required to produce any manifests
+        if (!StringUtils.isBlank(this.manifest.getToolUrl())) {
+            Set<ExternalToolManifestDTO> manifestDTOs = new HashSet<ExternalToolManifestDTO>();
 
-        if (this.manifest.getContentTypes() != null && !this.manifest.getContentTypes().isEmpty()) {
-            for (String contentType : this.manifest.getContentTypes()) {
-                ExternalToolManifestDTO manifestDTO = new ExternalToolManifestDTO(manifest,contentType);
-                manifestDTOs.add(manifestDTO);
+            if (this.manifest.getContentTypes() != null && !this.manifest.getContentTypes().isEmpty()) {
+                for (String contentType : this.manifest.getContentTypes()) {
+                    ExternalToolManifestDTO manifestDTO = new ExternalToolManifestDTO(manifest, contentType);
+                    manifestDTOs.add(manifestDTO);
+                }
+            } else {
+                manifestDTOs.add(this.manifest);
             }
-        } else {
-            manifestDTOs.add(this.manifest);
+
+            return manifestDTOs;
         }
 
-        return manifestDTOs;
+        return null;
     }
-  
 
     /* Getters and Setters */
 
@@ -101,21 +102,20 @@ public class ExternalToolVersionDTO implements Serializable{
     public ExternalToolManifestDTO getManifest() {
         return this.manifest;
     }
+
     public void setManifest(ExternalToolManifestDTO manifest) {
         this.manifest = manifest;
     }
 
-
     @Override
     public String toString() {
         return "{" +
-            " id='" + getId() + "'" +
-            ", version='" + getVersion() + "'" +
-            ", releaseNote='" + getReleaseNote() + "'" +
-            ", dataverseMinVersion='" + getDataverseMinVersion() + "'" +
-            ", manifest='" + manifest.toString() + "'" +
-            "}";
+                " id='" + getId() + "'" +
+                ", version='" + getVersion() + "'" +
+                ", releaseNote='" + getReleaseNote() + "'" +
+                ", dataverseMinVersion='" + getDataverseMinVersion() + "'" +
+                ", manifest='" + manifest.toString() + "'" +
+                "}";
     }
 
-    
 }
