@@ -24,7 +24,6 @@ import io.swagger.v3.oas.annotations.security.SecuritySchemes;
         @Tag(name = "External Tools", description = "External tools management"),
         @Tag(name = "External Tools Images", description = "External tools images management"),
         @Tag(name = "External Tools Version", description = "External tool versions endpoints"),
-        @Tag(name = "External Tools Version Manifest", description = "External tool versions manifest endpoints"),
         @Tag(name = "Security", description = "Security management"),
         @Tag(name = "StoredResources", description = "Stored resources management"),
         @Tag(name = "Users", description = "User management"),

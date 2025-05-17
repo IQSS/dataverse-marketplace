@@ -1,53 +1,66 @@
 package org.dataverse.marketplace.model;
 
 import java.io.Serializable;
-import java.util.List;
-import java.util.Objects;
+import java.util.Set;
+
 import jakarta.persistence.*;
 
 @Entity
-@IdClass(ExternalToolVersion.ExternalToolVersionId.class)
-@Table(name = "external_tool_version", uniqueConstraints = {
-        @UniqueConstraint(columnNames = { "id", "mkt_item_id" })
-})
 public class ExternalToolVersion implements Serializable {
 
     @Id
-    Integer id;
-
-    @Id
-    @Column(name = "mkt_item_id")
-    private Integer mkItemId;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "mkt_item_id", insertable = false, updatable = false)
+    @JoinColumn(name = "external_tool_id")
     private ExternalTool externalTool;
 
-    @OneToOne(cascade = CascadeType.REMOVE)
-    @JoinColumn(name = "v_metadata_id")
-    private VersionMetadata versionMetadata;
+    private String releaseNote;
 
-    @OneToMany(mappedBy = "externalToolVersion", cascade = CascadeType.REMOVE)
-    private List<ExternalToolManifest> manifests;
+    @Column(name = "item_version")
+    private String version;
+
+    @Column(name = "dv_min_version")
+    private String dataverseMinVersion;
+
+    // Manifest details
+    private String displayName;
+
+    private String description;
+
+    private String scope;
+
+    private String toolUrl;
+
+    private String toolName;
     
+    private String httpMethod;
+
+    @OneToMany(mappedBy = "externalToolVersion", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<QueryParameter> queryParameters;    
+
+    @OneToMany(mappedBy = "externalToolVersion", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<ExternalToolType> externalToolTypes;
+
+    @OneToMany(mappedBy = "externalToolVersion", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<ContentType> contentTypes;
+    
+    @OneToMany(mappedBy = "externalToolVersion", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<AllowedApiCall> allowedApiCalls;
+
+    @OneToMany(mappedBy = "externalToolVersion", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<AuxFilesExist> auxFilesExist;
+
 
     /* Getters and Setters */
 
-
-    public Integer getId() {
+    public Long getId() {
         return this.id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
-    }
-
-    public Integer getMkItemId() {
-        return this.mkItemId;
-    }
-
-    public void setMkItemId(Integer mkItemId) {
-        this.mkItemId = mkItemId;
     }
 
     public ExternalTool getExternalTool() {
@@ -58,54 +71,105 @@ public class ExternalToolVersion implements Serializable {
         this.externalTool = externalTool;
     }
 
-    public VersionMetadata getVersionMetadata() {
-        return this.versionMetadata;
+    public String getReleaseNote() {
+        return this.releaseNote;
     }
 
-    public void setVersionMetadata(VersionMetadata versionMetadata) {
-        this.versionMetadata = versionMetadata;
+    public void setReleaseNote(String releaseNote) {
+        this.releaseNote = releaseNote;
     }
 
-    public List<ExternalToolManifest> getManifests() {
-        return this.manifests;
+    public String getVersion() {
+        return this.version;
     }
 
-    public void setManifests(List<ExternalToolManifest> manifests) {
-        this.manifests = manifests;
+    public void setVersion(String version) {
+        this.version = version;
+    }
+
+    public String getDataverseMinVersion() {
+        return this.dataverseMinVersion;
+    }
+
+    public void setDataverseMinVersion(String dataverseMinVersion) {
+        this.dataverseMinVersion = dataverseMinVersion;
+    }
+
+    public String getDisplayName() {
+        return displayName;
+    }
+
+    public void setDisplayName(String displayName) {
+        this.displayName = displayName;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getScope() {
+        return scope;
+    }
+    public void setScope(String scope) {
+        this.scope = scope;
+    }
+
+    public String getToolUrl() {
+        return toolUrl;
     }
     
-    @Embeddable
-    public static class ExternalToolVersionId implements Serializable {
-
-        private Integer id;
-        private Integer mkItemId;
-
-        // Default constructor
-        public ExternalToolVersionId() {
-        }
-
-        // Parameterized constructor
-        public ExternalToolVersionId(Integer id, Integer mkItemId) {
-            this.id = id;
-            this.mkItemId = mkItemId;
-        }
-
-        // Getters and setters
-
-        @Override
-        public boolean equals(Object o) {
-            if (this == o)
-                return true;
-            if (o == null || getClass() != o.getClass())
-                return false;
-            ExternalToolVersionId that = (ExternalToolVersionId) o;
-            return Objects.equals(id, that.id) && Objects.equals(mkItemId, that.mkItemId);
-        }
-
-        @Override
-        public int hashCode() {
-            return Objects.hash(id, mkItemId);
-        }
+    public void setToolUrl(String toolUrl) {
+        this.toolUrl = toolUrl;
     }
 
+    public String getToolName() {
+        return toolName;
+    }
+    public void setToolName(String toolName) {
+        this.toolName = toolName;
+    }
+    public String getHttpMethod() {
+        return httpMethod;
+    }
+    public void setHttpMethod(String httpMethod) {
+        this.httpMethod = httpMethod;
+    }
+
+    public Set<ExternalToolType> getExternalToolTypes() {
+        return externalToolTypes;
+    }
+    public void setExternalToolTypes(Set<ExternalToolType> externalToolTypes) {
+        this.externalToolTypes = externalToolTypes;
+    }
+
+    public Set<QueryParameter> getQueryParameters() {
+        return queryParameters;
+    }
+    public void setQueryParameters(Set<QueryParameter> queryParameters) {
+        this.queryParameters = queryParameters;
+    }
+    public Set<ContentType> getContentTypes() {
+        return contentTypes;
+    }
+    public void setContentTypes(Set<ContentType> contentTypes) {
+        this.contentTypes = contentTypes;
+    }
+
+    public Set<AllowedApiCall> getAllowedApiCalls() {
+        return allowedApiCalls;
+    }
+    public void setAllowedApiCalls(Set<AllowedApiCall> allowedApiCalls) {
+        this.allowedApiCalls = allowedApiCalls;
+    }
+
+    public Set<AuxFilesExist> getAuxFilesExist() {
+        return auxFilesExist;
+    }
+    public void setAuxFilesExist(Set<AuxFilesExist> auxFilesExist) {
+        this.auxFilesExist = auxFilesExist;
+    }
 }

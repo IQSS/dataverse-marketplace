@@ -18,27 +18,24 @@ const EditVersionForm = ({ tool }: { tool: ExternalTool | undefined }) => {
 
 	return (
 		<>
-            <SectionHeader header="Versions:" setAddFormIsOpen={setAddVersionFormIsOpen}/>
-			
-            <Alert variant="info" show={addVersionFormIsOpen}>
+			<SectionHeader header="Versions:" setAddFormIsOpen={setAddVersionFormIsOpen} />
+
+			<Alert variant="info" show={addVersionFormIsOpen}>
 				<Form onSubmit={handleVersionSubmit} encType="multipart/form-data">
-					<FormInputTextArea
-						label="Release Note"
-						name="releaseNote"
-						id="releaseNote"
-					/>
-					<FormInputTextField
-						label="DV Min Version"
-						name="dvMinVersion"
-						id="dvMinVersion"
-					/>
-					<FormInputTextField label="Version" name="version" id="version" />
+					<FormInputTextField label="Version" name="version" id="version" />				
+					<FormInputTextArea label="Release Note" name="releaseNote" id="releaseNote"/>
+					<FormInputTextField label="DV Min Version" name="dvMinVersion" id="dvMinVersion"/>
+
 					<Form.Group className="mb-3" controlId="formBasicEmail">
 						<Form.Label>Manifests</Form.Label>
 						<Form.Control type="file" name="jsonData" multiple />
 					</Form.Group>
 					<Button variant="primary" type="submit">
-						Submit
+						Save
+					</Button>
+					<Button variant="outline-secondary" className="ms-2"
+						onClick={() => setAddVersionFormIsOpen(false)}>
+						Cancel
 					</Button>
 				</Form>
 			</Alert>
@@ -46,10 +43,10 @@ const EditVersionForm = ({ tool }: { tool: ExternalTool | undefined }) => {
 				<InnerCardDeck>
 					{tool?.versions.map((version) => (
 						<EditVersionCard
-                            key={version.id}
-                            version={version}
-                            tool={tool}
-                        />
+							key={version.id}
+							version={version}
+							tool={tool}
+						/>
 					))}
 				</InnerCardDeck>
 			</ul>

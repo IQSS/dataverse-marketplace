@@ -1,9 +1,6 @@
 package org.dataverse.marketplace.payload;
 
 import java.io.Serializable;
-import java.util.List;
-
-import org.springframework.web.multipart.MultipartFile;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotEmpty;
@@ -23,7 +20,7 @@ public class AddVersionRequest implements Serializable{
         example = "\"6.0\"")
     @NotEmpty
     private String dvMinVersion;
-
+/* 
     @Schema(description = "Manifest files for this version", 
         example = "[\"ask-the-data.json\"]",
         type = "array",
@@ -31,7 +28,7 @@ public class AddVersionRequest implements Serializable{
         implementation = MultipartFile[].class)
     @NotEmpty
     private List<MultipartFile> jsonData;
-
+*/
     /* Getters and Setters */
 
     public String getReleaseNote() {
@@ -57,7 +54,7 @@ public class AddVersionRequest implements Serializable{
     public void setDvMinVersion(String dvMinVersion) {
         this.dvMinVersion = dvMinVersion;
     }
-
+/* 
     public List<MultipartFile> getJsonData() {
         return this.jsonData;
     }
@@ -65,7 +62,7 @@ public class AddVersionRequest implements Serializable{
     public void setJsonData(List<MultipartFile> jsonData) {
         this.jsonData = jsonData;
     }
-
+*/
 
     @Override
     public String toString() {
@@ -73,7 +70,7 @@ public class AddVersionRequest implements Serializable{
             " releaseNote='" + getReleaseNote() + "'" +
             ", version='" + getVersion() + "'" +
             ", dvMinVersion='" + getDvMinVersion() + "'" +
-            ", jsonData='" + getJsonData() + "'" +
+           // ", jsonData='" + getJsonData() + "'" +
             "}";
     }
 

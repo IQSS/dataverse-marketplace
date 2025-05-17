@@ -16,7 +16,7 @@ public class ExternalToolDTO implements Serializable {
 
     @Schema(description = "The unique identifier of the external tool", 
             example = "1")
-    private Integer id;
+    private Long id;
 
     @Schema(description = "The name of the external tool", 
             example = "My External Tool")
@@ -66,11 +66,11 @@ public class ExternalToolDTO implements Serializable {
 
     /* Getters and Setters */
 
-    public Integer getId() {
+    public Long getId() {
         return this.id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

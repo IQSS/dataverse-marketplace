@@ -100,34 +100,6 @@ public class LoginAndAuthTest {
             assertNotNull(rolesResponseWithToken.getBody());
         });
 
-        //Test for adding roles
-        RoleCreationRequest testNewRole = new RoleCreationRequest();
-        testNewRole.setRoleName("TST" + randomNumber);
-        
-        //Test for unauthorized creation of role, logged user not admin
-        assertThrows(HttpClientErrorException.Unauthorized.class, () -> {
-            
-            HttpEntity<RoleCreationRequest> request = new HttpEntity<>(testNewRole, testuserHeaders);
-            ResponseEntity<ServerMessageResponse> roleCreationResponse =
-                restTemplate.postForEntity(serverUrl + "/auth/roles", request, ServerMessageResponse.class);
-            assertNotNull(roleCreationResponse);
-        });
-
-        //Test for unauthorized creation of role, not logged user
-        assertThrows(HttpClientErrorException.class, () -> {
-            HttpEntity<String> request = new HttpEntity<>(testuserHeaders);
-            ResponseEntity<ServerMessageResponse> roleCreationResponse =
-                restTemplate.postForEntity(serverUrl + "/auth/roles", request, ServerMessageResponse.class);
-            assertNotNull(roleCreationResponse);
-        });
-
-        // Test for authorized creation of role
-        assertDoesNotThrow(() -> {
-            HttpEntity<RoleCreationRequest> request = new HttpEntity<>(testNewRole, adminHeaders);
-            ResponseEntity<RoleCreationResponse> roleCreationResponse = 
-                restTemplate.postForEntity(serverUrl + "/auth/roles", request, RoleCreationResponse.class);
-            assertNotNull(roleCreationResponse);
-        });
 
 
         //Test of new password and role assignement

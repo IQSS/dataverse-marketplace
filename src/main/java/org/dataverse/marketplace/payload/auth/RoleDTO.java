@@ -7,7 +7,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 public class RoleDTO {
 
     @Schema(description = "The id of the role", example = "1")
-    private Integer id;
+    private Long id;
 
     @Schema(description = "The name of the role", example = "ADMIN")
     private String name;
@@ -20,7 +20,7 @@ public class RoleDTO {
         this.name = role.getName();
     }
 
-    public RoleDTO(Integer id, String name) {
+    public RoleDTO(Long id, String name) {
         this.id = id;
         this.name = name;
     }
@@ -29,7 +29,7 @@ public class RoleDTO {
         this.name = name;
     }
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
@@ -37,7 +37,7 @@ public class RoleDTO {
         return name;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

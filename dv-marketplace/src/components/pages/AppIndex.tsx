@@ -1,5 +1,6 @@
 import { ErrorBoundary } from "react-error-boundary";
-import UserContextProvider from "../context/UserContextProvider";
+import { useContext } from "react";
+import UserContextProvider, { UserContext } from "../context/UserContextProvider";
 import ErrorView from "../UI/ErrorView";
 import { Outlet } from "react-router-dom";
 import Navigation from '../UI/Navigation/NavigationBar';
@@ -10,7 +11,11 @@ function ErrorFallback({ error, resetErrorBoundary }: { error: Error; resetError
 };
 
 const AppIndex = () => {
+
+  
+
   return (
+      
         <ErrorBoundary FallbackComponent={ErrorFallback}>
           <UserContextProvider>
             <Navigation />

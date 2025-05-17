@@ -50,7 +50,7 @@ public class ExternalToolController {
      */
     @GetMapping("/{toolId}")
     @ExternalToolsAPIDocs.GetExternalToolByIdDoc
-    public ResponseEntity<?> getToolById(@PathVariable("toolId") Integer toolId) {
+    public ResponseEntity<?> getToolById(@PathVariable("toolId") Long toolId) {
 
         ExternalTool tool = externalToolService.getToolById(toolId);
         return ResponseEntity.ok(new ExternalToolDTO(tool));
@@ -61,7 +61,7 @@ public class ExternalToolController {
      */
     @GetMapping("/owner/{ownerId}")
     @ExternalToolsAPIDocs.GetExternalToolByOwnerIdDoc
-    public ResponseEntity<?> getToolByOwnerId(@PathVariable("ownerId") Integer ownerId) {
+    public ResponseEntity<?> getToolByOwnerId(@PathVariable("ownerId") Long ownerId) {
 
         return ResponseEntity.ok(externalToolService.getAllToolsByOwnerId(ownerId));
 
@@ -77,6 +77,7 @@ public class ExternalToolController {
 
         try {
             String authenticatedUser = SecurityContextHolder.getContext().getAuthentication().getName();
+            // todo: this should call a service bran, not repo directly
             User user = userRepository.findByUsername(authenticatedUser).orElse(null);
             return ResponseEntity.ok(externalToolService.addTool(addToolRequest, user));
         } catch (IOException e) {
@@ -93,7 +94,7 @@ public class ExternalToolController {
       + " or (" + ApplicationRoles.EDITOR_ROLE + " and @externalToolService.getToolById(#toolId).getOwner().getId() == authentication.getPrincipal().getId)")
     @PutMapping("/{toolId}")
     @ExternalToolsAPIDocs.UpdateExternalToolDoc
-    public ResponseEntity<?> updateTool(@PathVariable("toolId") Integer toolId, 
+    public ResponseEntity<?> updateTool(@PathVariable("toolId") Long toolId, 
                                         @Valid @RequestBody UpdateToolRequest updateToolRequest) {
 
         ExternalTool tool = externalToolService.getToolById(toolId);
@@ -126,7 +127,7 @@ public class ExternalToolController {
      */
     @GetMapping("/{toolId}/images")
     @ExternalToolsAPIDocs.GetToolImagesDoc
-    public ResponseEntity<?> getToolImages(@PathVariable("toolId") Integer toolId) {
+    public ResponseEntity<?> getToolImages(@PathVariable("toolId") Long toolId) {
 
         ExternalTool tool = externalToolService.getToolById(toolId);
 
@@ -154,7 +155,7 @@ public class ExternalToolController {
     @PostMapping(path = "/{toolId}/images", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @ExternalToolsAPIDocs.AddToolImagesDoc
     public ResponseEntity<?> addToolImages(
-            @PathVariable("toolId") Integer toolId, 
+            @PathVariable("toolId") Long toolId, 
             @RequestPart("images") List<MultipartFile> images) throws IOException {
 
         ExternalTool tool = externalToolService.getToolById(toolId);
@@ -191,10 +192,10 @@ public class ExternalToolController {
     @DeleteMapping("/{toolId}/images/{imageId}")
     @ExternalToolsAPIDocs.DeleteToolImageDoc
     public ResponseEntity<?> deleteToolImage(
-            @PathVariable("toolId") Integer toolId, 
-            @PathVariable("imageId") Integer imageId) {
+            @PathVariable("toolId") Long toolId, 
+            @PathVariable("imageId") Long imageId) {
 
-        MarketplaceItemImage image =  externalToolService.getItemImage(imageId, toolId);
+        MarketplaceItemImage image =  externalToolService.getItemImage(imageId);
 
         if(image == null){
             ServerMessageResponse messageResponse = new ServerMessageResponse(HttpStatus.NOT_FOUND,
@@ -205,7 +206,7 @@ public class ExternalToolController {
 
         try {
 
-            resourceStorageService.deleteResourceContent(image.getImageStoredResourceId()); 
+            resourceStorageService.deleteResourceContent(image.getStoredResource()); 
             externalToolService.deleteToolImage(image);
             return ResponseEntity.ok(new ServerMessageResponse(HttpStatus.OK,
                     "Image deleted",

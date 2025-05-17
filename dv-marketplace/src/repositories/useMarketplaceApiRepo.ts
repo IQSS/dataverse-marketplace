@@ -1,22 +1,22 @@
 import { useContext } from "react";
 import { UserContext } from "../components/context/UserContextProvider";
 import axios from "axios";
+import { toast } from "react-toastify";
 
 const BASE_URL = 'http://localhost:8081';
 
 export default function useMarketplaceApiRepo() {
 
     const userContext = useContext(UserContext);
-    const BASE_URL = 'http://localhost:8081';
+    // Change this for deployment
+    // const BASE_URL = '';
+    
     const jwtToken = userContext.user ? userContext.user.accessToken : '';
 
     const deleteBodyRequest = async (url: string) => {
         const confirmed = window.confirm("Are you sure you want to delete this item?");
         if (!confirmed) {
-            userContext.setModalTitle("Cancelled");
-            userContext.setModalMessage("Operation cancelled by user.");
-            userContext.setShowMessage(true);
-            
+            toast.error("Operation cancelled by user.");
         } else {
             return makeApiBodyRequest(url, 'DELETE', new FormData());
         }
@@ -35,11 +35,8 @@ export default function useMarketplaceApiRepo() {
 
     const deleteFormRequest = async (url: string) => {
         const confirmed = window.confirm("Are you sure you want to delete this item?");
-        if (!confirmed) {
-            userContext.setModalTitle("Cancelled");
-            userContext.setModalMessage("Operation cancelled by user.");
-            userContext.setShowMessage(true);
-            
+        if (!confirmed) {            
+            toast.error("Operation cancelled by user.");
         } else {
             return makeApiFormRequest(url, 'DELETE', new FormData());
         }
@@ -61,10 +58,10 @@ export default function useMarketplaceApiRepo() {
     const makeApiFormRequest = async (url: string, method: string, formData: FormData) => {
          return handleRequest(url, method, formData, false);
     }
-    
+
     const handleRequest = async (url: string, method: string, formData: FormData, bodyRequest: boolean) => {
         try {
-            const data = bodyRequest ? JSON.stringify(Object.fromEntries(formData.entries())) : formData;
+            const data = bodyRequest ? convertFormDataToJson(formData) : formData;
             const headers = bodyRequest ? {
                     "Content-Type": "application/json",
                     "Authorization": `Bearer ${jwtToken}`
@@ -79,26 +76,22 @@ export default function useMarketplaceApiRepo() {
                 headers: headers
             });
 
-            userContext.setModalTitle("Success");
             if (response.data.message) {
-                userContext.setModalMessage(response.data.message);
+                toast.success(response.data.message);
             } else {
-                userContext.setModalMessage("Operation successful");
+                toast.success("Operation successful");
             }
             
-            userContext.setShowMessage(true);
-
             return response.data;
 
         } catch (error) {
+            
             if (axios.isAxiosError(error)) {
-                userContext.setModalMessage(error.response?.data?.message || error.message);
+                toast.error(error.response?.data?.message || error.message);
             }
             else {
-                userContext.setModalMessage(String(error));
+                toast.error("An error occurred");
             }
-            userContext.setModalTitle("Error");
-            userContext.setShowMessage(true);
         }
     }
 
@@ -123,6 +116,67 @@ export default function useMarketplaceApiRepo() {
 
 }
 
+function convertFormDataToJson(formData: FormData): any {
+  const obj: any = {};
+
+  for (const [key, value] of formData.entries()) {
+    const match = key.match(/^(.*)\[(\d+)\]\.key$/);
+    if (match) {
+      const base = match[1]; // e.g. toolParameters.queryParameters
+      const index = match[2];
+      const keyName = value;
+      const val = formData.get(`${base}[${index}].value`);
+      if (val !== null) {
+        setNestedValue(obj, `${base}[${index}]`, { [keyName as string]: val });
+      }
+      continue; // skip .key entry
+    }
+
+    if (!/\.value$/.test(key)) {
+      setNestedValue(obj, key, value);
+    }
+  }
+
+  return obj;
+}
+
+  
+  function setNestedValue(obj: any, path: string, value: any) {
+    const keys = path
+      .replace(/\[(\w+)\]/g, '.$1')  // convert [0] to .0
+      .replace(/^\./, '')            // strip leading dot
+      .split('.');
+  
+    let current = obj;
+  
+    for (let i = 0; i < keys.length; i++) {
+      const key = keys[i];
+      const nextKey = keys[i + 1];
+  
+      const isLast = i === keys.length - 1;
+      const isArrayIndex = /^\d+$/.test(nextKey || "");
+  
+      if (isLast) {
+        if (key in current) {
+          // Convert to array if multiple values under same key
+          if (!Array.isArray(current[key])) {
+            current[key] = [current[key]];
+          }
+          current[key].push(value);
+        } else {
+          current[key] = value;
+        }
+      } else {
+        if (!(key in current)) {
+          current[key] = isArrayIndex ? [] : {};
+        }
+        current = current[key];
+      }
+    }
+  }
+  
+  
+
 export async function fetchFromApi<T>(url: string): Promise<T> {
     try {
         const response = await axios.get(`${BASE_URL}${url}`);
@@ -130,5 +184,5 @@ export async function fetchFromApi<T>(url: string): Promise<T> {
     } catch (error) {
         console.error('Error fetching data:', error);
         throw error;
-    }
+    }    
 }

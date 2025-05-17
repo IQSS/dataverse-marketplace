@@ -106,28 +106,10 @@ public class AuthController {
         return ResponseEntity.ok(messageResponse);
     }
 
-    
-    @PreAuthorize(ApplicationRoles.ADMIN_ROLE)
-    @PostMapping("/roles")
-    @AuthAPIDocs.RoleCreationRequestDoc
-    public ResponseEntity<?> createRole(@Valid @RequestBody RoleCreationRequest roleCreationRequest) {
-        
-        if(roleRepository.existsByName(roleCreationRequest.getRoleName().toUpperCase())) {
-            return ResponseEntity.badRequest().body(new ServerMessageResponse(HttpStatus.BAD_REQUEST,
-                    "Role already exists.",
-                    "Error during the creation of the role, a role with this name already exist."));
-        }
-        
-        Role role = new Role();
-        role.setName(roleCreationRequest.getRoleName().toUpperCase());
-        roleRepository.save(role);
-        return ResponseEntity.ok(new RoleCreationResponse(role));
-    }
-
     @PreAuthorize(ApplicationRoles.ADMIN_ROLE)
     @PostMapping("/roles/{roleId}/user/{userId}")
     @AuthAPIDocs.AssignRole
-    public ResponseEntity<?> assignRole(@PathVariable("roleId") Integer roleId, @PathVariable("userId") Long userId) {
+    public ResponseEntity<?> assignRole(@PathVariable("roleId") Long roleId, @PathVariable("userId") Long userId) {
         
         try {
 
@@ -163,7 +145,7 @@ public class AuthController {
     @PreAuthorize(ApplicationRoles.ADMIN_ROLE)
     @DeleteMapping("/roles/{roleId}/user/{userId}")
     @AuthAPIDocs.RemoveRole
-    public ResponseEntity<?> removeRole(@PathVariable("roleId") Integer roleId, @PathVariable("userId") Long userId) {
+    public ResponseEntity<?> removeRole(@PathVariable("roleId") Long roleId, @PathVariable("userId") Long userId) {
 
         try {
 

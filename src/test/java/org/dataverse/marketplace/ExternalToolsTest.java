@@ -244,16 +244,7 @@ public class ExternalToolsTest {
                 assertEquals(getManifestResponse.getStatusCode(), HttpStatus.OK);
                 assertEquals(getManifestResponse.getBody().length, 2);
 
-                // Test delete manifest
-                adminHeaders.setContentType(MediaType.APPLICATION_JSON);
-                ResponseEntity<ServerMessageResponse> deleteManifestResponse = restTemplate.exchange(
-                                newToolPostUrl + "/versions/"
-                                                + getVersionsResponse.getBody()[0].getId() + "/manifests/"
-                                                + getManifestResponse.getBody()[0].getManifestId(),
-                                org.springframework.http.HttpMethod.DELETE, new HttpEntity<>(adminHeaders),
-                                ServerMessageResponse.class);
 
-                assertEquals(deleteManifestResponse.getStatusCode(), HttpStatus.OK);
 
                 getManifestResponse = restTemplate.getForEntity(
                                 newToolPostUrl + "/versions/"

@@ -79,17 +79,11 @@ public class ResourceStorageService {
     /**
      * This method deletes the content of a stored resource depending on the storage type.
      */
-    public void deleteResourceContent(Long resourceId) throws IOException {
-        StoredResource storedResource = storedResourceRepo.findById(resourceId).orElse(null);
-        if(storedResource == null) {
-            throw new NoSuchFileException("File not found for resource id: " + resourceId);
-        }
-
+    public void deleteResourceContent(StoredResource storedResource) throws IOException {
         if(storedResource.getType().getId() == StoredResourceStorageTypeEnum.DATABASE.getId()) {
-            databaseResourceStorageRepo.deleteById(resourceId);
+            databaseResourceStorageRepo.deleteById(storedResource.getId());
         } else if (storedResource.getType().getId() == StoredResourceStorageTypeEnum.FILESYSTEM.getId()) {
             Path filePath = Paths.get(diskStoragePath, storedResource.getId().toString());
-            System.out.println("Deleting file: " + filePath);
             Files.delete(filePath);
         }
     }

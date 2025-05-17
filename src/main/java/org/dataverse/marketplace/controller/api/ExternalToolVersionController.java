@@ -17,7 +17,6 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 import jakarta.validation.Valid;
 
 @RestController
@@ -36,10 +35,10 @@ public class ExternalToolVersionController {
     @GetMapping("/{toolId}/versions/{versionId}")
     @ExternalToolVersionsAPIDocs.GetExternalToolVersionByIdDoc
     public ResponseEntity<?> getVersionById(
-            @PathVariable("toolId") Integer toolId,
-            @PathVariable("versionId") Integer versionId) {
+            @PathVariable("toolId") Long toolId,
+            @PathVariable("versionId") Long versionId) {
 
-        ExternalToolVersion version = externalToolService.getToolVersionById(toolId, versionId);
+        ExternalToolVersion version = externalToolVersionService.getToolVersionById(versionId);
         return ResponseEntity.ok(new ExternalToolVersionDTO(version));
     }
 
@@ -52,17 +51,14 @@ public class ExternalToolVersionController {
     @PutMapping("/{toolId}/versions/{versionId}")
     @ExternalToolVersionsAPIDocs.UpdateVersionByIdDoc
     public ResponseEntity<?> updateVersionById(
-            @PathVariable("toolId") Integer toolId,
-            @PathVariable("versionId") Integer versionId,
+            @PathVariable("toolId") Long toolId,
+            @PathVariable("versionId") Long versionId,
             @Valid @RequestBody ToolVersionMetadataUpdateRequest updateToolVersionRequest) {
 
-        System.out.println(updateToolVersionRequest);
-        ExternalToolVersion version = externalToolService.getToolVersionById(toolId, versionId);
-
-        VersionMetadata metadata = version.getVersionMetadata();
-        metadata.setDataverseMinVersion(updateToolVersionRequest.getDvMinVersion());
-        metadata.setReleaseNote(updateToolVersionRequest.getReleaseNote());
-        metadata.setVersion(updateToolVersionRequest.getVersion());
+        ExternalToolVersion version = externalToolVersionService.getToolVersionById(versionId);
+        version.setDataverseMinVersion(updateToolVersionRequest.getDvMinVersion());
+        version.setReleaseNote(updateToolVersionRequest.getReleaseNote());
+        version.setVersion(updateToolVersionRequest.getVersion());
 
         externalToolVersionService.updateToolVersion(version);
 
@@ -78,12 +74,12 @@ public class ExternalToolVersionController {
     @DeleteMapping("/{toolId}/versions/{versionId}")
     @ExternalToolVersionsAPIDocs.DeleteExternalToolVersionByIdDoc
     public ResponseEntity<?> deleteVersionById(
-            @PathVariable("toolId") Integer toolId,
-            @PathVariable("versionId") Integer versionId) {
+            @PathVariable("toolId") Long toolId,
+            @PathVariable("versionId") Long versionId) {
 
         try{
             if (externalToolVersionService.getVersionCount(toolId) > 1) {
-                ExternalToolVersion version = externalToolService.getToolVersionById(toolId, versionId);
+                ExternalToolVersion version = externalToolVersionService.getToolVersionById(versionId);
                 externalToolVersionService.deleteToolVersion(version);
                 ServerMessageResponse messageResponse = new ServerMessageResponse(HttpStatus.OK,
                         "Version deleted",
@@ -113,7 +109,7 @@ public class ExternalToolVersionController {
     @PostMapping(path = "/{toolId}/versions", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @ExternalToolVersionsAPIDocs.AddExternalToolVersionDoc
     public ResponseEntity<?> addNewExternalToolVersion(
-            @PathVariable("toolId") Integer toolId,
+            @PathVariable("toolId") Long toolId,
             AddVersionRequest addVersionRequest) { 
         
         ExternalTool tool = externalToolService.getToolById(toolId);
@@ -125,7 +121,8 @@ public class ExternalToolVersionController {
         } else {
 
             try {
-                ExternalToolVersion newVersion = externalToolVersionService.addToolVersion(addVersionRequest, toolId);
+                ExternalTool externalTool = externalToolService.getToolById(toolId);
+                ExternalToolVersion newVersion = externalToolVersionService.addToolVersion(addVersionRequest, externalTool);
                 return ResponseEntity.ok(new ExternalToolVersionDTO(newVersion));
             } catch (IOException e) {
                 ServerMessageResponse messageResponse = new ServerMessageResponse(HttpStatus.INTERNAL_SERVER_ERROR,
@@ -144,7 +141,7 @@ public class ExternalToolVersionController {
     @GetMapping("/{toolId}/versions")
     @ExternalToolVersionsAPIDocs.GetExternalToolVersionsByToolIdDoc
     public ResponseEntity<?> getVersionsToolByToolId(
-            @PathVariable("toolId") Integer toolId) {
+            @PathVariable("toolId") Long toolId) {
 
         ExternalTool tool = externalToolService.getToolById(toolId);
         if(tool == null){
@@ -161,82 +158,45 @@ public class ExternalToolVersionController {
         return ResponseEntity.ok(versions);
     }
 
-    /**
-     * Method to add manifests to an existing external tool version
-     */
-    @PreAuthorize(ApplicationRoles.ADMIN_ROLE 
-      + " or (" + ApplicationRoles.EDITOR_ROLE + " and @externalToolService.getToolById(#toolId).getOwner().getId() == authentication.getPrincipal().getId)")
-    @CacheEvict(value = "externalTools", allEntries = true)    
-    @PostMapping(path = "/{toolId}/versions/{versionId}/manifests", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    @ExternalToolVersionsAPIDocs.AddVersionManifestDoc
-    public ResponseEntity<?> addVersionManifest(
-            @PathVariable("toolId") Integer toolId,
-            @PathVariable("versionId") Integer versionId,
-            @RequestPart List<MultipartFile> jsonData) throws IOException {
-        
-        ExternalToolVersion version = externalToolService.getToolVersionById(toolId, versionId);
-        
-        if(version == null){
-            ServerMessageResponse messageResponse = new ServerMessageResponse(HttpStatus.NOT_FOUND,
-                    "Resource not found",
-                    String.format("The requested external tool version with ID %d was not found.", versionId));
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(messageResponse);
-        }
 
-        List<ExternalToolManifest> manifests = 
-            externalToolVersionService.addVersionManifests(version, jsonData);
-        ArrayList<ExternalToolManifestDTO> manifestsDTO = new ArrayList<>();
-        for (ExternalToolManifest m : manifests) {
-            manifestsDTO.add(new ExternalToolManifestDTO(m));
-        }
-        
-        return ResponseEntity.ok(manifestsDTO);
-    }
+    // manifest related methods
+
     
     /**
      * Method to retrieve all manifests of an external tool version
      */
     @GetMapping("/{toolId}/versions/{versionId}/manifests")
-    @ExternalToolVersionsAPIDocs.GetVersionManifestDoc
+    @ExternalToolVersionsAPIDocs.GetVersionManifestsDoc
     public ResponseEntity<?> getVersionManifestsById(
-        @PathVariable("toolId") Integer toolId,
-        @PathVariable("versionId") Integer versionId) {
+        @PathVariable("toolId") Long toolId,
+        @PathVariable("versionId") Long versionId) {
 
-        List<ExternalToolManifest> manifests = externalToolService.getToolManifests(toolId, versionId);
-        List<ExternalToolManifestDTO> manifestStoredResourceId = new ArrayList<>();
-        for (ExternalToolManifest manifest : manifests) {
-            ExternalToolManifestDTO manifestDTO = new ExternalToolManifestDTO(manifest);
-            manifestStoredResourceId.add(manifestDTO);
-        }
-        return ResponseEntity.ok(manifestStoredResourceId);
+        ExternalToolVersion version = externalToolVersionService.getToolVersionById(versionId);
+        ExternalToolVersionDTO versionDTO = new ExternalToolVersionDTO(version);
+        return ResponseEntity.ok(versionDTO.getManifestSet());
     }
 
+  
     /**
-     * Method to delete a specific manifest of an external tool version
+     * Method to update a the manifest metadata of an external tool version
      */
-    @PreAuthorize(ApplicationRoles.ADMIN_ROLE 
-      + " or (" + ApplicationRoles.EDITOR_ROLE + " and @externalToolService.getToolById(#toolId).getOwner().getId() == authentication.getPrincipal().getId)")
+    @PreAuthorize(ApplicationRoles.ADMIN_ROLE)
     @CacheEvict(value = "externalTools", allEntries = true)
-    @ExternalToolVersionsAPIDocs.DeleteVersionManifestDoc
-    @DeleteMapping("/{toolId}/versions/{versionId}/manifests/{manifestId}")
-    public ResponseEntity<?> deleteVersionManifest(
-            @PathVariable("toolId") Integer toolId,
-            @PathVariable("versionId") Integer versionId,
-            @PathVariable("manifestId") Integer manifestId) {
-        
-        try {
-            
-            externalToolVersionService.deleteToolManifest(toolId, versionId, manifestId);
-            ServerMessageResponse messageResponse = new ServerMessageResponse(HttpStatus.OK,
-                    "Manifest deleted",
-                    String.format("The manifest with ID %d was deleted.", manifestId));
-            return ResponseEntity.ok(messageResponse);
+    @PutMapping(path = "/{toolId}/versions/{versionId}/manifest")
+    @ExternalToolVersionsAPIDocs.UpdateVersionManifestDoc
+    public ResponseEntity<?> updateVersionManifest(
+            @PathVariable("toolId") Long toolId,
+            @PathVariable("versionId") Long versionId,
+            @Valid @RequestBody ExternalToolManifestDTO manifestDTO) throws IOException {
 
+        try {
+            ExternalToolVersion version = externalToolVersionService.getToolVersionById(versionId);
+            ExternalToolVersion reversion = externalToolVersionService.updateVersionManifest(version, manifestDTO);
+            return ResponseEntity.ok(new ExternalToolVersionDTO(reversion));
         } catch (IOException e) {
-            
             ServerMessageResponse messageResponse = new ServerMessageResponse(HttpStatus.INTERNAL_SERVER_ERROR,
-                    "Error deleting manifest",
-                    String.format("An error occurred while deleting the manifest with ID %d.", manifestId));
+                    "Error updating manifest metadata",
+                    String.format("An error occurred while updating the manifest metadta for version ID %d.", versionId));
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(messageResponse);
         }
     }

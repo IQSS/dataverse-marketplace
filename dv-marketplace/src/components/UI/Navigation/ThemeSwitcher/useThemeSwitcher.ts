@@ -1,50 +1,40 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
+import { UserContext } from "../../../context/UserContextProvider";
 
-type Theme = "auto" | "light" | "dark";
+import { Theme } from "../../../../types/MarketplaceTypes";
 
 export default function useThemeSwitcher() {
-
-    const [theme, setTheme] = useState<Theme>();
+    
+    const userContext = useContext(UserContext);
     const [themeClass, setThemeClass] = useState("bi bi-circle-half");
 
     const handleThemeChange = (newTheme: Theme) => {
-        setTheme(newTheme);
+       userContext.setTheme(newTheme);
     };
 
-    useEffect(() => {
-        const savedTheme = localStorage.getItem("theme");
-        if (savedTheme) {
-            setTheme(savedTheme as Theme);
-            console.log("Theme loaded from local storage");
-            console.log(savedTheme);
-        } else {
-            setTheme("auto");
-        }
-    }, []);
+    
 
     useEffect(() => {
         
-        document.documentElement.setAttribute("data-bs-theme", theme || "auto");
+        document.documentElement.setAttribute("data-bs-theme", userContext.theme || "auto");
         const savedTheme = localStorage.getItem("theme") as Theme;
 
-        if (savedTheme !== theme && theme !== undefined) {
-            localStorage.setItem("theme", theme);
-            console.log("Theme saved to local storage");
-            console.log(theme);
+        if (savedTheme !== userContext.theme && userContext.theme !== undefined) {
+            console.log("Theme changed to: ", userContext.theme);
+            localStorage.setItem("theme", userContext.theme);
         }
 
-        if (theme === "auto") {
+        if (userContext.theme === Theme.AUTO) {
             setThemeClass("bi bi-circle-half");
-        } else if (theme === "light") {
+        } else if (userContext.theme === Theme.LIGHT) {
             setThemeClass("bi bi-sun");
-        } else if (theme === "dark") {
+        } else if (userContext.theme === Theme.DARK) {
             setThemeClass("bi bi-moon");
         }
         
-    }, [theme]);
+    }, [userContext.theme]);
 
     return {
-        theme,
         themeClass,
         setThemeClass,
         handleThemeChange

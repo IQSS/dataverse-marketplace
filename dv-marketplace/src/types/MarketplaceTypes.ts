@@ -1,16 +1,27 @@
+import { types } from "storybook/internal/babel";
 
 export interface Version {
   id: number;
   version: string;
   releaseNote: string;
   dataverseMinVersion: string;
-  manifests: Manifest[];
+  manifest: Manifest;
+  manifestSet: Manifest[];
 }
 
 export interface Manifest {
-  manifestId: number;
-  storedResourceId: number;
-  fileName: string;
+  displayName: string;
+  description: string;
+  scope: string;
+  toolUrl: string;
+  httpMethod: string;
+  toolName: string;  
+  contentType: string;
+  contentTypes: string[];
+  types: string[];
+  toolParameters: {
+    queryParameters: { [key: string]: string }[];
+  };
 }
 
 export interface Image {
@@ -24,6 +35,7 @@ export interface ExternalTool {
   description: string;
   versions: Version[];
   images: Image[];
+  owner: User;
 }
 
 export type User = {
@@ -46,5 +58,13 @@ export type UserContextType = {
     setModalMessage: (message: string) => void;
     modalTitle: string;
     setModalTitle: (title: string) => void;
+    theme: Theme;
+    setTheme: (theme: Theme) => void;
 };
+
+export enum Theme {
+    LIGHT = "light",
+    DARK = "dark",
+    AUTO = "auto"
+}
 

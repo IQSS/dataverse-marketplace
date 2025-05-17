@@ -1,6 +1,7 @@
 import { useContext, useState } from "react";
 import { UserContext } from "../../context/UserContextProvider";
 import axios from "axios";
+import useMarketplaceApiRepo from "../../../repositories/useMarketplaceApiRepo";
 
 
 
@@ -14,12 +15,14 @@ export default function useLoginCustomForm() {
     const handleClose = () => {
         userContext.setShowLogin(false)
     };
+
+    const { BASE_URL } = useMarketplaceApiRepo();
     
 
     const handleSubmit = async (event: React.FormEvent) => {
         event.preventDefault();
         try {
-            const response = await axios.post('http://localhost:8081/api/auth/login', { username, password });
+            const response = await axios.post(`${BASE_URL}/api/auth/login`, { username, password });
             userContext.setUser(response.data);
             console.log('Login successful');
         } catch (error) {

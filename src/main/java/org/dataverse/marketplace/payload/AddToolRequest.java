@@ -5,8 +5,6 @@ import java.util.List;
 
 import org.springframework.web.multipart.MultipartFile;
 
-import io.swagger.v3.oas.annotations.media.ArraySchema;
-import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotEmpty;
 
@@ -36,7 +34,7 @@ public class AddToolRequest implements Serializable{
         example = "\"6.0\"")
     @NotEmpty
     private String dvMinVersion;
-
+/* 
     @Schema(description = "Manifest files for the default versionof the new external tool", 
             type = "array",
             contentMediaType = "multipart/form-data",
@@ -45,7 +43,7 @@ public class AddToolRequest implements Serializable{
             example = "[\"file.json\"]")
     @NotEmpty
     private List<MultipartFile> jsonData;
-
+*/
     @Schema(description = "Image files for the new external tool", 
             type = "array",
             contentMediaType = "multipart/form-data",
@@ -96,15 +94,15 @@ public class AddToolRequest implements Serializable{
     public void setDvMinVersion(String dvMinVersion) {
         this.dvMinVersion = dvMinVersion;
     }
-
+/* 
     public List<MultipartFile> getJsonData() {
         return this.jsonData;
     }
-
+ 
     public void setJsonData(List<MultipartFile> jsonData) {
         this.jsonData = jsonData;
     }
-
+*/
     public List<MultipartFile> getItemImages() {
         return this.itemImages;
     }
@@ -122,7 +120,7 @@ public class AddToolRequest implements Serializable{
             ", releaseNote='" + getReleaseNote() + "'" +
             ", version='" + getVersion() + "'" +
             ", dvMinVersion='" + getDvMinVersion() + "'" +
-            ", jsonData='" + getJsonData() + "'" +
+           // ", jsonData='" + getJsonData() + "'" +
             ", itemImages='" + getItemImages() + "'" +
             "}";
     }
