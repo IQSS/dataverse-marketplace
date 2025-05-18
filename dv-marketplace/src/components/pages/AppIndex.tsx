@@ -1,6 +1,5 @@
 import { ErrorBoundary } from "react-error-boundary";
-import { useContext } from "react";
-import UserContextProvider, { UserContext } from "../context/UserContextProvider";
+import UserContextProvider from "../context/UserContextProvider";
 import ErrorView from "../UI/ErrorView";
 import { Outlet } from "react-router-dom";
 import Navigation from '../UI/Navigation/NavigationBar';

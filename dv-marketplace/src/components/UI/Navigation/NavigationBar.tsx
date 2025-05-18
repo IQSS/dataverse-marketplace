@@ -7,7 +7,6 @@ import ThemeSwitcher from './ThemeSwitcher/ThemeSwitcher';
 import LoginForm from '../../forms/LoginForm/LoginForm';
 import LoginButton from '../LoginButton/LoginButton';
 import NavOptions from './NavOptions';
-import {toast} from 'react-toastify';
 import { ToastContainer } from "react-toastify";
 import { Theme } from "../../../types/MarketplaceTypes";
 
