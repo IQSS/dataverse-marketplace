@@ -1,3 +1,4 @@
+import React from 'react';
 import useEditVersionForm from "./useEditVersionForm";
 import { Alert, Button, Form } from "react-bootstrap";
 import type { ExternalTool } from "../../../../types/MarketplaceTypes";
@@ -14,7 +15,15 @@ const EditVersionForm = ({ tool }: { tool: ExternalTool | undefined }) => {
 		handleVersionSubmit,
 		addVersionFormIsOpen,
 		setAddVersionFormIsOpen,
+		emptyVersion,
+        versionData,
+        setVersionData		
 	} = useEditVersionForm({ tool });
+
+	const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+		const { name, value } = e.target;
+		setVersionData(prev => ({ ...prev, [name]: value }));
+	};
 
 	return (
 		<>
@@ -22,9 +31,9 @@ const EditVersionForm = ({ tool }: { tool: ExternalTool | undefined }) => {
 
 			<Alert variant="info" show={addVersionFormIsOpen}>
 				<Form onSubmit={handleVersionSubmit} encType="multipart/form-data">
-					<FormInputTextField label="Version" name="version" id="version" />				
-					<FormInputTextArea label="Release Note" name="releaseNote" id="releaseNote"/>
-					<FormInputTextField label="DV Min Version" name="dvMinVersion" id="dvMinVersion"/>
+					<FormInputTextField label="Version" name="version" id="version" value={versionData.version} onChange={handleChange} />
+					<FormInputTextArea label="Release Note" name="releaseNote" id="releaseNote" value={versionData.releaseNote} onChange={handleChange} />
+					<FormInputTextField label="DV Min Version" name="dvMinVersion" id="dvMinVersion" value={versionData.dvMinVersion} onChange={handleChange} />
 
 					<Form.Group className="mb-3" controlId="formBasicEmail">
 						<Form.Label>Manifests</Form.Label>
@@ -34,7 +43,10 @@ const EditVersionForm = ({ tool }: { tool: ExternalTool | undefined }) => {
 						Save
 					</Button>
 					<Button variant="outline-secondary" className="ms-2"
-						onClick={() => setAddVersionFormIsOpen(false)}>
+						onClick={() => {
+							setVersionData(emptyVersion);
+							setAddVersionFormIsOpen(false);
+						}}>
 						Cancel
 					</Button>
 				</Form>

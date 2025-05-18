@@ -1,9 +1,9 @@
-import { useRef } from "react";
-import { Modal, Alert, Button, Form } from "react-bootstrap";
+import React from 'react';
+import { Alert, Button, Form } from "react-bootstrap";
 import type { ExternalTool, Version } from "../../../../types/MarketplaceTypes";
 import MarketplaceCard from "../../../UI/MarketplaceCard";
 import useEditVersionCard from "./useEditVersionCard";
-import { FormInputTextArea, FormInputTextField } from "../../../UI/FormInputFields";
+import { FormInputTextArea, FormInputTextField, createFormChangeHandler } from "../../../UI/FormInputFields";
 import EditManifestForm from './EditManifestForm'; // adjust the path if needed
 
 
@@ -19,15 +19,25 @@ const EditVersionCard = ({ version, tool }: EditVersionCardProps) => {
         setShowVersionEdit,
         showManifestEdit,
         setShowManifestEdit,
-        showEditPanel,
-        setShowEditPanel,
         handleVersionDelete,
         handleVersionEdit,
         handleManifestEdit,
-        handleJsonUpload
+        handleJsonUpload,
+        defaultManifest,
+        formManifest,
+        setFormManifest
     } = useEditVersionCard({ tool });
 
-    const fileInputRef = useRef<HTMLInputElement>(null);
+
+    const versionData = { version: version.version, releaseNote: version.releaseNote, dvMinVersion: version.dataverseMinVersion };    
+    const [formData, setFormData] = React.useState( versionData );
+
+    const handleVersionChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+        const { name, value } = e.target;
+        setFormData(prev => ({ ...prev, [name]: value }));
+    };
+
+    const handleManifestChange = createFormChangeHandler(setFormManifest);
 
     return (
         <MarketplaceCard
@@ -43,56 +53,20 @@ const EditVersionCard = ({ version, tool }: EditVersionCardProps) => {
                             type="button"
                             className="btn bi-pen px-0"
                             onClick={() => {
-                                setShowEditPanel(true);
+                                setFormManifest(version.manifest)
+                                setShowManifestEdit(version.id);
                             }}
                         />
 
-                        <Modal show={showEditPanel} onHide={() => setShowEditPanel(false)} centered>
-                            <Modal.Header closeButton>
-                                <Modal.Title>Edit Manifest</Modal.Title>
-                            </Modal.Header>
-
-                            <Modal.Body>
-                                <div className="d-flex justify-content-center mb-2">
-                                    <Button
-                                        variant="primary"
-                                        className="me-3"
-                                        onClick={() => {
-                                            if (fileInputRef.current) {
-                                                fileInputRef.current.click();
-                                            }
-                                        }}
-                                    >
-                                        Upload JSON
-                                    </Button>
-
-                                    <input
-                                        type="file"
-                                        accept=".json"
-                                        ref={fileInputRef}
-                                        style={{ display: 'none' }}
-                                        onChange={(event) => {
-                                            handleJsonUpload(event, version);
-                                        }}
-                                    />
-
-                                    <Button
-                                        variant="secondary"
-                                        className="me-2" // Adds margin to the right of the button
-                                        onClick={() => {
-                                            setShowManifestEdit(version.id);
-                                            setShowEditPanel(false);
-                                        }}>
-                                        Manual
-                                    </Button>
-                                </div>
-                            </Modal.Body>
-                        </Modal>
                         <EditManifestForm
                             show={showManifestEdit === version.id}
                             onCancel={() => setShowManifestEdit(0)}
                             onSubmit={(e) => handleManifestEdit(e, version.id)}
-                            formManifest={version.manifest}
+                            onUpload={(e) => handleJsonUpload(e)}
+                            onReset={() => setFormManifest(defaultManifest)}
+                            onChange={handleManifestChange}
+
+                            formManifest={formManifest}
                         />
                     </p>
                     <div>
@@ -118,19 +92,24 @@ const EditVersionCard = ({ version, tool }: EditVersionCardProps) => {
                         label="Version"
                         name="version"
                         id={`version-${version.id}`}
-                        value={version.version}
+                        value={formData.version}
+                        onChange={handleVersionChange}
                     />
                     <FormInputTextArea
                         label="Release Note"
                         name="releaseNote"
                         id={`releaseNote-${version.id}`}
-                        value={version.releaseNote}
+                        value={formData.releaseNote}
+                        onChange={handleVersionChange}
+
                     />
                     <FormInputTextField
                         label="DV Min Version"
                         name="dvMinVersion"
                         id={`dvMinVersion-${version.id}`}
-                        value={version.dataverseMinVersion}
+                        value={formData.dvMinVersion}
+                        onChange={handleVersionChange}
+
                     />
 
                     <Button variant="primary" type="submit">
@@ -139,6 +118,7 @@ const EditVersionCard = ({ version, tool }: EditVersionCardProps) => {
 
                     <Button variant="outline-secondary" className="ms-2"
                         onClick={() => {
+                            setFormData(versionData); // reset the Form
                             setShowVersionEdit(0);
                         }}
                     >

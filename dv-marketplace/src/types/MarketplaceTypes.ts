@@ -15,13 +15,30 @@ export interface Manifest {
   scope: string;
   toolUrl: string;
   httpMethod: string;
-  toolName: string;  
+  toolName: string;
   contentType: string;
   contentTypes: string[];
   types: string[];
   toolParameters: {
     queryParameters: { [key: string]: string }[];
   };
+  allowedApiCalls: AllowedApiCall[];
+  requirements: {
+    auxFilesExist: AuxFilesExist[];
+  }
+
+}
+
+export interface AllowedApiCall {
+  name: string;
+  httpMethod: string;
+  urlTemplate: string;
+  timeOut: number;
+}
+
+export interface AuxFilesExist {
+  fileTag: string;
+  fileVersion: string;
 }
 
 export interface Image {
@@ -39,32 +56,32 @@ export interface ExternalTool {
 }
 
 export type User = {
-    id: number;
-    username: string;
-    email: string;
-    roles: string[];
-    accessToken: string;
-    tokenType: string;
+  id: number;
+  username: string;
+  email: string;
+  roles: string[];
+  accessToken: string;
+  tokenType: string;
 };
 
 export type UserContextType = {
-    user: User | null;
-    setUser: (user: User | null) => void;
-    showLogin: boolean;
-    setShowLogin: (show: boolean) => void;
-    showMessage: boolean;
-    setShowMessage: (show: boolean) => void;
-    modalMessage: string;
-    setModalMessage: (message: string) => void;
-    modalTitle: string;
-    setModalTitle: (title: string) => void;
-    theme: Theme;
-    setTheme: (theme: Theme) => void;
+  user: User | null;
+  setUser: (user: User | null) => void;
+  showLogin: boolean;
+  setShowLogin: (show: boolean) => void;
+  showMessage: boolean;
+  setShowMessage: (show: boolean) => void;
+  modalMessage: string;
+  setModalMessage: (message: string) => void;
+  modalTitle: string;
+  setModalTitle: (title: string) => void;
+  theme: Theme;
+  setTheme: (theme: Theme) => void;
 };
 
 export enum Theme {
-    LIGHT = "light",
-    DARK = "dark",
-    AUTO = "auto"
+  LIGHT = "light",
+  DARK = "dark",
+  AUTO = "auto"
 }
 

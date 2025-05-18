@@ -80,7 +80,7 @@ const ViewExternalTool = () => {
                                 {(version.manifestSet ?? []).map((manifest: Manifest) => 
                                         <tr key={version.id + "_" + manifest.contentType}>
                                             <td>
-                                               a {manifest.displayName}{manifest.contentType != null ? " (" + manifest.contentType + ")": ""}
+                                               {manifest.displayName}{manifest.contentType != null ? " (" + manifest.contentType + ")": ""}
                                             </td>
                                             <td>
                                                 <button

@@ -7,13 +7,13 @@ import { toast } from "react-toastify";
 
 export default function useEditToolForm() {
 
-    
+
     const [tool, setTool] = useState<ExternalTool | undefined>();
     const { id } = useParams();
 
-    const {putBodyRequest} = useMarketplaceApiRepo();
+    const { putBodyRequest } = useMarketplaceApiRepo();
 
-    const {BASE_URL} = useMarketplaceApiRepo();
+    const { BASE_URL } = useMarketplaceApiRepo();
 
     useEffect(() => {
         const fetchTool = async () => {
@@ -32,10 +32,14 @@ export default function useEditToolForm() {
         event.preventDefault();
         const formData = new FormData(event.currentTarget);
         await putBodyRequest(`/api/tools/${id}`, formData);
+
         if (tool) {
-            tool.name = formData.get("name") as string;
-            tool.description = formData.get("description") as string;
-        }        
+            setTool({
+                ...tool,
+                name: formData.get("name") as string,
+                description: formData.get("description") as string,
+            });
+        }
     };
 
 

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import useMarketplaceApiRepo from "../../../../repositories/useMarketplaceApiRepo";
-import type { ExternalTool, Version } from "../../../../types/MarketplaceTypes";
+import type { ExternalTool, Version, Manifest } from "../../../../types/MarketplaceTypes";
 
 
 export default function useEditVersionCard({ tool }: { tool: ExternalTool | undefined }) {
@@ -13,10 +13,23 @@ export default function useEditVersionCard({ tool }: { tool: ExternalTool | unde
 
     const [showVersionEdit, setShowVersionEdit] = useState(0);
     const [showManifestEdit, setShowManifestEdit] = useState(0);
-    const [showEditPanel, setShowEditPanel] = useState(false);
+    
+    const defaultManifest: Manifest = {
+    displayName: '',
+    description: '',
+    scope: '',
+    toolUrl: '',
+    toolName: '',
+    httpMethod: 'GET',
+    types: [],
+    contentType: '',
+    contentTypes: [],
+    toolParameters: {  queryParameters: []},
+    allowedApiCalls: [],
+    requirements: {  auxFilesExist: []}
+    };
 
-
-
+    const [formManifest, setFormManifest] = useState<Manifest>(defaultManifest);
 
     const handleVersionDelete = async (versionId: number) => {
 
@@ -64,9 +77,7 @@ export default function useEditVersionCard({ tool }: { tool: ExternalTool | unde
         setShowManifestEdit(0);
     }
 
-    const handleJsonUpload = (event: React.ChangeEvent<HTMLInputElement>,
-        version: Version
-    ) => {
+    const handleJsonUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
         const file = event.target.files?.[0];
         if (!file) return;
 
@@ -81,10 +92,11 @@ export default function useEditVersionCard({ tool }: { tool: ExternalTool | unde
                 if (data.contentType && !data.contentTypes) {
                     data.contentTypes = [data.contentType];
                 }
-                Object.assign(version.manifest, data);
 
-                setShowManifestEdit(version.id);
-                setShowEditPanel(false);
+                setFormManifest(data);
+
+                //setShowManifestEdit(version.id);
+                //setShowEditPanel(false);
 
             } catch (err) {
                 console.error("Invalid JSON file", err);
@@ -99,12 +111,13 @@ export default function useEditVersionCard({ tool }: { tool: ExternalTool | unde
         setShowVersionEdit,        
         showManifestEdit,
         setShowManifestEdit,
-        showEditPanel,
-        setShowEditPanel,
         handleVersionDelete,
         handleVersionEdit,
         handleManifestEdit,
-        handleJsonUpload
+        handleJsonUpload,
+        defaultManifest,
+        formManifest,
+        setFormManifest
     };
 
 }

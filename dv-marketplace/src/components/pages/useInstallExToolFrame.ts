@@ -33,13 +33,12 @@ export default function useInstallExToolFrame(
     fetchHostnames();
   }, []);
 
-  const sendData = (manifest: Manifest | undefined): void => {
-    const form = document.querySelector("#installForm") as HTMLFormElement;
 
-    const formData = new FormData(form);
-    const hostname = formData.get("hostname") as string;
-    const apiKey = formData.get("apiKey") as string;
-    const useHttps = formData.get("useHttps") === "on";
+  const sendData = (
+    manifest: Manifest | undefined,
+    formData: { hostname: string; apiKey: string; useHttps: boolean }
+  ): void => {
+    const { hostname, apiKey, useHttps } = formData;
     const protocol = useHttps ? "https" : "http";
     const url = `${protocol}://${hostname}/api/externalTools?key=${apiKey}`;
 
