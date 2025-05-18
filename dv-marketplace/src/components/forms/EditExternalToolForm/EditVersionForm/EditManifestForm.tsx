@@ -135,7 +135,7 @@ const EditManifestForm = ({
                                 { name: "name", label: "Name", type: "string" },
                                 { name: "httpMethod", label: "HTTP Method", type: "select", options: ["GET", "POST"] },
                                 { name: "urlTemplate", label: "URL Template", type: "string" },
-                                { name: "timeOut", label: "Time Out", type: "number" },
+                                { name: "timeOut", label: "Time Out", type: "number", defaultValue:60 },
                             ]}
                         />
 

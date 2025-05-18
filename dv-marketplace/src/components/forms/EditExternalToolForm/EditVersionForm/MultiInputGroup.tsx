@@ -1,11 +1,12 @@
 import { Button, Col, Form, Row } from "react-bootstrap";
-import { FormInputTextField, FormInputSelect } from "../../../UI/FormInputFields";
+import { FormInputTextField, FormInput, FormInputSelect } from "../../../UI/FormInputFields";
 
 type ObjectSchemaField = {
   name: string;
   label: string;
   type: "string" | "number" | "select";
   options?: string[];
+  defaultValue?: any;
 };
 
 type Props = {
@@ -31,7 +32,15 @@ const MultiInputGroup = ({
     if (type === "object") {
       const obj: any = {};
       objectSchema.forEach((field) => {
-        obj[field.name] = field.type === "select" ? field.options?.[0] ?? "" : "";
+        if (field.defaultValue !== undefined) {
+          obj[field.name] = field.defaultValue;
+        } else if (field.type === "select") {
+          obj[field.name] = field.options?.[0] ?? "";
+        } else if (field.type === "number") {
+          obj[field.name] = 0;
+        } else {
+          obj[field.name] = "";
+        }
       });
       return obj;
     }
@@ -132,13 +141,24 @@ const MultiInputGroup = ({
                           })) || []}
                         />
                       ) : (
-                        <FormInputTextField
-                          label={field.label}
-                          name={`${namePrefix}[${index}].${field.name}`}
-                          id={`${namePrefix}-${index}-${field.name}`}
-                          value={fieldValue}
-                          onChange={onChange}
-                        />
+                        field.type === "number" ? (
+                          <FormInput
+                            label={field.label}
+                            name={`${namePrefix}[${index}].${field.name}`}
+                            id={`${namePrefix}-${index}-${field.name}`}
+                            value={fieldValue}
+                            onChange={onChange}
+                            htmlType="number"
+                          />
+                        ) : (
+                          <FormInputTextField
+                            label={field.label}
+                            name={`${namePrefix}[${index}].${field.name}`}
+                            id={`${namePrefix}-${index}-${field.name}`}
+                            value={fieldValue}
+                            onChange={onChange}
+                          />
+                        )
                       )}
                     </Col>
                   );
