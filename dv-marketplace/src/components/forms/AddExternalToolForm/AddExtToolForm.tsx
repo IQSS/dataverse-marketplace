@@ -1,4 +1,6 @@
 import useAddExternalTool from './useAddExternalTool';
+import { Button } from "react-bootstrap";
+import { Link } from 'react-router-dom';
 
 const AddExtToolForm = () => {
     
@@ -32,14 +34,13 @@ const AddExtToolForm = () => {
                     <input type="text" className="form-control" id="dataverseMinVersion" name="dvMinVersion" />
                 </div>
                 <div className="mb-3">
-                    <label htmlFor="manifests" className="form-label">Manifests</label>
-                    <input type="file" className="form-control" id="manifests" name="jsonData" multiple />
-                </div>
-                <div className="mb-3">
                     <label htmlFor="images" className="form-label">Images</label>
                     <input type="file" className="form-control" id="images" name="itemImages" multiple />
                 </div>
-                <button type="submit" className="btn btn-primary">Submit</button>
+                <button type="submit" className="btn btn-primary">Save</button>
+                <Button variant="outline-secondary" className="ms-2" as={Link as any} to={`/`}>
+                    <span className="me-1"></span>Cancel
+                </Button>                
             </form>    
         </div>
     );

@@ -34,11 +34,6 @@ const EditVersionForm = ({ tool }: { tool: ExternalTool | undefined }) => {
 					<FormInputTextField label="Version" name="version" id="version" value={versionData.version} onChange={handleChange} />
 					<FormInputTextArea label="Release Note" name="releaseNote" id="releaseNote" value={versionData.releaseNote} onChange={handleChange} />
 					<FormInputTextField label="DV Min Version" name="dvMinVersion" id="dvMinVersion" value={versionData.dvMinVersion} onChange={handleChange} />
-
-					<Form.Group className="mb-3" controlId="formBasicEmail">
-						<Form.Label>Manifests</Form.Label>
-						<Form.Control type="file" name="jsonData" multiple />
-					</Form.Group>
 					<Button variant="primary" type="submit">
 						Save
 					</Button>

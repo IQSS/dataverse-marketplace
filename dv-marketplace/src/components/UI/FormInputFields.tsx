@@ -46,7 +46,7 @@ export const FormInputTextArea = ({ label, name, id, onChange, value }: FormInpu
 export const FormInputCheckbox = ({ label, name, id, checked, onChange }: CheckBoxProps) => {
     return (
         <div className="mb-3 form-check">
-            <input type="checkbox" className="form-check-input" id={id} name={name} checked={checked} onChange={onChange}/>
+            <input type="checkbox" className="form-check-input" id={id} name={name} checked={checked} onChange={onChange} />
             <label className="form-check-label" htmlFor={id}>{label}</label>
         </div>
     );
@@ -100,6 +100,8 @@ export function createFormChangeHandler<T>(setState: React.Dispatch<React.SetSta
 
         if (type === 'checkbox') {
             finalValue = checked;
+        } else if (type === 'number') {
+            finalValue = value === "" ? "" : Number(value);
         } else if (multiple) {
             finalValue = Array.from(options as HTMLOptionsCollection)
                 .filter((option: HTMLOptionElement) => option.selected)
@@ -111,31 +113,31 @@ export function createFormChangeHandler<T>(setState: React.Dispatch<React.SetSta
 }
 
 function updateNestedField(obj: any, path: string, value: any): any {
-  const keys = path.replace(/\[(\d+)\]/g, '.$1').split('.');
-  const result = { ...obj };
-  let current = result;
+    const keys = path.replace(/\[(\d+)\]/g, '.$1').split('.');
+    const result = { ...obj };
+    let current = result;
 
-  for (let i = 0; i < keys.length - 1; i++) {
-    const key = keys[i];
-    const nextKey = keys[i + 1];
-    const isArrayIndex = /^\d+$/.test(nextKey);
+    for (let i = 0; i < keys.length - 1; i++) {
+        const key = keys[i];
+        const nextKey = keys[i + 1];
+        const isArrayIndex = /^\d+$/.test(nextKey);
 
-    if (!(key in current)) {
-      current[key] = isArrayIndex ? [] : {};
+        if (!(key in current)) {
+            current[key] = isArrayIndex ? [] : {};
+        }
+
+        // clone arrays/objects to preserve immutability
+        if (Array.isArray(current[key])) {
+            current[key] = [...current[key]];
+        } else {
+            current[key] = { ...current[key] };
+        }
+
+        current = current[key];
     }
 
-    // clone arrays/objects to preserve immutability
-    if (Array.isArray(current[key])) {
-      current[key] = [...current[key]];
-    } else {
-      current[key] = { ...current[key] };
-    }
-
-    current = current[key];
-  }
-
-  current[keys[keys.length - 1]] = value;
-  return result;
+    current[keys[keys.length - 1]] = value;
+    return result;
 }
 
 
