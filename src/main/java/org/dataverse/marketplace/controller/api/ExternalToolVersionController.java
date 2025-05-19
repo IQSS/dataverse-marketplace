@@ -38,8 +38,7 @@ public class ExternalToolVersionController {
      * Method to update a specific external tool version
      */
     @PreAuthorize(ApplicationRoles.ADMIN_ROLE
-            + " or (" + "isAuthenticated()"
-            + " and @externalToolService.getToolById(#toolId).getOwner().getId() == authentication.getPrincipal().getId)")
+            + " or (" + "isAuthenticated()" + " and @externalToolVersionService.getToolVersionById(#versionId).getExternalTool().getOwner().getId() == authentication.getPrincipal().getId)")
     @CacheEvict(value = "externalTools", allEntries = true)
     @PutMapping("/{versionId}")
     @ExternalToolVersionsAPIDocs.UpdateVersionByIdDoc
@@ -61,8 +60,7 @@ public class ExternalToolVersionController {
      * Method to delete a specific external tool version
      */
     @PreAuthorize(ApplicationRoles.ADMIN_ROLE
-            + " or (" + "isAuthenticated()"
-            + " and @externalToolService.getToolById(#toolId).getOwner().getId() == authentication.getPrincipal().getId)")
+            + " or (" + "isAuthenticated()" + " and @externalToolVersionService.getToolVersionById(#versionId).getExternalTool().getOwner().getId() == authentication.getPrincipal().getId)")
     @CacheEvict(value = "externalTools", allEntries = true)
     @DeleteMapping("/{versionId}")
     @ExternalToolVersionsAPIDocs.DeleteExternalToolVersionByIdDoc
@@ -114,8 +112,7 @@ public class ExternalToolVersionController {
      * Method to update the manifest metadata of an external tool version
      */
     @PreAuthorize(ApplicationRoles.ADMIN_ROLE
-            + " or (" + "isAuthenticated()"
-            + " and @externalToolService.getToolById(#toolId).getOwner().getId() == authentication.getPrincipal().getId)")
+            + " or (" + "isAuthenticated()" + " and @externalToolVersionService.getToolVersionById(#versionId).getExternalTool().getOwner().getId() == authentication.getPrincipal().getId)")
     @CacheEvict(value = "externalTools", allEntries = true)
     @PutMapping(path = "{versionId}/manifest")
     @ExternalToolVersionsAPIDocs.UpdateVersionManifestDoc
