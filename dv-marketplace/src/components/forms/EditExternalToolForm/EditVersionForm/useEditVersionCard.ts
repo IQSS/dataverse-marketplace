@@ -16,7 +16,7 @@ export default function useEditVersionCard({ tool }: { tool: ExternalTool | unde
     
     const handleVersionDelete = async (versionId: number) => {
 
-        const data = await deleteBodyRequest(`/api/tools/${tool?.id}/versions/${versionId}`);
+        const data = await deleteBodyRequest(`/api/versions/${versionId}`);
         if (data && tool?.versions) {
             tool.versions = tool.versions.filter((version: Version) => version.id !== versionId);
         }
@@ -26,7 +26,7 @@ export default function useEditVersionCard({ tool }: { tool: ExternalTool | unde
 
         event.preventDefault();
         const formData = new FormData(event.currentTarget);
-        const data = await putBodyRequest(`/api/tools/${tool?.id}/versions/${versionId}`, formData);
+        const data = await putBodyRequest(`/api/versions/${versionId}`, formData);
         if (data) {
             const version = tool?.versions.find((version) => version.id === versionId);
             if (version) {
@@ -47,7 +47,7 @@ export default function useEditVersionCard({ tool }: { tool: ExternalTool | unde
             formData.append("types", values[0]); // append duplicate to ensure array
         }
 
-        const data = await putBodyRequest(`/api/tools/${tool?.id}/versions/${versionId}/manifest`, formData);
+        const data = await putBodyRequest(`/api/versions/${versionId}/manifest`, formData);
         if (data) {
             const version = tool?.versions.find((version) => version.id === versionId);
             if (version) {
