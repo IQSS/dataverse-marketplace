@@ -40,9 +40,15 @@ public class ExternalToolVersionService {
             throws IOException {
         ExternalToolVersion newVersion = new ExternalToolVersion();
         newVersion.setExternalTool(externalTool);
+        
         newVersion.setVersion(externalToolVersion.getVersion());
         newVersion.setReleaseNote(externalToolVersion.getReleaseNote());
-        newVersion.setDataverseMinVersion(externalToolVersion.getDvMinVersion());        
+        newVersion.setDataverseMinVersion(externalToolVersion.getDvMinVersion());   
+        
+        if (externalToolVersion.getManifest() != null) {
+            externalToolVersion.getManifest().convertDTOtoEntity(newVersion);
+        }
+        
         externalToolVersionRepo.save(newVersion);
 
         return newVersion;

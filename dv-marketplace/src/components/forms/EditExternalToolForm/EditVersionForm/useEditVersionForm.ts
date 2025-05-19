@@ -5,7 +5,7 @@ import type { ExternalTool } from "../../../../types/MarketplaceTypes";
 export default function useEditVersionForm({ tool }: { tool: ExternalTool | undefined }) {
 
     const {
-        postFormRequest,
+        postBodyRequest,
     } = useMarketplaceApiRepo();
 
     const [addVersionFormIsOpen, setAddVersionFormIsOpen] = useState(false);
@@ -15,7 +15,7 @@ export default function useEditVersionForm({ tool }: { tool: ExternalTool | unde
     const handleVersionSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         const formData = new FormData(event.currentTarget);
-        const data = await postFormRequest(`/api/tools/${tool?.id}/versions`, formData);
+        const data = await postBodyRequest(`/api/tools/${tool?.id}/versions`, formData);
 
         if (data) {
             tool?.versions.push(data);

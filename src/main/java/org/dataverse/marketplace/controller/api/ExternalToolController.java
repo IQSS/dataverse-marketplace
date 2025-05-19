@@ -227,11 +227,11 @@ public class ExternalToolController {
     @PreAuthorize(ApplicationRoles.ADMIN_ROLE 
       + " or (" + "isAuthenticated()" + " and @externalToolService.getToolById(#toolId).getOwner().getId() == authentication.getPrincipal().getId)")
     @CacheEvict(value = "externalTools", allEntries = true)
-    @PostMapping(path = "/{toolId}/versions", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping(path = "/{toolId}/versions", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ExternalToolVersionsAPIDocs.AddExternalToolVersionDoc
     public ResponseEntity<?> addNewExternalToolVersion(
             @PathVariable("toolId") Long toolId,
-            AddVersionRequest addVersionRequest) {
+            @RequestBody AddVersionRequest addVersionRequest) {
 
         ExternalTool tool = externalToolService.getToolById(toolId);
         if (tool == null) {

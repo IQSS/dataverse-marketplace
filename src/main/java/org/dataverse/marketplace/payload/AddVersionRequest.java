@@ -20,15 +20,10 @@ public class AddVersionRequest implements Serializable{
         example = "\"6.0\"")
     @NotEmpty
     private String dvMinVersion;
-/* 
-    @Schema(description = "Manifest files for this version", 
-        example = "[\"ask-the-data.json\"]",
-        type = "array",
-        contentMediaType = "application/octet-stream",
-        implementation = MultipartFile[].class)
-    @NotEmpty
-    private List<MultipartFile> jsonData;
-*/
+
+    @Schema(description = "Manifest metadata for this version")
+    private ExternalToolManifestDTO manifest;
+
     /* Getters and Setters */
 
     public String getReleaseNote() {
@@ -54,15 +49,14 @@ public class AddVersionRequest implements Serializable{
     public void setDvMinVersion(String dvMinVersion) {
         this.dvMinVersion = dvMinVersion;
     }
-/* 
-    public List<MultipartFile> getJsonData() {
-        return this.jsonData;
-    }
 
-    public void setJsonData(List<MultipartFile> jsonData) {
-        this.jsonData = jsonData;
+    public ExternalToolManifestDTO getManifest() {
+        return this.manifest;
     }
-*/
+    public void setManifest(ExternalToolManifestDTO manifest) {
+        this.manifest = manifest;
+    }    
+
 
     @Override
     public String toString() {

@@ -52,7 +52,7 @@ public @interface ExternalToolVersionsAPIDocs {
             @ApiResponse(responseCode = "500", description = "Internal Server Error during version add", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ServerMessageResponse.class), examples = @ExampleObject(GenericBusinessSamples.SERVER_MESSAGE_RESPONSE)))
     })
     @Operation(summary = "Adds a new version to the specified external tool.", description = "This endpoint adds a new version to the specified external tool by id.")
-    @RequestBody(description = "The external tool version add request", required = true, content = @Content(mediaType = "multipart/form-data", schema = @Schema(implementation = AddVersionRequest.class), examples = @ExampleObject(ExternalToolVersionSamples.ADD_EXTERNAL_TOOL_VERSION_REQUEST_SAMPLE)))
+    @RequestBody(description = "The external tool version add request", required = true, content = @Content(mediaType = "application/json", schema = @Schema(implementation = AddVersionRequest.class), examples = @ExampleObject(ExternalToolVersionSamples.ADD_EXTERNAL_TOOL_VERSION_REQUEST_SAMPLE)))
     @Parameter(name = "toolId", description = "The id of the external tool to add a new version", required = true, in = ParameterIn.PATH, schema = @Schema(type = "integer"))
     public @interface AddExternalToolVersionDoc {
     }

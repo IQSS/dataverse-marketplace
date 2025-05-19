@@ -32,9 +32,34 @@ public class ExternalToolVersionSamples {
             "releaseNote": "This release includes a new feature that allows you to ask questions to an LLM.",
             "version": "1.0",
             "dvMinVersion": "6.0",
-            "jsonData": [
-                "ask-the-data.json"
-            ]
+            "manifest": {
+                "displayName": "Ask the Data",
+                "description": "A tool that allows you to ask questions about Dataverse tabular data.",
+                "toolName": "AskTheData",
+                "scope": "file",
+                "types": [
+                    "query"
+                ],
+                "toolUrl": "https://askdataverse.shinyapps.io/askthedata",
+                "contentTypes": [
+                    "text/tab-separated-values",
+                    "application/pdf"
+                ],
+                "httpMethod":"GET",
+                "toolParameters": {
+                    "queryParameters": [
+                    {
+                        "fileId": "{fileId}"
+                    },
+                    {
+                        "datasetPid": "{datasetPid}"
+                    },
+                    {
+                        "siteUrl": "{siteUrl}"
+                    }
+                    ]
+                }
+            }
         }
     """;
 
