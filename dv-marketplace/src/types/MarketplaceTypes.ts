@@ -1,5 +1,3 @@
-import { types } from "storybook/internal/babel";
-
 export interface Version {
   id: number;
   version: string;
