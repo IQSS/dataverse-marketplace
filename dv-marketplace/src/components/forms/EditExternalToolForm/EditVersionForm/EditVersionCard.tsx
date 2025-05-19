@@ -4,7 +4,6 @@ import MarketplaceCard from "../../../UI/MarketplaceCard";
 import type { ExternalTool, Version } from "../../../../types/MarketplaceTypes";
 import { FormInputTextArea, FormInputTextField } from "../../../UI/FormInputFields";
 import EditManifestForm from './EditManifestForm';
-import useEditManifestForm from './useEditManifestForm';
 import useEditVersionCard from "./useEditVersionCard";
 
 
@@ -24,15 +23,6 @@ const EditVersionCard = ({ version, tool }: EditVersionCardProps) => {
         handleVersionEdit,
         handleManifestEdit,
     } = useEditVersionCard({ tool });
-
-    const {
-        defaultManifest,
-        formManifest,
-        setFormManifest,
-        handleManifestChange,
-        handleJsonUpload
-    } = useEditManifestForm();
-
 
 
     const versionData = { version: version.version, releaseNote: version.releaseNote, dvMinVersion: version.dataverseMinVersion };
@@ -57,7 +47,6 @@ const EditVersionCard = ({ version, tool }: EditVersionCardProps) => {
                             type="button"
                             className="btn bi-pen px-0"
                             onClick={() => {
-                                setFormManifest(version.manifest)
                                 setShowManifestEdit(version.id);
                             }}
                         />
@@ -66,12 +55,9 @@ const EditVersionCard = ({ version, tool }: EditVersionCardProps) => {
                             show={showManifestEdit === version.id}
                             onCancel={() => setShowManifestEdit(0)}
                             onSubmit={(e) => handleManifestEdit(e, version.id)}
-                            onUpload={(e) => handleJsonUpload(e)}
-                            onReset={() => setFormManifest(defaultManifest)}
-                            onChange={handleManifestChange}
-
-                            formManifest={formManifest}
+                            initialManifest={version.manifest} 
                         />
+
                     </p>
                     <div>
                         <button

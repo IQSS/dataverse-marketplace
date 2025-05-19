@@ -3,7 +3,36 @@ import type { Manifest } from "../../../../types/MarketplaceTypes";
 import { createFormChangeHandler } from "../../../UI/FormInputFields";
 
 
-export default function useEditManifestForm() {
+export default function useEditManifestForm(initialManifest?: Manifest, show?: boolean) {
+
+    const defaultManifest: Manifest = {
+        displayName: '',
+        description: '',
+        scope: '',
+        toolUrl: '',
+        toolName: '',
+        httpMethod: 'GET',
+        types: [],
+        contentType: '',
+        contentTypes: [],
+        toolParameters: { queryParameters: [] },
+        allowedApiCalls: [],
+        requirements: { auxFilesExist: [] }
+    };
+
+
+    const [formManifest, setFormManifest] = useState<Manifest>(
+        initialManifest ?? defaultManifest
+    );
+
+    useEffect(() => {
+        if (show) {
+            setFormManifest(initialManifest ?? defaultManifest);
+        }
+    }, [show]);
+
+    const handleManifestChange = createFormChangeHandler(setFormManifest);
+
 
     const BASE_URL = 'http://localhost:8081';
 
@@ -27,24 +56,6 @@ export default function useEditManifestForm() {
             .then(data => setToolTypes(data));
     }, []);
 
-    const defaultManifest: Manifest = {
-    displayName: '',
-    description: '',
-    scope: '',
-    toolUrl: '',
-    toolName: '',
-    httpMethod: 'GET',
-    types: [],
-    contentType: '',
-    contentTypes: [],
-    toolParameters: {  queryParameters: []},
-    allowedApiCalls: [],
-    requirements: {  auxFilesExist: []}
-    };
-
-    const [formManifest, setFormManifest] = useState<Manifest>(defaultManifest);
-
-    const handleManifestChange = createFormChangeHandler(setFormManifest);
 
 
     const handleJsonUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -71,7 +82,7 @@ export default function useEditManifestForm() {
         };
 
         reader.readAsText(file);
-    };    
+    };
 
     return {
         scopes,

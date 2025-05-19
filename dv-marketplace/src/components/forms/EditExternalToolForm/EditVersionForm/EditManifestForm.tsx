@@ -10,18 +10,12 @@ const EditManifestForm = ({
     show,
     onCancel,
     onSubmit,
-    onUpload,
-    onReset,
-    onChange,
-    formManifest,
+    initialManifest,
 }: {
     show: boolean;
     onCancel: () => void;
-    onUpload: (e: React.ChangeEvent<HTMLInputElement>) => void;
-    onReset: () => void;
     onSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
-    onChange: (e: React.ChangeEvent<any>) => void;
-    formManifest: Manifest
+    initialManifest: Manifest
 }) => {
 
     const fileInputRef = useRef<HTMLInputElement>(null);
@@ -33,8 +27,13 @@ const EditManifestForm = ({
     const {
         scopes,
         httpMethods,
-        toolTypes
-    } = useEditManifestForm();
+        toolTypes,
+        handleManifestChange,
+        handleJsonUpload,
+        defaultManifest,
+        formManifest,
+        setFormManifest        
+    } = useEditManifestForm(initialManifest, show);
 
     return (
         <Modal show={show} onHide={handleCancel} size="lg" centered backdrop="static">
@@ -57,15 +56,14 @@ const EditManifestForm = ({
                         ref={fileInputRef}
                         style={{ display: 'none' }}
                         onChange={(e) => {
-                            onUpload(e);
+                            handleJsonUpload(e)
                             e.target.value = '';
                         }} />
 
                     <Button
                         variant="outline-secondary"
-                        onClick={() => {
-                            onReset();
-                        }} >
+onClick={() => setFormManifest(defaultManifest)}
+ >
                         Reset
                     </Button>
                 </div>
@@ -79,36 +77,36 @@ const EditManifestForm = ({
                     <Form.Group className="mb-3">
 
                         <FormInputTextField id="displayName" name="displayName"
-                            label="Display Name" onChange={onChange} value={formManifest.displayName} />
+                            label="Display Name" onChange={handleManifestChange} value={formManifest.displayName} />
 
                         <FormInputTextArea id="description" name="description"
-                            label="Description" onChange={onChange} value={formManifest.description} />
+                            label="Description" onChange={handleManifestChange} value={formManifest.description} />
 
                         <FormInputSelect
                             id="scope" name="scope" label="Scope"
-                            value={formManifest.scope} onChange={onChange}
+                            value={formManifest.scope} onChange={handleManifestChange}
                             options={scopes.map(scope => ({
                                 value: scope,
                                 label: scope
                             }))} />
 
-                        <FormInput id="toolUrl" name="toolUrl" htmlType="url" onChange={onChange}
+                        <FormInput id="toolUrl" name="toolUrl" htmlType="url" onChange={handleManifestChange}
                             label="Tool URL" value={formManifest.toolUrl} />
 
                         <FormInputSelect
                             id="httpMethod" name="httpMethod" label="HTTP Method"
-                            value={formManifest.httpMethod} onChange={onChange}
+                            value={formManifest.httpMethod} onChange={handleManifestChange}
                             options={httpMethods.map(httpMethod => ({
                                 value: httpMethod,
                                 label: httpMethod
                             }))} />
 
-                        <FormInputTextField id="toolName" name="toolName" onChange={onChange}
+                        <FormInputTextField id="toolName" name="toolName" onChange={handleManifestChange}
                             label="Tool Name" value={formManifest.toolName} />
 
                         <FormInputSelect
                             id="types" name="types" label="Types" multiple
-                            value={formManifest.types} onChange={onChange}
+                            value={formManifest.types} onChange={handleManifestChange}
                             options={toolTypes.map(toolType => ({
                                 value: toolType,
                                 label: toolType
@@ -119,7 +117,7 @@ const EditManifestForm = ({
                             namePrefix="contentTypes"
                             label="Content Types"
                             values={formManifest.contentTypes || []}
-                            onChange={onChange}
+                            onChange={handleManifestChange}
                         />
 
                         <MultiInputGroup
@@ -127,7 +125,7 @@ const EditManifestForm = ({
                             namePrefix="toolParameters.queryParameters"
                             label="Query Parameters"
                             values={formManifest.toolParameters?.queryParameters || []}
-                            onChange={onChange}
+                            onChange={handleManifestChange}
                         />
 
                         <MultiInputGroup
@@ -135,7 +133,7 @@ const EditManifestForm = ({
                             namePrefix="allowedApiCalls"
                             label="Allowed API Calls"
                             values={formManifest.allowedApiCalls || []}
-                            onChange={onChange}
+                            onChange={handleManifestChange}
                             objectSchema={[
                                 { name: "name", label: "Name", type: "string" },
                                 { name: "httpMethod", label: "HTTP Method", type: "select", options: httpMethods },
@@ -149,7 +147,7 @@ const EditManifestForm = ({
                             namePrefix="requirements.auxFilesExist"
                             label="Aux Files Exists"
                             values={formManifest.requirements?.auxFilesExist || []}
-                            onChange={onChange}
+                            onChange={handleManifestChange}
                             objectSchema={[
                                 { name: "formatTag", label: "Format Tag", type: "string" },
                                 { name: "formatVersion", label: "Format Version", type: "string" },
@@ -173,4 +171,3 @@ const EditManifestForm = ({
 }
 
 export default EditManifestForm;
-
