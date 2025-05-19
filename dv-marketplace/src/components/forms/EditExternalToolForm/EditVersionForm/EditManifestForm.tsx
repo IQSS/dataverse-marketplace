@@ -1,10 +1,9 @@
 import React, { useRef } from 'react';
 import { Modal, Button, Form } from "react-bootstrap";
-import { FormInput, FormInputTextArea, FormInputTextField, FormInputSelect } from "../../../UI/FormInputFields";
 import type { Manifest } from "../../../../types/MarketplaceTypes";
+import { FormInput, FormInputTextArea, FormInputTextField, FormInputSelect } from "../../../UI/FormInputFields";
 import MultiInputGroup from './MultiInputGroup';
 import useEditManifestForm from './useEditManifestForm';
-
 
 
 const EditManifestForm = ({

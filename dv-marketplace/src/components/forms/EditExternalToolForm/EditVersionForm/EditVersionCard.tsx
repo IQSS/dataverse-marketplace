@@ -1,10 +1,11 @@
 import React from 'react';
 import { Alert, Button, Form } from "react-bootstrap";
-import type { ExternalTool, Version } from "../../../../types/MarketplaceTypes";
 import MarketplaceCard from "../../../UI/MarketplaceCard";
+import type { ExternalTool, Version } from "../../../../types/MarketplaceTypes";
+import { FormInputTextArea, FormInputTextField } from "../../../UI/FormInputFields";
+import EditManifestForm from './EditManifestForm';
+import useEditManifestForm from './useEditManifestForm';
 import useEditVersionCard from "./useEditVersionCard";
-import { FormInputTextArea, FormInputTextField, createFormChangeHandler } from "../../../UI/FormInputFields";
-import EditManifestForm from './EditManifestForm'; // adjust the path if needed
 
 
 interface EditVersionCardProps {
@@ -22,22 +23,25 @@ const EditVersionCard = ({ version, tool }: EditVersionCardProps) => {
         handleVersionDelete,
         handleVersionEdit,
         handleManifestEdit,
-        handleJsonUpload,
-        defaultManifest,
-        formManifest,
-        setFormManifest
     } = useEditVersionCard({ tool });
 
+    const {
+        defaultManifest,
+        formManifest,
+        setFormManifest,
+        handleManifestChange,
+        handleJsonUpload
+    } = useEditManifestForm();
 
-    const versionData = { version: version.version, releaseNote: version.releaseNote, dvMinVersion: version.dataverseMinVersion };    
-    const [formData, setFormData] = React.useState( versionData );
+
+
+    const versionData = { version: version.version, releaseNote: version.releaseNote, dvMinVersion: version.dataverseMinVersion };
+    const [formData, setFormData] = React.useState(versionData);
 
     const handleVersionChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const { name, value } = e.target;
         setFormData(prev => ({ ...prev, [name]: value }));
     };
-
-    const handleManifestChange = createFormChangeHandler(setFormManifest);
 
     return (
         <MarketplaceCard

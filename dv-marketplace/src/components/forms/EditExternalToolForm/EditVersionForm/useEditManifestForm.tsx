@@ -1,4 +1,6 @@
 import { useEffect, useState } from "react";
+import type {  Manifest } from "../../../../types/MarketplaceTypes";
+import { createFormChangeHandler } from "../../../UI/FormInputFields";
 
 
 export default function useEditManifestForm() {
@@ -25,11 +27,61 @@ export default function useEditManifestForm() {
             .then(data => setToolTypes(data));
     }, []);
 
+    const defaultManifest: Manifest = {
+    displayName: '',
+    description: '',
+    scope: '',
+    toolUrl: '',
+    toolName: '',
+    httpMethod: 'GET',
+    types: [],
+    contentType: '',
+    contentTypes: [],
+    toolParameters: {  queryParameters: []},
+    allowedApiCalls: [],
+    requirements: {  auxFilesExist: []}
+    };
+
+    const [formManifest, setFormManifest] = useState<Manifest>(defaultManifest);
+
+    const handleManifestChange = createFormChangeHandler(setFormManifest);
+
+
+    const handleJsonUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const file = event.target.files?.[0];
+        if (!file) return;
+
+        const reader = new FileReader();
+
+        reader.onload = (e) => {
+            const result = e.target?.result as string;
+            try {
+                const data = JSON.parse(result);
+
+                // Convert 'contentType' to 'contentTypes' if necessary
+                if (data.contentType && !data.contentTypes) {
+                    data.contentTypes = [data.contentType];
+                }
+
+                setFormManifest(data);
+
+            } catch (err) {
+                console.error("Invalid JSON file", err);
+            }
+        };
+
+        reader.readAsText(file);
+    };    
 
     return {
         scopes,
         httpMethods,
-        toolTypes
+        toolTypes,
+        handleManifestChange,
+        handleJsonUpload,
+        defaultManifest,
+        formManifest,
+        setFormManifest
     };
 
 }
