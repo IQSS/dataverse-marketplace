@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import type {  Manifest } from "../../../../types/MarketplaceTypes";
+import type { Manifest } from "../../../../types/MarketplaceTypes";
 import { createFormChangeHandler } from "../../../UI/FormInputFields";
 
 
