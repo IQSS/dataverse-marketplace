@@ -79,22 +79,10 @@ public class ExternalToolsTest {
                 postNewToolBody.add("version", "1.0");
                 postNewToolBody.add("itemImages", new FileSystemResource(image));
 
-                // admin does not have editor role, can not add a new tool
-                assertThrows(HttpClientErrorException.Unauthorized.class, () -> {
-                        restTemplate.postForEntity(serverUrl + "/tools",
-                                        new HttpEntity<>(postNewToolBody, adminHeaders),
-                                        ServerMessageResponse.class);
-                });
-
-                // add the role and try again
-                TestUtils.assignRole(serverUrl, adminLogin, adminLogin.getId(), "EDITOR");
 
                 ResponseEntity<ExternalToolDTO> postToolResponse = restTemplate.postForEntity(serverUrl + "/tools",
                                 new HttpEntity<>(postNewToolBody, adminHeaders), ExternalToolDTO.class);
                 assertEquals(postToolResponse.getStatusCode(), HttpStatus.OK);
-
-                // and remove the role
-                TestUtils.removeRole(serverUrl, adminLogin, adminLogin.getId(), "EDITOR");
 
 
                 assertThrows(HttpClientErrorException.Unauthorized.class, () -> {

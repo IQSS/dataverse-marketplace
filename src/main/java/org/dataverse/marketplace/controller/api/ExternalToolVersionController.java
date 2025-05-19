@@ -37,8 +37,9 @@ public class ExternalToolVersionController {
     /**
      * Method to update a specific external tool version
      */
-    @PreAuthorize(ApplicationRoles.ADMIN_ROLE 
-      + " or (" + ApplicationRoles.EDITOR_ROLE + " and @externalToolService.getToolById(#toolId).getOwner().getId() == authentication.getPrincipal().getId)")
+    @PreAuthorize(ApplicationRoles.ADMIN_ROLE
+            + " or (" + "isAuthenticated()"
+            + " and @externalToolService.getToolById(#toolId).getOwner().getId() == authentication.getPrincipal().getId)")
     @CacheEvict(value = "externalTools", allEntries = true)
     @PutMapping("/{versionId}")
     @ExternalToolVersionsAPIDocs.UpdateVersionByIdDoc
@@ -59,15 +60,16 @@ public class ExternalToolVersionController {
     /**
      * Method to delete a specific external tool version
      */
-    @PreAuthorize(ApplicationRoles.ADMIN_ROLE 
-      + " or (" + ApplicationRoles.EDITOR_ROLE + " and @externalToolService.getToolById(#toolId).getOwner().getId() == authentication.getPrincipal().getId)")
+    @PreAuthorize(ApplicationRoles.ADMIN_ROLE
+            + " or (" + "isAuthenticated()"
+            + " and @externalToolService.getToolById(#toolId).getOwner().getId() == authentication.getPrincipal().getId)")
     @CacheEvict(value = "externalTools", allEntries = true)
     @DeleteMapping("/{versionId}")
     @ExternalToolVersionsAPIDocs.DeleteExternalToolVersionByIdDoc
     public ResponseEntity<?> deleteVersionById(
             @PathVariable("versionId") Long versionId) {
 
-        try{
+        try {
             ExternalToolVersion version = externalToolVersionService.getToolVersionById(versionId);
 
             if (externalToolVersionService.getVersionCount(version.getExternalTool().getId()) > 1) {
@@ -91,9 +93,9 @@ public class ExternalToolVersionController {
 
     }
 
-    //*******************************/
+    // *******************************/
     // manifest related methods
-    //*******************************/
+    // *******************************/
 
     /**
      * Method to retrieve all manifests of an external tool version
@@ -101,18 +103,19 @@ public class ExternalToolVersionController {
     @GetMapping("{versionId}/manifests")
     @ExternalToolVersionsAPIDocs.GetVersionManifestsDoc
     public ResponseEntity<?> getVersionManifestsById(
-        @PathVariable("versionId") Long versionId) {
+            @PathVariable("versionId") Long versionId) {
 
         ExternalToolVersion version = externalToolVersionService.getToolVersionById(versionId);
         ExternalToolVersionDTO versionDTO = new ExternalToolVersionDTO(version);
         return ResponseEntity.ok(versionDTO.getManifestSet());
     }
 
-  
     /**
      * Method to update the manifest metadata of an external tool version
      */
-    @PreAuthorize(ApplicationRoles.ADMIN_ROLE)
+    @PreAuthorize(ApplicationRoles.ADMIN_ROLE
+            + " or (" + "isAuthenticated()"
+            + " and @externalToolService.getToolById(#toolId).getOwner().getId() == authentication.getPrincipal().getId)")
     @CacheEvict(value = "externalTools", allEntries = true)
     @PutMapping(path = "{versionId}/manifest")
     @ExternalToolVersionsAPIDocs.UpdateVersionManifestDoc
@@ -127,7 +130,8 @@ public class ExternalToolVersionController {
         } catch (IOException e) {
             ServerMessageResponse messageResponse = new ServerMessageResponse(HttpStatus.INTERNAL_SERVER_ERROR,
                     "Error updating manifest metadata",
-                    String.format("An error occurred while updating the manifest metadta for version ID %d.", versionId));
+                    String.format("An error occurred while updating the manifest metadta for version ID %d.",
+                            versionId));
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(messageResponse);
         }
     }

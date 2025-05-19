@@ -74,7 +74,7 @@ public class ExternalToolController {
     /**
      * Method to add a new external tool
      */
-    @PreAuthorize(ApplicationRoles.EDITOR_ROLE)
+    @PreAuthorize("isAuthenticated()")
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @ExternalToolsAPIDocs.AddExternalToolsRequestDoc
     public ResponseEntity<?> addNewTool(@Valid AddToolRequest addToolRequest) {
@@ -92,9 +92,8 @@ public class ExternalToolController {
         }
     }
 
-    @PreAuthorize(ApplicationRoles.ADMIN_ROLE
-            + " or (" + ApplicationRoles.EDITOR_ROLE
-            + " and @externalToolService.getToolById(#toolId).getOwner().getId() == authentication.getPrincipal().getId)")
+    @PreAuthorize(ApplicationRoles.ADMIN_ROLE 
+      + " or (" + "isAuthenticated()" + " and @externalToolService.getToolById(#toolId).getOwner().getId() == authentication.getPrincipal().getId)")
     @PutMapping("/{toolId}")
     @ExternalToolsAPIDocs.UpdateExternalToolDoc
     public ResponseEntity<?> updateTool(@PathVariable("toolId") Long toolId,
@@ -150,9 +149,8 @@ public class ExternalToolController {
     /**
      * Method to add images to an external tool.
      */
-    @PreAuthorize(ApplicationRoles.ADMIN_ROLE
-            + " or (" + ApplicationRoles.EDITOR_ROLE
-            + " and @externalToolService.getToolById(#toolId).getOwner().getId() == authentication.getPrincipal().getId)")
+    @PreAuthorize(ApplicationRoles.ADMIN_ROLE 
+      + " or (" + "isAuthenticated()" + " and @externalToolService.getToolById(#toolId).getOwner().getId() == authentication.getPrincipal().getId)")
     @CacheEvict(value = "externalTools", allEntries = true)
     @PostMapping(path = "/{toolId}/images", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @ExternalToolsAPIDocs.AddToolImagesDoc
@@ -189,9 +187,8 @@ public class ExternalToolController {
     /**
      * Method to delete an image from an external tool.
      */
-    @PreAuthorize(ApplicationRoles.ADMIN_ROLE
-            + " or (" + ApplicationRoles.EDITOR_ROLE
-            + " and @externalToolService.getToolById(#toolId).getOwner().getId() == authentication.getPrincipal().getId)")
+    @PreAuthorize(ApplicationRoles.ADMIN_ROLE 
+      + " or (" + "isAuthenticated()" + " and @externalToolService.getToolById(#toolId).getOwner().getId() == authentication.getPrincipal().getId)")
     @DeleteMapping("/{toolId}/images/{imageId}")
     @ExternalToolsAPIDocs.DeleteToolImageDoc
     public ResponseEntity<?> deleteToolImage(
@@ -227,9 +224,8 @@ public class ExternalToolController {
     /**
      * Method to add a new version to an existing external tool
      */
-    @PreAuthorize(ApplicationRoles.ADMIN_ROLE
-            + " or (" + ApplicationRoles.EDITOR_ROLE
-            + " and @externalToolService.getToolById(#toolId).getOwner().getId() == authentication.getPrincipal().getId)")
+    @PreAuthorize(ApplicationRoles.ADMIN_ROLE 
+      + " or (" + "isAuthenticated()" + " and @externalToolService.getToolById(#toolId).getOwner().getId() == authentication.getPrincipal().getId)")
     @CacheEvict(value = "externalTools", allEntries = true)
     @PostMapping(path = "/{toolId}/versions", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @ExternalToolVersionsAPIDocs.AddExternalToolVersionDoc

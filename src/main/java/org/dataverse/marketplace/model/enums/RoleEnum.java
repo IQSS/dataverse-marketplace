@@ -2,8 +2,7 @@ package org.dataverse.marketplace.model.enums;
 
 public enum RoleEnum {
 
-    ADMIN("ADMIN"),
-    USER("USER");
+    ADMIN("ADMIN");
 
     private final String name;
 

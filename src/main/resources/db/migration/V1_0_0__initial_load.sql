@@ -20,6 +20,4 @@ CREATE TABLE IF NOT EXISTS user_roles (
 
 insert into users (username, email, password) values ('admin', 'admin@localhost', '$2a$10$ZGbgWue/D39CfwwStB.qWe5hWqvSU8qi4DVZDzKt3ZK3374KSFP8q');
 insert into roles (name) values ('ADMIN');
-insert into roles (name) values ('EDITOR');
 insert into user_roles (user_id, role_id) values (1, 1);
-insert into user_roles (user_id, role_id) values (1, 2); --temp

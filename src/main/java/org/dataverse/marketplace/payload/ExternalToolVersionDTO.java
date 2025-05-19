@@ -45,8 +45,9 @@ public class ExternalToolVersionDTO implements Serializable {
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     public Set<ExternalToolManifestDTO> getManifestSet() {
 
+        Set<ExternalToolManifestDTO> manifestDTOs = new HashSet<ExternalToolManifestDTO>();
+
         if (this.manifest.isValidManifest()) {
-            Set<ExternalToolManifestDTO> manifestDTOs = new HashSet<ExternalToolManifestDTO>();
 
             if (this.manifest.getContentTypes() != null && !this.manifest.getContentTypes().isEmpty()) {
                 for (String contentType : this.manifest.getContentTypes()) {
@@ -56,11 +57,9 @@ public class ExternalToolVersionDTO implements Serializable {
             } else {
                 manifestDTOs.add(this.manifest);
             }
-
-            return manifestDTOs;
         }
 
-        return null;
+        return manifestDTOs;
     }
 
     /* Getters and Setters */
