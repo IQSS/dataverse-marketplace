@@ -3,6 +3,8 @@ import { Modal, Button, Form } from "react-bootstrap";
 import { FormInput, FormInputTextArea, FormInputTextField, FormInputSelect } from "../../../UI/FormInputFields";
 import type { Manifest } from "../../../../types/MarketplaceTypes";
 import MultiInputGroup from './MultiInputGroup';
+import useEditManifestForm from './useEditManifestForm';
+
 
 
 const EditManifestForm = ({
@@ -29,6 +31,12 @@ const EditManifestForm = ({
         onCancel();
     };
 
+    const {
+        scopes,
+        httpMethods,
+        toolTypes
+    } = useEditManifestForm();
+
     return (
         <Modal show={show} onHide={handleCancel} size="lg" centered backdrop="static">
             <Modal.Header closeButton>
@@ -51,7 +59,7 @@ const EditManifestForm = ({
                         style={{ display: 'none' }}
                         onChange={(e) => {
                             onUpload(e);
-                            e.target.value = ''; 
+                            e.target.value = '';
                         }} />
 
                     <Button
@@ -80,10 +88,10 @@ const EditManifestForm = ({
                         <FormInputSelect
                             id="scope" name="scope" label="Scope"
                             value={formManifest.scope} onChange={onChange}
-                            options={[
-                                { value: "file", label: "file" },
-                                { value: "dataset", label: "dataset" },
-                            ]} />
+                            options={scopes.map(scope => ({
+                                value: scope,
+                                label: scope
+                            }))} />
 
                         <FormInput id="toolUrl" name="toolUrl" htmlType="url" onChange={onChange}
                             label="Tool URL" value={formManifest.toolUrl} />
@@ -91,10 +99,10 @@ const EditManifestForm = ({
                         <FormInputSelect
                             id="httpMethod" name="httpMethod" label="HTTP Method"
                             value={formManifest.httpMethod} onChange={onChange}
-                            options={[
-                                { value: "GET", label: "GET" },
-                                { value: "POST", label: "POST" },
-                            ]} />
+                            options={httpMethods.map(httpMethod => ({
+                                value: httpMethod,
+                                label: httpMethod
+                            }))} />
 
                         <FormInputTextField id="toolName" name="toolName" onChange={onChange}
                             label="Tool Name" value={formManifest.toolName} />
@@ -102,12 +110,10 @@ const EditManifestForm = ({
                         <FormInputSelect
                             id="types" name="types" label="Types" multiple
                             value={formManifest.types} onChange={onChange}
-                            options={[
-                                { value: "preview", label: "preview" },
-                                { value: "explore", label: "explore" },
-                                { value: "configure", label: "configure" },
-                                { value: "query", label: "query" },
-                            ]} />
+                            options={toolTypes.map(toolType => ({
+                                value: toolType,
+                                label: toolType
+                            }))} />
 
                         <MultiInputGroup
                             type="string"
@@ -133,9 +139,9 @@ const EditManifestForm = ({
                             onChange={onChange}
                             objectSchema={[
                                 { name: "name", label: "Name", type: "string" },
-                                { name: "httpMethod", label: "HTTP Method", type: "select", options: ["GET", "POST"] },
+                                { name: "httpMethod", label: "HTTP Method", type: "select", options: httpMethods },
                                 { name: "urlTemplate", label: "URL Template", type: "string" },
-                                { name: "timeOut", label: "Time Out", type: "number", defaultValue:60 },
+                                { name: "timeOut", label: "Time Out", type: "number", defaultValue: 60 },
                             ]}
                         />
 

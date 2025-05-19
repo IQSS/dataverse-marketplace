@@ -3,6 +3,9 @@ package org.dataverse.marketplace.model;
 import java.io.Serializable;
 import java.util.Set;
 
+import org.dataverse.marketplace.model.enums.HttpMethod;
+import org.dataverse.marketplace.model.enums.Scope;
+
 import jakarta.persistence.*;
 
 @Entity
@@ -29,13 +32,15 @@ public class ExternalToolVersion implements Serializable {
 
     private String description;
 
-    private String scope;
+    @Enumerated(EnumType.STRING)
+    private Scope scope;
 
     private String toolUrl;
 
     private String toolName;
     
-    private String httpMethod;
+    @Enumerated(EnumType.STRING)
+    private HttpMethod httpMethod;
 
     @OneToMany(mappedBy = "externalToolVersion", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<QueryParameter> queryParameters;    
@@ -111,10 +116,10 @@ public class ExternalToolVersion implements Serializable {
         this.description = description;
     }
 
-    public String getScope() {
+    public Scope getScope() {
         return scope;
     }
-    public void setScope(String scope) {
+    public void setScope(Scope scope) {
         this.scope = scope;
     }
 
@@ -132,10 +137,10 @@ public class ExternalToolVersion implements Serializable {
     public void setToolName(String toolName) {
         this.toolName = toolName;
     }
-    public String getHttpMethod() {
+    public HttpMethod getHttpMethod() {
         return httpMethod;
     }
-    public void setHttpMethod(String httpMethod) {
+    public void setHttpMethod(HttpMethod httpMethod) {
         this.httpMethod = httpMethod;
     }
 

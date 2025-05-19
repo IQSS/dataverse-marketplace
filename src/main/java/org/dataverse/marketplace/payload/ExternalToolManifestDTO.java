@@ -12,6 +12,9 @@ import org.dataverse.marketplace.model.ContentType;
 import org.dataverse.marketplace.model.ExternalToolVersion;
 import org.dataverse.marketplace.model.ExternalToolType;
 import org.dataverse.marketplace.model.QueryParameter;
+import org.dataverse.marketplace.model.enums.HttpMethod;
+import org.dataverse.marketplace.model.enums.Scope;
+import org.dataverse.marketplace.model.enums.ToolType;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 
@@ -29,7 +32,7 @@ public class ExternalToolManifestDTO implements Serializable {
     private String description;
 
     @Schema(description = "The manifest's scope", example = "Dataset")
-    private String scope;
+    private Scope scope;
 
     @Schema(description = "The manifest's tool URL", example = "https://example.com/tool")
     private String toolUrl;
@@ -38,13 +41,13 @@ public class ExternalToolManifestDTO implements Serializable {
     private String toolName;
 
     @Schema(description = "The manifest's HTTP method", example = "GET")
-    private String httpMethod;
+    private HttpMethod httpMethod;
 
     @Schema(description = "The content types for the file the tool will work with", example = "application/pdf")
     private Set<String> contentTypes;
 
     @Schema(description = "The tool types", example = "query")
-    private Set<String> types;
+    private Set<ToolType> types;
 
     // @Schema(description = "the query paramters (as part of toolParameters)",
     // example = "fileid: {fileId}")
@@ -73,7 +76,7 @@ public class ExternalToolManifestDTO implements Serializable {
         this.httpMethod = externalToolVersion.getHttpMethod();
 
         if (externalToolVersion.getExternalToolTypes() != null) {
-            this.types = new HashSet<String>();
+            this.types = new HashSet<ToolType>();
             for (ExternalToolType type : externalToolVersion.getExternalToolTypes()) {
                 this.types.add(type.getType());
             }
@@ -186,7 +189,7 @@ public class ExternalToolManifestDTO implements Serializable {
             version.setExternalToolTypes(existingTypes);
         }
         if (this.getTypes() != null) {
-            for (String type : this.getTypes()) {
+            for (ToolType type : this.getTypes()) {
                 ExternalToolType newType = new ExternalToolType();
                 newType.setExternalToolVersion(version);
                 newType.setType(type);
@@ -275,11 +278,11 @@ public class ExternalToolManifestDTO implements Serializable {
         this.description = description;
     }
 
-    public String getScope() {
+    public Scope getScope() {
         return this.scope;
     }
 
-    public void setScope(String scope) {
+    public void setScope(Scope scope) {
         this.scope = scope;
     }
 
@@ -299,11 +302,11 @@ public class ExternalToolManifestDTO implements Serializable {
         this.toolName = toolName;
     }
 
-    public String getHttpMethod() {
+    public HttpMethod getHttpMethod() {
         return this.httpMethod;
     }
 
-    public void setHttpMethod(String httpMethod) {
+    public void setHttpMethod(HttpMethod httpMethod) {
         this.httpMethod = httpMethod;
     }
 
@@ -323,11 +326,11 @@ public class ExternalToolManifestDTO implements Serializable {
         this.contentTypes = contentTypes;
     }
 
-    public Set<String> getTypes() {
+    public Set<ToolType> getTypes() {
         return this.types;
     }
 
-    public void setTypes(Set<String> types) {
+    public void setTypes(Set<ToolType> types) {
         this.types = types;
     }
 

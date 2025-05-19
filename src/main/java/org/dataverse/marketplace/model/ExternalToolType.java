@@ -1,5 +1,7 @@
 package org.dataverse.marketplace.model;
 
+import org.dataverse.marketplace.model.enums.ToolType;
+
 import jakarta.persistence.*;
 
 @Entity
@@ -9,7 +11,8 @@ public class ExternalToolType {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    String type;
+    @Enumerated(EnumType.STRING)
+    ToolType type;
 
     @ManyToOne
     @JoinColumn(name = "external_tool_version_id", nullable = false)
@@ -23,11 +26,11 @@ public class ExternalToolType {
         this.id = id;
     }
 
-    public String getType() {
+    public ToolType getType() {
         return type;
     }
 
-    public void setType(String type) {
+    public void setType(ToolType type) {
         this.type = type;
     }
 

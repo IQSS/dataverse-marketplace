@@ -2,20 +2,22 @@ package org.dataverse.marketplace.payload;
 
 import java.io.Serializable;
 
+import org.dataverse.marketplace.model.enums.HttpMethod;
+
 import io.swagger.v3.oas.annotations.media.Schema;
 
 @Schema(description = "Allowed Api Call data transfer object")
 public class AllowedApiCallDTO implements Serializable {
 
     String name;
-    String httpMethod;
+    HttpMethod httpMethod;
     String urlTemplate;
     Integer timeOut;
 
     public AllowedApiCallDTO() {
     }
 
-    public AllowedApiCallDTO(String name, String httpMethod, String urlTemplate, Integer timeOut) {
+    public AllowedApiCallDTO(String name, HttpMethod httpMethod, String urlTemplate, Integer timeOut) {
         this.name = name;
         this.httpMethod = httpMethod;
         this.urlTemplate = urlTemplate;
@@ -30,11 +32,11 @@ public class AllowedApiCallDTO implements Serializable {
         this.name = name;
     }
 
-    public String getHttpMethod() {
+    public HttpMethod getHttpMethod() {
         return httpMethod;
     }
 
-    public void setHttpMethod(String httpMethod) {
+    public void setHttpMethod(HttpMethod httpMethod) {
         this.httpMethod = httpMethod;
     }
 

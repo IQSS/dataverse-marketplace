@@ -1,5 +1,7 @@
 package org.dataverse.marketplace.model;
 
+import org.dataverse.marketplace.model.enums.HttpMethod;
+
 import jakarta.persistence.*;
 
 @Entity
@@ -10,7 +12,8 @@ public class AllowedApiCall {
     private Long id;
 
     String name;
-    String httpMethod;
+    @Enumerated(EnumType.STRING)
+    HttpMethod httpMethod;
     String urlTemplate;
     Integer timeOut;
 
@@ -41,10 +44,10 @@ public class AllowedApiCall {
         this.name = name;
     }
 
-    public String getHttpMethod() {
+    public HttpMethod getHttpMethod() {
         return httpMethod;
     }
-    public void setHttpMethod(String httpMethod) {
+    public void setHttpMethod(HttpMethod httpMethod) {
         this.httpMethod = httpMethod;
     }
 
