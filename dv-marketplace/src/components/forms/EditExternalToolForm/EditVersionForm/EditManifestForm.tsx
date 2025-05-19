@@ -138,7 +138,7 @@ onClick={() => setFormManifest(defaultManifest)}
                                 { name: "name", label: "Name", type: "string" },
                                 { name: "httpMethod", label: "HTTP Method", type: "select", options: httpMethods },
                                 { name: "urlTemplate", label: "URL Template", type: "string" },
-                                { name: "timeOut", label: "Time Out", type: "number", defaultValue: 60 },
+                                { name: "timeOut", label: "Time Out", type: "number", defaultValue: 3600 },
                             ]}
                         />
 
