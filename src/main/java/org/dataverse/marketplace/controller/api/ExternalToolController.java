@@ -81,7 +81,7 @@ public class ExternalToolController {
 
         try {
             String authenticatedUser = SecurityContextHolder.getContext().getAuthentication().getName();
-            // TODO: this should call a service bran, not repo directly
+            // TODO: this should call a service bean, not repo directly
             User user = userRepository.findByUsername(authenticatedUser).orElse(null);
             return ResponseEntity.ok(externalToolService.addTool(addToolRequest, user));
         } catch (IOException e) {

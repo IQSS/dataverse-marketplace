@@ -13,6 +13,8 @@ import org.dataverse.marketplace.payload.*;
 import org.dataverse.marketplace.payload.auth.request.*;
 import org.dataverse.marketplace.payload.auth.response.*;
 
+import static org.dataverse.marketplace.TestUtils.assertPresent;
+
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class LoginAndAuthTest {
@@ -113,7 +115,7 @@ public class LoginAndAuthTest {
             ResponseEntity<Role[]> systemRoles
                 = restTemplate.exchange(serverUrl + "/auth/roles", HttpMethod.GET, adminRequest, Role[].class);
             
-            assertTrue(systemRoles.getBody().length > testUserRoles.size());
+            assertTrue(assertPresent(systemRoles).length > testUserRoles.size());
 
             List<Role> systemRoleList = Arrays.asList(systemRoles.getBody());
 
@@ -133,10 +135,8 @@ public class LoginAndAuthTest {
             ResponseEntity<ServerMessageResponse> roleCreationResponse =
                 restTemplate.postForEntity(roleAssignmentRequest, 
                     adminRequest, ServerMessageResponse.class);
-
-            assertNotNull(roleCreationResponse);
             
-            assertEquals(roleCreationResponse.getBody().getCode(), HttpStatus.OK.value());
+            assertEquals(assertPresent(roleCreationResponse).getCode(), HttpStatus.OK.value());
             
         }); 
 

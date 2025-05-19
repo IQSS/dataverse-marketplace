@@ -1,5 +1,7 @@
 package org.dataverse.marketplace;
 
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -17,49 +19,54 @@ public class TestUtils {
 
         private static RestTemplate restTemplate = new RestTemplate();
 
-        public static void assignRole (String serverUrl, JwtResponse adminLogin, Long userId, String roleName) {
+        public static <T> T assertPresent(ResponseEntity<T> response) {
+                assertNotNull(response.getBody());
+                return response.getBody();
+        }
+
+        public static void assignRole(String serverUrl, JwtResponse adminLogin, Long userId, String roleName) {
 
                 HttpHeaders roleAssignmentHeaders = new HttpHeaders();
-                roleAssignmentHeaders.setBearerAuth(adminLogin.getAccessToken()); 
+                roleAssignmentHeaders.setBearerAuth(adminLogin.getAccessToken());
                 HttpEntity<String> adminRequest = new HttpEntity<>(roleAssignmentHeaders);
 
-                ResponseEntity<Role[]> systemRoles
-                        = restTemplate.exchange(serverUrl + "/auth/roles", HttpMethod.GET, adminRequest, Role[].class);
-            
+                ResponseEntity<Role[]> systemRoles = restTemplate.exchange(serverUrl + "/auth/roles", HttpMethod.GET,
+                                adminRequest, Role[].class);
+
                 List<Role> systemRoleList = Arrays.asList(systemRoles.getBody());
                 List<Role> roleToAssign = systemRoleList.stream()
-                                                .filter(role -> roleName.equals(role.getName()))
-                                                .collect(Collectors.toList());
-                
+                                .filter(role -> roleName.equals(role.getName()))
+                                .collect(Collectors.toList());
+
                 // TODO CHECK IF ROLE ALREADY ASSIGNED
-                String roleAssignmentRequest = serverUrl + 
-                                            "/auth/roles/" +  roleToAssign.get(0).getId() +
-                                            "/user/" + userId;  
+                String roleAssignmentRequest = serverUrl +
+                                "/auth/roles/" + roleToAssign.get(0).getId() +
+                                "/user/" + userId;
 
                 restTemplate.postForEntity(roleAssignmentRequest, adminRequest, ServerMessageResponse.class);
         }
 
-        public static void removeRole (String serverUrl, JwtResponse adminLogin, Long userId, String roleName) {
+        public static void removeRole(String serverUrl, JwtResponse adminLogin, Long userId, String roleName) {
 
                 HttpHeaders roleAssignmentHeaders = new HttpHeaders();
-                roleAssignmentHeaders.setBearerAuth(adminLogin.getAccessToken()); 
-                HttpEntity<String> adminRequest = new HttpEntity<>(roleAssignmentHeaders);                
+                roleAssignmentHeaders.setBearerAuth(adminLogin.getAccessToken());
+                HttpEntity<String> adminRequest = new HttpEntity<>(roleAssignmentHeaders);
 
-                ResponseEntity<Role[]> systemRoles
-                        = restTemplate.exchange(serverUrl + "/auth/roles", HttpMethod.GET, adminRequest, Role[].class);
-            
+                ResponseEntity<Role[]> systemRoles = restTemplate.exchange(serverUrl + "/auth/roles", HttpMethod.GET,
+                                adminRequest, Role[].class);
+
                 List<Role> systemRoleList = Arrays.asList(systemRoles.getBody());
                 List<Role> roleToRemove = systemRoleList.stream()
-                                                .filter(role -> roleName.equals(role.getName()))
-                                                .collect(Collectors.toList());
+                                .filter(role -> roleName.equals(role.getName()))
+                                .collect(Collectors.toList());
 
-                // TODO CHECK IF ROLE IS ASSIGNED                                
-                String roleAssignmentRequest = serverUrl + 
-                                            "/auth/roles/" + roleToRemove.get(0).getId() +
-                                            "/user/" + userId;  
+                // TODO CHECK IF ROLE IS ASSIGNED
+                String roleAssignmentRequest = serverUrl +
+                                "/auth/roles/" + roleToRemove.get(0).getId() +
+                                "/user/" + userId;
 
-                restTemplate.exchange(roleAssignmentRequest, 
-                        org.springframework.http.HttpMethod.DELETE, adminRequest, ServerMessageResponse.class);
-        }   
+                restTemplate.exchange(roleAssignmentRequest,
+                                org.springframework.http.HttpMethod.DELETE, adminRequest, ServerMessageResponse.class);
+        }
 
 }
