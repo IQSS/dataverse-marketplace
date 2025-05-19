@@ -117,12 +117,12 @@ public @interface AuthAPIDocs {
                 description = "The user id to assign the role to", 
                 required = true, 
                 in = ParameterIn.PATH, 
-                schema = @Schema(type = "long", format = "int64"))
+                schema = @Schema(type = "integer", format = "int64"))
     @Parameter(name = "roleId",
                 description = "The role id to assign to the user.",
                 required = true,
                 in = ParameterIn.PATH,
-                schema = @Schema(type = "long"))
+                schema = @Schema(type = "integer", format = "int64"))
     public @interface AssignRole{}
 
     @Target({ElementType.METHOD})    
@@ -156,12 +156,12 @@ public @interface AuthAPIDocs {
                 description = "The user id to remove the role from", 
                 required = true, 
                 in = ParameterIn.PATH, 
-                schema = @Schema(type = "long", format = "int64"))
+                schema = @Schema(type = "integer", format = "int64"))
     @Parameter(name = "roleId",
                 description = "The role id to be removed from the user",
                 required = true,
                 in = ParameterIn.PATH,
-                schema = @Schema(type = "long"))
+                schema = @Schema(type = "integer", format = "int64"))
     public @interface RemoveRole{}
 
     @Target({ElementType.METHOD})    
@@ -288,7 +288,7 @@ public @interface AuthAPIDocs {
                 description = "The id of the user to be retrieved",
                 required = true,
                 in = ParameterIn.PATH,
-                schema = @Schema(type = "long", format = "int64"))
+                schema = @Schema(type = "integer", format = "int64"))
     public @interface GetUser{}
 
 }
