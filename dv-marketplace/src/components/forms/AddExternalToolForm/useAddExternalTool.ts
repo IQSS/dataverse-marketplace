@@ -26,9 +26,9 @@ export default function useAddExternalTool() {
         const toolData = {
             name: form.toolName.value,
             description: form.description.value,
-            version: form.version.value,
-            releaseNote: form.releaseNote.value,
-            dvMinVersion: form.dvMinVersion.value,
+            versionName: form.versionName.value,
+            versioneNote: form.versioneNote.value,
+            dataverseMinVersion: form.dataverseMinVersion.value,
             manifest: manifestForm
 
         };

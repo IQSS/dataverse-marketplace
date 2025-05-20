@@ -17,11 +17,11 @@ public class ExternalToolVersionDTO implements Serializable {
     @Schema(description = "The unique identifier of the external tool version", example = "1")
     private Long id;
 
-    @Schema(description = "The version of the external tool", example = "\"1.0\"")
-    private String version;
+    @Schema(description = "The version name of the external tool", example = "\"1.0\"")
+    private String versionName;
 
-    @Schema(description = "The release note of the external tool", example = "This is a release note")
-    private String releaseNote;
+    @Schema(description = "The version note of the external tool", example = "This is a release note")
+    private String versionNote;
 
     @Schema(description = "The minimum version of Dataverse required for the external tool", example = "\"6.0\"")
     private String dataverseMinVersion;
@@ -35,8 +35,8 @@ public class ExternalToolVersionDTO implements Serializable {
     public ExternalToolVersionDTO(ExternalToolVersion version) {
 
         this.id = version.getId();
-        this.version = version.getVersion();
-        this.releaseNote = version.getReleaseNote();
+        this.versionName = version.getVersionName();
+        this.versionNote = version.getVersionNote();
         this.dataverseMinVersion = version.getDataverseMinVersion();
 
         this.manifest = new ExternalToolManifestDTO(version);
@@ -72,20 +72,20 @@ public class ExternalToolVersionDTO implements Serializable {
         this.id = id;
     }
 
-    public String getVersion() {
-        return this.version;
+    public String getVersionName() {
+        return this.versionName;
     }
 
-    public void setVersion(String version) {
-        this.version = version;
+    public void setVersionName(String versionName) {
+        this.versionName = versionName;
     }
 
-    public String getReleaseNote() {
-        return this.releaseNote;
+    public String getVersionNote() {
+        return this.versionNote;
     }
 
-    public void setReleaseNote(String releaseNote) {
-        this.releaseNote = releaseNote;
+    public void setVersionNote(String versionNote) {
+        this.versionNote = versionNote;
     }
 
     public String getDataverseMinVersion() {
@@ -108,8 +108,8 @@ public class ExternalToolVersionDTO implements Serializable {
     public String toString() {
         StringBuilder sb = new StringBuilder("ExternalToolVersionDTO{");
         sb.append("id=").append(id);
-        sb.append(", version='").append(version).append('\'');
-        sb.append(", releaseNote='").append(releaseNote).append('\'');
+        sb.append(", versionName='").append(versionName).append('\'');
+        sb.append(", versionNote='").append(versionNote).append('\'');
         sb.append(", dataverseMinVersion='").append(dataverseMinVersion).append('\'');
         sb.append(", manifest=").append(manifest != null ? manifest.toString() : "null");
         sb.append('}');

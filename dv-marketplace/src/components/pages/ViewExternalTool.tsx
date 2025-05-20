@@ -70,9 +70,9 @@ const ViewExternalTool = () => {
 
             <InnerCardDeck>
                 {tool?.versions.map((version) => (
-                    <RowCard key={version.id} header={`Version: ${version.version}`}>
-                        <p>Release Note : {version.releaseNote}</p>
-                        <p>DV Min Version : {version.dataverseMinVersion}</p>
+                    <RowCard key={version.id} header={`Version Name: ${version.versionName}`}>
+                        <p>Version Note : {version.versionNote}</p>
+                        <p>Dataverse Min Version : {version.dataverseMinVersion}</p>
                         <p>Manifests:</p>
                         <table className="table">
                             <tbody>

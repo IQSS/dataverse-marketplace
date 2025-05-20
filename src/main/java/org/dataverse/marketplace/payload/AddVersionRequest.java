@@ -8,46 +8,46 @@ import jakarta.validation.constraints.NotEmpty;
 @Schema(description = "Request to add a new version of an existing external tool")
 public class AddVersionRequest implements Serializable{
 
-    @Schema(description = "A brief note about the current release of the existing external tool.", 
-        example = "This release includes a new feature that allows you to ask questions to an LLM.")
-    private String releaseNote;
-    
     @Schema(description = "Version descriptor of the new version of the existing external tool", 
         example = "\"1.0\"")
-    private String version;
+    String versionName;
 
+    @Schema(description = "A brief note about this version of the external tool.", 
+        example = "This version includes a new feature that allows you to ask questions to an LLM.")
+    String versionNote;
+    
     @Schema(description = "Minimum version of Dataverse that this version of the existing external tool is compatible with", 
         example = "\"6.0\"")
     @NotEmpty
-    private String dvMinVersion;
+    private String dataverseMinVersion;
 
     @Schema(description = "Manifest metadata for this version")
     private ExternalToolManifestDTO manifest;
 
     /* Getters and Setters */
 
-    public String getReleaseNote() {
-        return this.releaseNote;
+    public String getVersionName() {
+        return this.versionName;
     }
 
-    public void setReleaseNote(String releaseNote) {
-        this.releaseNote = releaseNote;
+    public void setVersionName(String versionName) {
+        this.versionName = versionName;
     }
 
-    public String getVersion() {
-        return this.version;
+    public String getVersionNote() {
+        return this.versionNote;
     }
 
-    public void setVersion(String version) {
-        this.version = version;
+    public void setVersionNote(String versionNote) {
+        this.versionNote = versionNote;
     }
 
-    public String getDvMinVersion() {
-        return this.dvMinVersion;
+    public String getDataverseMinVersion() {
+        return this.dataverseMinVersion;
     }
 
-    public void setDvMinVersion(String dvMinVersion) {
-        this.dvMinVersion = dvMinVersion;
+    public void setDataverseMinVersion(String dataverseMinVersion) {
+        this.dataverseMinVersion = dataverseMinVersion;
     }
 
     public ExternalToolManifestDTO getManifest() {
@@ -61,9 +61,9 @@ public class AddVersionRequest implements Serializable{
     @Override
     public String toString() {
         return "{" +
-            " releaseNote='" + getReleaseNote() + "'" +
-            ", version='" + getVersion() + "'" +
-            ", dvMinVersion='" + getDvMinVersion() + "'" +
+            "versionName='" + getVersionName() + "'" +
+            ", versionNote='" + getVersionNote() + "'" +
+            ", dataverseMinVersion='" + getDataverseMinVersion() + "'" +
             ", manifest='" + getManifest() + "'" +
             "}";
     }

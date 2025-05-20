@@ -19,12 +19,10 @@ public class ExternalToolVersion implements Serializable {
     @JoinColumn(name = "external_tool_id")
     private ExternalTool externalTool;
 
-    private String releaseNote;
+    private String versionName;
 
-    @Column(name = "item_version")
-    private String version;
+    private String versionNote;
 
-    @Column(name = "dv_min_version")
     private String dataverseMinVersion;
 
     // Manifest details
@@ -76,30 +74,30 @@ public class ExternalToolVersion implements Serializable {
         this.externalTool = externalTool;
     }
 
-    public String getReleaseNote() {
-        return this.releaseNote;
+    public String getVersionName() {
+        return versionName;
+    }
+    
+    public void setVersionName(String versionName) {
+        this.versionName = versionName;
     }
 
-    public void setReleaseNote(String releaseNote) {
-        this.releaseNote = releaseNote;
+    public String getVersionNote() {
+        return versionNote;
     }
 
-    public String getVersion() {
-        return this.version;
-    }
-
-    public void setVersion(String version) {
-        this.version = version;
+    public void setVersionNote(String versionNote) {
+        this.versionNote = versionNote;
     }
 
     public String getDataverseMinVersion() {
-        return this.dataverseMinVersion;
+        return dataverseMinVersion;
     }
 
     public void setDataverseMinVersion(String dataverseMinVersion) {
         this.dataverseMinVersion = dataverseMinVersion;
     }
-
+    
     public String getDisplayName() {
         return displayName;
     }

@@ -34,9 +34,9 @@ const EditVersionForm = ({ tool }: { tool: ExternalTool | undefined }) => {
 
 			<Alert variant="info" show={addVersionFormIsOpen}>
 				<Form onSubmit={handleVersionSubmit} encType="multipart/form-data">
-					<FormInputTextField label="Version" name="version" id="version" value={versionData.version} onChange={handleChange} />
-					<FormInputTextArea label="Release Note" name="releaseNote" id="releaseNote" value={versionData.releaseNote} onChange={handleChange} />
-					<FormInputTextField label="DV Min Version" name="dvMinVersion" id="dvMinVersion" value={versionData.dvMinVersion} onChange={handleChange} />
+					<FormInputTextField label="Version Name" name="versionName" id="versionName" value={versionData.versionName} onChange={handleChange} />
+					<FormInputTextArea label="Version Note" name="versionNote" id="versionNote" value={versionData.versionNote} onChange={handleChange} />
+					<FormInputTextField label="Dataverse Min Version" name="dataverseMinVersion" id="dataverseMinVersion" value={versionData.dataverseMinVersion} onChange={handleChange} />
 
 					<p>Manifest Data:{" "}
 						<button

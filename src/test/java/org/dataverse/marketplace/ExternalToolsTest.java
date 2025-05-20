@@ -73,9 +73,10 @@ public class ExternalToolsTest {
                 AddToolRequest addToolRequest = new AddToolRequest();
                 addToolRequest.setName("AskTheData");
                 addToolRequest.setDescription("Ask the Data from tests");
-                addToolRequest.setDvMinVersion("6.0");
-                addToolRequest.setReleaseNote("This release includes a new feature ...");
-                addToolRequest.setVersion("1.0");
+                addToolRequest.setVersionName("1.0");
+                addToolRequest.setVersionNote("This release includes a new feature ...");
+                addToolRequest.setDataverseMinVersion("6.0");
+
 
                 ResponseEntity<ExternalToolDTO> postToolResponse = restTemplate.postForEntity(serverUrl + "/tools",
                                 new HttpEntity<>(addToolRequest, adminHeaders), ExternalToolDTO.class);
@@ -157,9 +158,9 @@ public class ExternalToolsTest {
                 // Test post version
                 adminHeaders.setContentType(MediaType.APPLICATION_JSON);
                 AddVersionRequest addVersionRequest = new AddVersionRequest();
-                addVersionRequest.setVersion("1.1");     
-                addVersionRequest.setReleaseNote("This release updates ...");
-                addVersionRequest.setDvMinVersion("6.0");
+                addVersionRequest.setVersionName("1.1");     
+                addVersionRequest.setVersionNote("This release updates ...");
+                addVersionRequest.setDataverseMinVersion("6.0");
            
 
                 ResponseEntity<ExternalToolVersionDTO> postVersionResponse = restTemplate.postForEntity(
@@ -196,8 +197,8 @@ public class ExternalToolsTest {
                                 ExternalToolVersionDTO[].class);
                 assertEquals(getVersionsResponse.getStatusCode(), HttpStatus.OK);
                 assertEquals(assertPresent(getVersionsResponse).length, 2);
-                assertEquals(assertPresent(getVersionsResponse)[1].getReleaseNote(), UPDATED);
-                assertEquals(assertPresent(getVersionsResponse)[1].getVersion(), UPDATED);
+                assertEquals(assertPresent(getVersionsResponse)[1].getVersionName(), UPDATED);
+                assertEquals(assertPresent(getVersionsResponse)[1].getVersionNote(), UPDATED);
                 assertEquals(assertPresent(getVersionsResponse)[1].getDataverseMinVersion(), UPDATED);
 
                 // Test get manifest

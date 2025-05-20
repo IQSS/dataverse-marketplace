@@ -64,9 +64,9 @@ public class ExternalToolService {
         externalToolRepo.save(newTool);
 
         AddVersionRequest addVersionRequest = new AddVersionRequest();
-        addVersionRequest.setVersion(addToolRequest.getVersion());
-        addVersionRequest.setReleaseNote(addToolRequest.getReleaseNote());
-        addVersionRequest.setDvMinVersion(addToolRequest.getDvMinVersion());
+        addVersionRequest.setVersionName(addToolRequest.getVersionName());
+        addVersionRequest.setVersionNote(addToolRequest.getVersionNote());
+        addVersionRequest.setDataverseMinVersion(addToolRequest.getDataverseMinVersion());
         addVersionRequest.setManifest(addToolRequest.getManifest());
         
         List<ExternalToolVersion> versions = new ArrayList<ExternalToolVersion>();

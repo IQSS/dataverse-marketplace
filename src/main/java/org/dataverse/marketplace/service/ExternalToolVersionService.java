@@ -41,9 +41,9 @@ public class ExternalToolVersionService {
         ExternalToolVersion newVersion = new ExternalToolVersion();
         newVersion.setExternalTool(externalTool);
         
-        newVersion.setVersion(externalToolVersion.getVersion());
-        newVersion.setReleaseNote(externalToolVersion.getReleaseNote());
-        newVersion.setDataverseMinVersion(externalToolVersion.getDvMinVersion());   
+        newVersion.setVersionName(externalToolVersion.getVersionName());
+        newVersion.setVersionNote(externalToolVersion.getVersionNote());
+        newVersion.setDataverseMinVersion(externalToolVersion.getDataverseMinVersion());   
         
         if (externalToolVersion.getManifest() != null) {
             externalToolVersion.getManifest().convertDTOtoEntity(newVersion);

@@ -1,7 +1,7 @@
 export interface Version {
   id: number;
-  version: string;
-  releaseNote: string;
+  versionName: string;
+  versionNote: string;
   dataverseMinVersion: string;
   manifest: Manifest;
   manifestSet: Manifest[];

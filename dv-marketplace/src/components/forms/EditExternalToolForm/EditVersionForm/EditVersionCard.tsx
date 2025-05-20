@@ -25,7 +25,7 @@ const EditVersionCard = ({ version, tool }: EditVersionCardProps) => {
     } = useEditVersionCard({ tool });
 
 
-    const versionData = { version: version.version, releaseNote: version.releaseNote, dvMinVersion: version.dataverseMinVersion };
+    const versionData = { versionName: version.versionName, versionNote: version.versionNote, dataverseMinVersion: version.dataverseMinVersion };
     const [formData, setFormData] = React.useState(versionData);
 
     const handleVersionChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -36,12 +36,12 @@ const EditVersionCard = ({ version, tool }: EditVersionCardProps) => {
     return (
         <MarketplaceCard
             key={version.id}
-            header={`Version: ${version.version}`}
+            header={`Version Name: ${version.versionName}`}
         >
             {!(showVersionEdit === version.id) && (
                 <div>
-                    <p>Release Note : {version.releaseNote}</p>
-                    <p>DV Min Version : {version.dataverseMinVersion}</p>
+                    <p>Version Note : {version.versionNote}</p>
+                    <p>Dataverse Min Version : {version.dataverseMinVersion}</p>
                     <p>Manifest Data:{" "}
                         <button
                             type="button"
@@ -79,25 +79,25 @@ const EditVersionCard = ({ version, tool }: EditVersionCardProps) => {
             <Alert variant="light" show={showVersionEdit === version.id}>
                 <Form onSubmit={(e) => handleVersionEdit(e, version.id)}>
                     <FormInputTextField
-                        label="Version"
-                        name="version"
-                        id={`version-${version.id}`}
-                        value={formData.version}
+                        label="Version Name"
+                        name="versionName"
+                        id={`versionName-${version.id}`}
+                        value={formData.versionName}
                         onChange={handleVersionChange}
                     />
                     <FormInputTextArea
-                        label="Release Note"
-                        name="releaseNote"
-                        id={`releaseNote-${version.id}`}
-                        value={formData.releaseNote}
+                        label="Version Note"
+                        name="versionNote"
+                        id={`versionNote-${version.id}`}
+                        value={formData.versionNote}
                         onChange={handleVersionChange}
 
                     />
                     <FormInputTextField
-                        label="DV Min Version"
-                        name="dvMinVersion"
-                        id={`dvMinVersion-${version.id}`}
-                        value={formData.dvMinVersion}
+                        label="Dataverse Min Version"
+                        name="dataverseMinVersion"
+                        id={`dataverseMinVersion-${version.id}`}
+                        value={formData.dataverseMinVersion}
                         onChange={handleVersionChange}
 
                     />

@@ -28,16 +28,16 @@ const AddExtToolForm = () => {
                     <textarea className="form-control" id="toolDescription" name="description" />
                 </div>
                 <div className="mb-3">
-                    <label htmlFor="version" className="form-label">Version</label>
-                    <input type="text" className="form-control" id="version" name="version" />
+                    <label htmlFor="versionName" className="form-label">Version Name</label>
+                    <input type="text" className="form-control" id="versionName" name="versionName" />
                 </div>
                 <div className="mb-3">
-                    <label htmlFor="releaseNote" className="form-label">Release Note</label>
-                    <textarea className="form-control" id="releaseNote" name="releaseNote" />
+                    <label htmlFor="versioneNote" className="form-label">Version Note</label>
+                    <textarea className="form-control" id="versioneNote" name="versioneNote" />
                 </div>
                 <div className="mb-3">
                     <label htmlFor="dataverseMinVersion" className="form-label">Dataverse Min Version</label>
-                    <input type="text" className="form-control" id="dataverseMinVersion" name="dvMinVersion" />
+                    <input type="text" className="form-control" id="dataverseMinVersion" name="dataverseMinVersion" />
                 </div>
                 <div className="mb-3">
                     <label htmlFor="images" className="form-label">Images</label>

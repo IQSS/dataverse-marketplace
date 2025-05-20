@@ -47,9 +47,9 @@ public class ExternalToolVersionController {
             @Valid @RequestBody UpdateVersionRequest updateToolVersionRequest) {
 
         ExternalToolVersion version = externalToolVersionService.getToolVersionById(versionId);
-        version.setDataverseMinVersion(updateToolVersionRequest.getDvMinVersion());
-        version.setReleaseNote(updateToolVersionRequest.getReleaseNote());
-        version.setVersion(updateToolVersionRequest.getVersion());
+        version.setDataverseMinVersion(updateToolVersionRequest.getDataverseMinVersion());
+        version.setVersionNote(updateToolVersionRequest.getVersionNote());
+        version.setVersionName(updateToolVersionRequest.getVersionName());
 
         externalToolVersionService.updateToolVersion(version);
 

@@ -30,9 +30,9 @@ export default function useEditVersionCard({ tool }: { tool: ExternalTool | unde
         if (data) {
             const version = tool?.versions.find((version) => version.id === versionId);
             if (version) {
-                version.releaseNote = formData.get("releaseNote") as string;
-                version.dataverseMinVersion = formData.get("dvMinVersion") as string;
-                version.version = formData.get("version") as string;
+                version.versionName = formData.get("versionName") as string;                
+                version.versionNote = formData.get("versionNote") as string;
+                version.dataverseMinVersion = formData.get("dataverseMinVersion") as string;
             }
         }
         setShowVersionEdit(0);

@@ -37,7 +37,6 @@ public @interface ExternalToolVersionsAPIDocs {
     })
     @Operation(summary = "Updates the version of the specified external tool.", description = "This endpoint updates the version of the specified external tool by id.")
     @RequestBody(description = "The external tool version update request", required = true, content = @Content(mediaType = "application/json", schema = @Schema(implementation = UpdateVersionRequest.class), examples = @ExampleObject(ExternalToolVersionSamples.EXTERNAL_TOOL_VERSION_REQUEST_SAMPLE)))
-    @Parameter(name = "toolId", description = "The id of the external tool", required = true, in = ParameterIn.PATH, schema = @Schema(type = "integer"))
     @Parameter(name = "versionId", description = "The id of the version of the external tool to be updated", required = true, in = ParameterIn.PATH, schema = @Schema(type = "integer"))
     public @interface UpdateVersionByIdDoc {
     }
@@ -67,7 +66,6 @@ public @interface ExternalToolVersionsAPIDocs {
             @ApiResponse(responseCode = "500", description = "Internal Server Error during version by id retrieval", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ServerMessageResponse.class), examples = @ExampleObject(GenericBusinessSamples.SERVER_MESSAGE_RESPONSE)))
     })
     @Operation(summary = "Retrieves the version of the specified external tool by id.", description = "This endpoint retrieves the version of the specified external tool by id.")
-    @Parameter(name = "toolId", description = "The id of the external tool that contains the version to be retrieved", required = true, in = ParameterIn.PATH, schema = @Schema(type = "integer"))
     @Parameter(name = "versionId", description = "The id of the version of the external tool to be retrieved", required = true, in = ParameterIn.PATH, schema = @Schema(type = "integer"))
     public @interface GetExternalToolVersionByIdDoc {
     }
@@ -82,7 +80,6 @@ public @interface ExternalToolVersionsAPIDocs {
             @ApiResponse(responseCode = "500", description = "Internal Server Error during version deletion", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ServerMessageResponse.class), examples = @ExampleObject(GenericBusinessSamples.SERVER_MESSAGE_RESPONSE)))
     })
     @Operation(summary = "Deletes the specified version of the external tool.", description = "This endpoint deletes the specified version of the external tool by id. It will fail if you try to delete the only version of a tool.")
-    @Parameter(name = "toolId", description = "The id of the external tool that contains the version to be deleted", required = true, in = ParameterIn.PATH, schema = @Schema(type = "integer"))
     @Parameter(name = "versionId", description = "The id of the version of the external tool to be deleted", required = true, in = ParameterIn.PATH, schema = @Schema(type = "integer"))
     public @interface DeleteExternalToolVersionByIdDoc {
     }
@@ -112,9 +109,7 @@ public @interface ExternalToolVersionsAPIDocs {
     @Operation(summary = "Updates the manifest.", description = """
             This endpoint will update the manifest metadata from the specified version of the external tool.
             """)
-    @Parameter(name = "toolId", description = "The id of the external tool that contains the version to delete a manifest", required = true, in = ParameterIn.PATH, schema = @Schema(type = "integer"))
     @Parameter(name = "versionId", description = "The id of the version of the external tool that contains the manifest to be deleted", required = true, in = ParameterIn.PATH, schema = @Schema(type = "integer"))
-    @Parameter(name = "manifestId", description = "The id of the manifest to be deleted", required = true, in = ParameterIn.PATH, schema = @Schema(type = "integer"))
     @RequestBody(description = "The external tool manifest DTO", required = true, content = @Content(mediaType = "application/json", schema = @Schema(implementation = ExternalToolManifestDTO.class), examples = @ExampleObject(ExternalToolVersionSamples.EXTERNAL_TOOL_VERSION_MANIFEST_REQUEST_SAMPLE)))
     public @interface UpdateVersionManifestDoc {
     }
@@ -129,7 +124,6 @@ public @interface ExternalToolVersionsAPIDocs {
             @ApiResponse(responseCode = "500", description = "Internal Server Error when retrieving the manifest list", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ServerMessageResponse.class), examples = @ExampleObject(GenericBusinessSamples.SERVER_MESSAGE_RESPONSE)))
     })
     @Operation(summary = "Retrieves the manifest list.", description = "This endpoint will retrieve the manifest list from the specified version of the external tool.")
-    @Parameter(name = "toolId", description = "The id of the external tool that contains the version to get the manifest list", required = true, in = ParameterIn.PATH, schema = @Schema(type = "integer"))
     @Parameter(name = "versionId", description = "The id of the version of the external tool to retrieve the manifest list", required = true, in = ParameterIn.PATH, schema = @Schema(type = "integer"))
     public @interface GetVersionManifestsDoc {
     }

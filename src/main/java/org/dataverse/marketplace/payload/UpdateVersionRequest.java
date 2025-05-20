@@ -6,53 +6,53 @@ import jakarta.validation.constraints.NotEmpty;
 @Schema(description = "A representation of the update tool version request")
 public class UpdateVersionRequest {
 
-    @Schema(description = "A brief not about the current release of the external tool.", 
-        example = "This release includes a new feature that allows you to ask questions to an LLM.")
-    String releaseNote;
-    
-    @Schema(description = "Version of the external tool", 
+    @Schema(description = "Version descriptor of the new version of the existing external tool", 
         example = "\"1.0\"")
-    String version;
+    String versionName;
 
+    @Schema(description = "A brief note about this version of the external tool.", 
+        example = "This version includes a new feature that allows you to ask questions to an LLM.")
+    String versionNote;
+    
     @Schema(description = "Minimum version of Dataverse that the external tool is compatible with", 
         example = "\"6.0\"")
     @NotEmpty
-    String dvMinVersion;
+    String dataverseMinVersion;
 
     /* Getters and Setters */
 
-
-    public String getReleaseNote() {
-        return this.releaseNote;
+    public String getVersionName() {
+        return this.versionName;
     }
 
-    public void setReleaseNote(String releaseNote) {
-        this.releaseNote = releaseNote;
+    public void setVersionName(String versionName) {
+        this.versionName = versionName;
     }
 
-    public String getVersion() {
-        return this.version;
+    public String getVersionNote() {
+        return this.versionNote;
     }
 
-    public void setVersion(String version) {
-        this.version = version;
+    public void setVersionNote(String versionNote) {
+        this.versionNote = versionNote;
     }
 
-    public String getDvMinVersion() {
-        return this.dvMinVersion;
+    public String getDataverseMinVersion() {
+        return this.dataverseMinVersion;
     }
 
-    public void setDvMinVersion(String dvMinVersion) {
-        this.dvMinVersion = dvMinVersion;
+    public void setDataverseMinVersion(String dataverseMinVersion) {
+        this.dataverseMinVersion = dataverseMinVersion;
     }
+
 
 
     @Override
     public String toString() {
         return "{" +
-            " releaseNote='" + getReleaseNote() + "'" +
-            ", version='" + getVersion() + "'" +
-            ", dvMinVersion='" + getDvMinVersion() + "'" +
+            "versionName='" + getVersionName() + "'" +
+            ", versionNote='" + getVersionNote() + "'" +
+            ", dataverseMinVersion='" + getDataverseMinVersion() + "'" +
             "}";
     }
 

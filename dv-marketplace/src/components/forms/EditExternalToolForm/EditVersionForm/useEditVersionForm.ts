@@ -15,7 +15,7 @@ export default function useEditVersionForm({ tool }: { tool: ExternalTool | unde
     const [manifestForm, setManifestForm] = useState<Manifest | null>(null);
 
     const [addVersionFormIsOpen, setAddVersionFormIsOpen] = useState(false);
-    const emptyVersion = { version: '', releaseNote: '', dvMinVersion: '' };
+    const emptyVersion = { versionName: '', versionNote: '', dataverseMinVersion: '' };
     const [versionData, setVersionData] = useState(emptyVersion);
 
     const handleVersionSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -24,9 +24,9 @@ export default function useEditVersionForm({ tool }: { tool: ExternalTool | unde
         const form = event.currentTarget;
 
         const versionData = {
-            version: form.version.value,
-            releaseNote: form.releaseNote.value,
-            dvMinVersion: form.dvMinVersion.value,
+            versionName: form.versionName.value,
+            versionNote: form.versionNote.value,
+            dataverseMinVersion: form.dataverseMinVersion.value,
             manifest: manifestForm
         };
 
