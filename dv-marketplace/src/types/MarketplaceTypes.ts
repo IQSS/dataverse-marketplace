@@ -50,7 +50,7 @@ export interface ExternalTool {
   description: string;
   versions: Version[];
   images: Image[];
-  owner: User;
+  ownerId: number;
 }
 
 export type User = {

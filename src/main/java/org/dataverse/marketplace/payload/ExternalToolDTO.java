@@ -33,12 +33,17 @@ public class ExternalToolDTO implements Serializable {
             example = "[1, 2, 3]")
     private List<MarketplaceItemImageDTO> images;
 
+    @Schema(description = "The id of the owner of the external tool", 
+            implementation = Long.class,
+            example = "1")    
+    private Long ownerId;
 
     public ExternalToolDTO() {
     }
 
     public ExternalToolDTO(ExternalTool externalTool) {
         id = externalTool.getId();
+        ownerId = externalTool.getOwner().getId();
         name = externalTool.getName();
         description = externalTool.getDescription();
 
@@ -98,5 +103,16 @@ public class ExternalToolDTO implements Serializable {
     public void setImages(List<MarketplaceItemImageDTO> images) {
         this.images = images;
     }
-            
+
+    public Long getOwnerId() {
+        return ownerId;
+    }
+
+    public void setOwnerId(Long ownerId) {
+        this.ownerId = ownerId;
+    }
+
+
+    
+    
 }
