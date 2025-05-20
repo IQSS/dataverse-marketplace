@@ -4,7 +4,9 @@ import java.io.Serializable;
 import org.dataverse.marketplace.model.MarketplaceItemImage;
 import io.swagger.v3.oas.annotations.media.Schema;
 
-@Schema(description = "Marketplace item image")
+@Schema(
+    name = "MarketplaceItemImage",
+    description = "Marketplace item image")
 public class MarketplaceItemImageDTO implements Serializable {
 
     @Schema(description = "The image ID", example = "1")
