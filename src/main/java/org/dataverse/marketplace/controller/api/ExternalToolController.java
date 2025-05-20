@@ -87,7 +87,7 @@ public class ExternalToolController {
 
     // with images (undocumented until we solve swagger issue TODO)
     @PreAuthorize("isAuthenticated()")
-    @PostMapping(path = "/withimages", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping(path = "/with-images", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> addNewToolWithImages(
             @RequestPart("toolData") AddToolRequest addToolRequest,
             @RequestPart(name = "itemImages", required = false) MultipartFile[] itemImages) {

@@ -40,7 +40,7 @@ export default function useAddExternalTool() {
             formData.append("itemImages", imageFiles[i]);
         }        
 
-        await axios.post(`${BASE_URL}/api/tools/withimages`, formData, {
+        await axios.post(`${BASE_URL}/api/tools/with-images`, formData, {
             headers: {
                 'Authorization': `Bearer ${jwtToken}`
             }
