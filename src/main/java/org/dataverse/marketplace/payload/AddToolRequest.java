@@ -113,25 +113,9 @@ public class AddToolRequest implements Serializable{
             ", releaseNote='" + getReleaseNote() + "'" +
             ", version='" + getVersion() + "'" +
             ", dvMinVersion='" + getDvMinVersion() + "'" +
-           // ", jsonData='" + getJsonData() + "'" +
+            ", manifest='" + getManifest() + "'" +
             ", itemImages='" + getItemImages() + "'" +
             "}";
     }
 
-    public static class MultipartWrapper {
-        @Schema(
-            description = "The JSON payload for the tool as a stringified JSON",
-            type = "string",
-            format = "binary",
-            required = true
-        )
-        public String toolData;
-
-        @Schema(
-            description = "Optional image files for the tool",
-            type = "array",
-            format = "binary"
-        )
-        public MultipartFile[] itemImages;
-    }
 }    
