@@ -13,6 +13,8 @@ import java.nio.file.Files;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.dataverse.marketplace.payload.AddToolRequest;
+import org.dataverse.marketplace.payload.AddVersionRequest;
 import org.dataverse.marketplace.payload.ExternalToolDTO;
 import org.dataverse.marketplace.payload.ExternalToolManifestDTO;
 import org.dataverse.marketplace.payload.ExternalToolVersionDTO;
@@ -45,7 +47,7 @@ public class ExternalToolsTest {
         private RestTemplate restTemplate = new RestTemplate();
 
         @Test
-        public void TestExternalTools() throws InterruptedException {   
+        public void TestExternalTools() throws InterruptedException {
 
                 String serverUrl = "http://localhost:" + port + "/api/";
                 String toolsUrl = serverUrl + "/tools/";
@@ -66,27 +68,22 @@ public class ExternalToolsTest {
                                 ExternalToolDTO[].class);
                 assertEquals(getToolsResponse.getStatusCode(), HttpStatus.OK);
 
-                File image = new File("src/test/resources/dv_logo.png");
-                assertEquals(image.exists(), true);
-                MediaType contentTypeObj = adminHeaders.getContentType();
-                String contentType = contentTypeObj != null ? contentTypeObj.toString() : "no val";
-                adminHeaders.setContentType(MediaType.MULTIPART_FORM_DATA);
-                MultiValueMap<String, Object> postNewToolBody = new LinkedMultiValueMap<>();
-                postNewToolBody.add("name", "AskTheData");
-                postNewToolBody.add("description",contentType);
-                postNewToolBody.add("dvMinVersion", "6.0");
-                postNewToolBody.add("releaseNote", "This release includes a new feature ...");
-                postNewToolBody.add("version", "1.0");
-                postNewToolBody.add("itemImages", new FileSystemResource(image));
-
+                // Test add without images
+                adminHeaders.setContentType(MediaType.APPLICATION_JSON);
+                AddToolRequest addToolRequest = new AddToolRequest();
+                addToolRequest.setName("AskTheData");
+                addToolRequest.setDescription("Ask the Data from tests");
+                addToolRequest.setDvMinVersion("6.0");
+                addToolRequest.setReleaseNote("This release includes a new feature ...");
+                addToolRequest.setVersion("1.0");
 
                 ResponseEntity<ExternalToolDTO> postToolResponse = restTemplate.postForEntity(serverUrl + "/tools",
-                                new HttpEntity<>(postNewToolBody, adminHeaders), ExternalToolDTO.class);
+                                new HttpEntity<>(addToolRequest, adminHeaders), ExternalToolDTO.class);
                 assertEquals(postToolResponse.getStatusCode(), HttpStatus.OK);
 
-
+                // test permissions (with no user)
                 assertThrows(HttpClientErrorException.Unauthorized.class, () -> {
-                        restTemplate.postForEntity(serverUrl + "/tools", new HttpEntity<>(postNewToolBody, userHeaders),
+                        restTemplate.postForEntity(serverUrl + "/tools", new HttpEntity<>(addToolRequest, userHeaders),
                                         ServerMessageResponse.class);
                 });
 
@@ -97,20 +94,11 @@ public class ExternalToolsTest {
                                 ExternalToolDTO.class);
                 assertEquals(getToolsByIdResponse.getStatusCode(), HttpStatus.OK);
 
-                // Get Images test
-                String imagesUrl = newToolPostUrl + "/images";
-                ResponseEntity<MarketplaceItemImageDTO[]> getImagesResponse = restTemplate.getForEntity(imagesUrl,
-                                MarketplaceItemImageDTO[].class);
-                assertEquals(getImagesResponse.getStatusCode(), HttpStatus.OK);
-                assertEquals(assertPresent(getImagesResponse).length, 1);
-
-                // Test get stored resource
-                ResponseEntity<byte[]> getStoredResourceResponse = restTemplate.getForEntity(
-                                serverUrl + "/stored-resource/" + assertPresent(getImagesResponse)[0].getStoredResourceId(),
-                                byte[].class);
-                assertEquals(getStoredResourceResponse.getStatusCode(), HttpStatus.OK);
 
                 // Test images post
+                String imagesUrl = newToolPostUrl + "/images";
+                File image = new File("src/test/resources/dv_logo.png");
+                assertEquals(image.exists(), true);                
                 adminHeaders.setContentType(MediaType.MULTIPART_FORM_DATA);
                 MultiValueMap<String, Object> imagePostBody = new LinkedMultiValueMap<>();
                 imagePostBody.add("images", new FileSystemResource(image));
@@ -120,10 +108,19 @@ public class ExternalToolsTest {
                                 MarketplaceItemImageDTO[].class);
                 assertEquals(postImagesResponse.getStatusCode(), HttpStatus.OK);
 
-                getImagesResponse = restTemplate.getForEntity(imagesUrl,
+
+                // Get Images test
+                ResponseEntity<MarketplaceItemImageDTO[]> getImagesResponse = restTemplate.getForEntity(imagesUrl,
                                 MarketplaceItemImageDTO[].class);
                 assertEquals(getImagesResponse.getStatusCode(), HttpStatus.OK);
-                assertEquals(assertPresent(getImagesResponse).length, 2);
+                assertEquals(assertPresent(getImagesResponse).length, 1);
+
+                // Test get stored resource
+                ResponseEntity<byte[]> getStoredResourceResponse = restTemplate.getForEntity(
+                                serverUrl + "/stored-resource/"
+                                                + assertPresent(getImagesResponse)[0].getStoredResourceId(),
+                                byte[].class);
+                assertEquals(getStoredResourceResponse.getStatusCode(), HttpStatus.OK);
 
                 // Test delete image
                 adminHeaders.setContentType(MediaType.APPLICATION_JSON);
@@ -138,7 +135,7 @@ public class ExternalToolsTest {
                                 imagesUrl,
                                 MarketplaceItemImageDTO[].class);
                 assertEquals(getImagesResponse.getStatusCode(), HttpStatus.OK);
-                assertEquals(assertPresent(getImagesResponse).length, 1);
+                assertEquals(assertPresent(getImagesResponse).length, 0);
 
                 // Test get versions
                 ResponseEntity<ExternalToolVersionDTO[]> getVersionsResponse = restTemplate.getForEntity(
@@ -154,19 +151,20 @@ public class ExternalToolsTest {
                                 + assertPresent(getVersionsResponse)[0].getId(),
                                 ExternalToolVersionDTO.class);
                 assertEquals(getVersionByIdResponse.getStatusCode(), HttpStatus.OK);
-                assertEquals(assertPresent(getVersionsResponse)[0].toString(), assertPresent(getVersionByIdResponse).toString());
+                assertEquals(assertPresent(getVersionsResponse)[0].toString(),
+                                assertPresent(getVersionByIdResponse).toString());
 
                 // Test post version
-                adminHeaders.setContentType(MediaType.MULTIPART_FORM_DATA);
-                MultiValueMap<String, Object> postVersionBody = new LinkedMultiValueMap<>();
-                postVersionBody.add("version", "1.1");
-                postVersionBody.add("releaseNote",
-                                "This release includes ...");
-                postVersionBody.add("dvMinVersion", "6.0");
+                adminHeaders.setContentType(MediaType.APPLICATION_JSON);
+                AddVersionRequest addVersionRequest = new AddVersionRequest();
+                addVersionRequest.setVersion("1.1");     
+                addVersionRequest.setReleaseNote("This release updates ...");
+                addVersionRequest.setDvMinVersion("6.0");
+           
 
                 ResponseEntity<ExternalToolVersionDTO> postVersionResponse = restTemplate.postForEntity(
                                 newToolPostUrl + "/versions",
-                                new HttpEntity<>(postVersionBody, adminHeaders),
+                                new HttpEntity<>(addVersionRequest, adminHeaders),
                                 ExternalToolVersionDTO.class);
                 assertEquals(postVersionResponse.getStatusCode(), HttpStatus.OK);
 
@@ -203,13 +201,12 @@ public class ExternalToolsTest {
                 assertEquals(assertPresent(getVersionsResponse)[1].getDataverseMinVersion(), UPDATED);
 
                 // Test get manifest
-                ResponseEntity<ExternalToolManifestDTO[]>  getManifestResponse = restTemplate.getForEntity(
+                ResponseEntity<ExternalToolManifestDTO[]> getManifestResponse = restTemplate.getForEntity(
                                 versionsUrl + assertPresent(getVersionsResponse)[0].getId() + "/manifests",
                                 ExternalToolManifestDTO[].class);
 
                 assertEquals(getManifestResponse.getStatusCode(), HttpStatus.OK);
                 assertEquals(assertPresent(getManifestResponse).length, 0);
-
 
                 // Test post manifest
                 File manifest = new File("src/test/resources/askthedata.json");
@@ -231,7 +228,6 @@ public class ExternalToolsTest {
 
                 assertEquals(putVersionResponse.getStatusCode(), HttpStatus.OK);
 
-                
                 getManifestResponse = restTemplate.getForEntity(
                                 versionsUrl + assertPresent(getVersionsResponse)[0].getId() + "/manifests",
                                 ExternalToolManifestDTO[].class);
@@ -239,7 +235,6 @@ public class ExternalToolsTest {
                 assertEquals(getManifestResponse.getStatusCode(), HttpStatus.OK);
                 assertEquals(assertPresent(getManifestResponse).length, 1);
 
-                
                 // Test delete version
                 adminHeaders.setContentType(MediaType.APPLICATION_JSON);
                 ResponseEntity<ServerMessageResponse> deleteVersionResponse = restTemplate.exchange(
