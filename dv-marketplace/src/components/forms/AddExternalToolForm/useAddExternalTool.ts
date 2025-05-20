@@ -17,30 +17,6 @@ export default function useAddExternalTool() {
     const [showManifestEdit, setShowManifestEdit] = useState(0);
     const [manifestForm, setManifestForm] = useState<Manifest | null>(null);
 
-    const handleManifestEdit = async (event: React.FormEvent<HTMLFormElement>) => {
-        event.preventDefault();
-        /*
-        const formData = new FormData(event.currentTarget);
-
-        const values = formData.getAll("types");
-        if (values.length === 1) {
-            formData.append("types", values[0]); // append duplicate to ensure array
-        }
-
-        const data = await putBodyRequest(`/api/versions/${versionId}/manifest`, formData);
-        if (data) {
-            const version = tool?.versions.find((version) => version.id === versionId);
-            if (version) {
-                // assign new values from data
-                Object.assign(version, data);
-
-            }
-        }*/
-
-        setShowManifestEdit(0);
-    }
-
-
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
 
