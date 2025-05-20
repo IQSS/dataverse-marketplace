@@ -64,7 +64,7 @@ public class AddVersionRequest implements Serializable{
             " releaseNote='" + getReleaseNote() + "'" +
             ", version='" + getVersion() + "'" +
             ", dvMinVersion='" + getDvMinVersion() + "'" +
-           // ", jsonData='" + getJsonData() + "'" +
+            ", manifest='" + getManifest() + "'" +
             "}";
     }
 
