@@ -1,14 +1,13 @@
 import React from 'react';
-import useEditVersionForm from "./useEditVersionForm";
 import { Alert, Button, Form } from "react-bootstrap";
 import type { ExternalTool } from "../../../../types/MarketplaceTypes";
-import {
-	FormInputTextArea,
-	FormInputTextField,
-} from "../../../UI/FormInputFields";
+import { FormInputTextArea, FormInputTextField } from "../../../UI/FormInputFields";
 import { InnerCardDeck } from "../../../UI/CardDeck";
 import SectionHeader from "../../../UI/SectionHeader";
+import useEditVersionForm from "./useEditVersionForm";
 import EditVersionCard from "./EditVersionCard";
+import EditManifestForm from './EditManifestForm';
+
 
 const EditVersionForm = ({ tool }: { tool: ExternalTool | undefined }) => {
 	const {
@@ -16,8 +15,12 @@ const EditVersionForm = ({ tool }: { tool: ExternalTool | undefined }) => {
 		addVersionFormIsOpen,
 		setAddVersionFormIsOpen,
 		emptyVersion,
-        versionData,
-        setVersionData		
+		versionData,
+		setVersionData,
+        showManifestEdit,
+        setShowManifestEdit,
+        manifestForm,
+        setManifestForm  		
 	} = useEditVersionForm({ tool });
 
 	const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -34,11 +37,33 @@ const EditVersionForm = ({ tool }: { tool: ExternalTool | undefined }) => {
 					<FormInputTextField label="Version" name="version" id="version" value={versionData.version} onChange={handleChange} />
 					<FormInputTextArea label="Release Note" name="releaseNote" id="releaseNote" value={versionData.releaseNote} onChange={handleChange} />
 					<FormInputTextField label="DV Min Version" name="dvMinVersion" id="dvMinVersion" value={versionData.dvMinVersion} onChange={handleChange} />
+
+					<p>Manifest Data:{" "}
+						<button
+							type="button"
+							className="btn bi-pen px-0"
+							onClick={() => {
+								setShowManifestEdit(1);
+							}}
+						/>
+
+						<EditManifestForm
+							show={showManifestEdit === 1}
+							initialManifest={manifestForm ?? undefined}
+							onSave={(newManifest) => {
+								setManifestForm(newManifest);
+								setShowManifestEdit(0);
+							}}
+							onCancel={() => setShowManifestEdit(0)}
+						/>
+					</p>
+
 					<Button variant="primary" type="submit">
 						Save
 					</Button>
 					<Button variant="outline-secondary" className="ms-2"
 						onClick={() => {
+							setManifestForm(null);
 							setVersionData(emptyVersion);
 							setAddVersionFormIsOpen(false);
 						}}>
