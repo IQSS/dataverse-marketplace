@@ -51,7 +51,7 @@ public @interface ExternalToolsAPIDocs {
             @ApiResponse(responseCode = "500", description = "Internal Server Error when adding a new external tool", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ServerMessageResponse.class), examples = @ExampleObject(GenericBusinessSamples.SERVER_MESSAGE_RESPONSE)))
     })
     @Operation(summary = "Adds a new external tool", description = "This endpoint will add a new external tool to the marketplace.")
-    @RequestBody(description = "The external tool creation request", required = true, content = @Content(mediaType = "multipart/form-data", schema = @Schema(implementation = AddToolRequest.class), examples = @ExampleObject(ExternalToolSamples.EXTERNAL_TOOL_MULTIPART_FORM_SAMPLE)))
+    @RequestBody(description = "The external tool creation request", required = true, content = @Content(mediaType = "application/json", schema = @Schema(implementation = AddToolRequest.class), examples = @ExampleObject(ExternalToolSamples.EXTERNAL_TOOL_MULTIPART_FORM_SAMPLE)))
     public @interface AddExternalToolsRequestDoc {
     }
 

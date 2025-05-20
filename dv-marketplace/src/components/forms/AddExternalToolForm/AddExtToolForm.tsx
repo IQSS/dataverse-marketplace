@@ -15,7 +15,7 @@ const AddExtToolForm = () => {
             <form onSubmit={handleSubmit} encType="multipart/form-data">
                 <div className="mb-3">
                     <label htmlFor="toolName" className="form-label">Tool Name</label>
-                    <input type="text" className="form-control" id="toolName" name="name" />
+                    <input type="text" className="form-control" id="toolName" name="toolName" />
                 </div>
                 <div className="mb-3">
                     <label htmlFor="toolDescription" className="form-label">Description</label>

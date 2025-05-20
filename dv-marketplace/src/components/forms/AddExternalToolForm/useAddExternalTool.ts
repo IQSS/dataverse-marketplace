@@ -14,10 +14,28 @@ export default function useAddExternalTool() {
 
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-        const formData = new FormData(event.currentTarget);
 
-       
-        await axios.post(`${BASE_URL}/api/tools`, formData, {
+        const form = event.currentTarget;
+        const formData = new FormData();
+
+
+
+        const toolData = {
+            name: form.toolName.value,
+            description: form.description.value,
+            version: form.version.value,
+            releaseNote: form.releaseNote.value,
+            dvMinVersion: form.dvMinVersion.value,
+        };
+        formData.append("toolData", new Blob([JSON.stringify(toolData)], { type: "application/json" }));
+
+        // Append image files
+        const imageFiles = form.itemImages.files;
+        for (let i = 0; i < imageFiles.length; i++) {
+            formData.append("itemImages", imageFiles[i]);
+        }        
+
+        await axios.post(`${BASE_URL}/api/tools/withimages`, formData, {
             headers: {
                 'Authorization': `Bearer ${jwtToken}`
             }

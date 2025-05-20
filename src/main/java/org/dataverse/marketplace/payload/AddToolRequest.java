@@ -34,16 +34,10 @@ public class AddToolRequest implements Serializable{
         example = "\"6.0\"")
     @NotEmpty
     private String dvMinVersion;
-/* 
-    @Schema(description = "Manifest files for the default versionof the new external tool", 
-            type = "array",
-            contentMediaType = "multipart/form-data",
-            implementation = MultipartFile[].class,
-            nullable = false,
-            example = "[\"file.json\"]")
-    @NotEmpty
-    private List<MultipartFile> jsonData;
-*/
+
+    @Schema(description = "Manifest metadata for this version") 
+    private ExternalToolManifestDTO manifest;
+
     @Schema(description = "Image files for the new external tool", 
             type = "array",
             contentMediaType = "multipart/form-data",
@@ -94,15 +88,14 @@ public class AddToolRequest implements Serializable{
     public void setDvMinVersion(String dvMinVersion) {
         this.dvMinVersion = dvMinVersion;
     }
-/* 
-    public List<MultipartFile> getJsonData() {
-        return this.jsonData;
+
+    public ExternalToolManifestDTO getManifest() {
+        return this.manifest;
     }
- 
-    public void setJsonData(List<MultipartFile> jsonData) {
-        this.jsonData = jsonData;
-    }
-*/
+    public void setManifest(ExternalToolManifestDTO manifest) {
+        this.manifest = manifest;
+    }      
+
     public List<MultipartFile> getItemImages() {
         return this.itemImages;
     }
@@ -125,5 +118,20 @@ public class AddToolRequest implements Serializable{
             "}";
     }
 
+    public static class MultipartWrapper {
+        @Schema(
+            description = "The JSON payload for the tool as a stringified JSON",
+            type = "string",
+            format = "binary",
+            required = true
+        )
+        public String toolData;
 
-}
+        @Schema(
+            description = "Optional image files for the tool",
+            type = "array",
+            format = "binary"
+        )
+        public MultipartFile[] itemImages;
+    }
+}    

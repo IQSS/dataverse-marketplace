@@ -4,6 +4,7 @@ import jakarta.validation.Valid;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.dataverse.marketplace.model.*;
@@ -72,17 +73,37 @@ public class ExternalToolController {
     }
 
     /**
-     * Method to add a new external tool
+     * Methods to add a new external tool
      */
-    @PreAuthorize("isAuthenticated()")
-    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    @ExternalToolsAPIDocs.AddExternalToolsRequestDoc
-    public ResponseEntity<?> addNewTool(@Valid AddToolRequest addToolRequest) {
 
+    // with no immage (documented)
+    @PreAuthorize("isAuthenticated()")
+    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
+    @ExternalToolsAPIDocs.AddExternalToolsRequestDoc
+    public ResponseEntity<?> addNewTool(
+            @RequestBody AddToolRequest addToolRequest) {
+        return addTool(addToolRequest);
+    }
+
+    // with images (undocumented until we solve swagger issue TODO)
+    @PreAuthorize("isAuthenticated()")
+    @PostMapping(path = "/withimages", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<?> addNewToolWithImages(
+            @RequestPart("toolData") AddToolRequest addToolRequest,
+            @RequestPart(name = "itemImages", required = false) MultipartFile[] itemImages) {
+        // add the images to the request object
+        if (itemImages != null) {
+            addToolRequest.setItemImages(Arrays.asList(itemImages));
+        }
+        return addTool(addToolRequest);
+    }
+
+    private ResponseEntity<?> addTool(AddToolRequest addToolRequest) {
         try {
             String authenticatedUser = SecurityContextHolder.getContext().getAuthentication().getName();
             // TODO: this should call a service bean, not repo directly
             User user = userRepository.findByUsername(authenticatedUser).orElse(null);
+
             return ResponseEntity.ok(externalToolService.addTool(addToolRequest, user));
         } catch (IOException e) {
             ServerMessageResponse messageResponse = new ServerMessageResponse(HttpStatus.INTERNAL_SERVER_ERROR,
@@ -92,8 +113,9 @@ public class ExternalToolController {
         }
     }
 
-    @PreAuthorize(ApplicationRoles.ADMIN_ROLE 
-      + " or (" + "isAuthenticated()" + " and @externalToolService.getToolById(#toolId).getOwner().getId() == authentication.getPrincipal().getId)")
+    @PreAuthorize(ApplicationRoles.ADMIN_ROLE
+            + " or (" + "isAuthenticated()"
+            + " and @externalToolService.getToolById(#toolId).getOwner().getId() == authentication.getPrincipal().getId)")
     @PutMapping("/{toolId}")
     @ExternalToolsAPIDocs.UpdateExternalToolDoc
     public ResponseEntity<?> updateTool(@PathVariable("toolId") Long toolId,
@@ -149,8 +171,9 @@ public class ExternalToolController {
     /**
      * Method to add images to an external tool.
      */
-    @PreAuthorize(ApplicationRoles.ADMIN_ROLE 
-      + " or (" + "isAuthenticated()" + " and @externalToolService.getToolById(#toolId).getOwner().getId() == authentication.getPrincipal().getId)")
+    @PreAuthorize(ApplicationRoles.ADMIN_ROLE
+            + " or (" + "isAuthenticated()"
+            + " and @externalToolService.getToolById(#toolId).getOwner().getId() == authentication.getPrincipal().getId)")
     @CacheEvict(value = "externalTools", allEntries = true)
     @PostMapping(path = "/{toolId}/images", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @ExternalToolsAPIDocs.AddToolImagesDoc
@@ -187,8 +210,9 @@ public class ExternalToolController {
     /**
      * Method to delete an image from an external tool.
      */
-    @PreAuthorize(ApplicationRoles.ADMIN_ROLE 
-      + " or (" + "isAuthenticated()" + " and @externalToolService.getToolById(#toolId).getOwner().getId() == authentication.getPrincipal().getId)")
+    @PreAuthorize(ApplicationRoles.ADMIN_ROLE
+            + " or (" + "isAuthenticated()"
+            + " and @externalToolService.getToolById(#toolId).getOwner().getId() == authentication.getPrincipal().getId)")
     @DeleteMapping("/{toolId}/images/{imageId}")
     @ExternalToolsAPIDocs.DeleteToolImageDoc
     public ResponseEntity<?> deleteToolImage(
@@ -224,8 +248,9 @@ public class ExternalToolController {
     /**
      * Method to add a new version to an existing external tool
      */
-    @PreAuthorize(ApplicationRoles.ADMIN_ROLE 
-      + " or (" + "isAuthenticated()" + " and @externalToolService.getToolById(#toolId).getOwner().getId() == authentication.getPrincipal().getId)")
+    @PreAuthorize(ApplicationRoles.ADMIN_ROLE
+            + " or (" + "isAuthenticated()"
+            + " and @externalToolService.getToolById(#toolId).getOwner().getId() == authentication.getPrincipal().getId)")
     @CacheEvict(value = "externalTools", allEntries = true)
     @PostMapping(path = "/{toolId}/versions", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ExternalToolVersionsAPIDocs.AddExternalToolVersionDoc
