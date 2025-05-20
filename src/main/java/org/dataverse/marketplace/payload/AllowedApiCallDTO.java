@@ -6,7 +6,9 @@ import org.dataverse.marketplace.model.enums.HttpMethod;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 
-@Schema(description = "Allowed Api Call data transfer object")
+@Schema(
+    name = "AllowedApiCall",
+    description = "Allowed Api Call data")
 public class AllowedApiCallDTO implements Serializable {
 
     String name;

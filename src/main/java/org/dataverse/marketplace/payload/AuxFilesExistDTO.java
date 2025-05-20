@@ -4,7 +4,9 @@ import java.io.Serializable;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 
-@Schema(description = "Aux File Exists data transfer object")
+@Schema(
+    name = "AuxFilesExist",
+    description = "Aux File Exists")
 public class AuxFilesExistDTO implements Serializable {
 
     String formatTag;

@@ -21,7 +21,9 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
-@Schema(description = "External tool manifest data transfer object")
+@Schema(
+    name = "ExternalToolManifest",
+    description = "External tool manifest")
 public class ExternalToolManifestDTO implements Serializable {
 
     // Manifest details
@@ -379,6 +381,9 @@ public class ExternalToolManifestDTO implements Serializable {
     }
 
     // Inner class
+    @Schema(
+        name = "ToolParameter",
+        description = "Parameters of the tool")
     public class ToolParameterDTO implements Serializable {
         private Set<Map<String, String>> queryParameters;
 
@@ -400,6 +405,9 @@ public class ExternalToolManifestDTO implements Serializable {
     }
 
     // Inner class
+    @Schema(
+        name = "Requirements",
+        description = "Requirements of the tool")
     public class RequirementsDTO implements Serializable {
         private Set<AuxFilesExistDTO> auxFilesExist;
 
