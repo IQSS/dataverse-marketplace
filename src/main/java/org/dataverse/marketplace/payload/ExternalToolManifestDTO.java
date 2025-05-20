@@ -258,10 +258,6 @@ public class ExternalToolManifestDTO implements Serializable {
             }
         }
     }
-    @Schema(hidden = true)
-    public boolean isValidManifest() {
-        return !StringUtils.isBlank(toolUrl);
-    }
 
     /* Getters and Setters */
     public String getDisplayName() {
@@ -427,4 +423,8 @@ public class ExternalToolManifestDTO implements Serializable {
         }
 
     }
+
+    public static boolean isValidManifest(ExternalToolManifestDTO manifestDTO) {
+        return !StringUtils.isBlank(manifestDTO.getToolUrl());
+    }    
 }

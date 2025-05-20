@@ -47,7 +47,7 @@ public class ExternalToolVersionDTO implements Serializable {
 
         Set<ExternalToolManifestDTO> manifestDTOs = new HashSet<ExternalToolManifestDTO>();
 
-        if (this.manifest.isValidManifest()) {
+        if (ExternalToolManifestDTO.isValidManifest(this.manifest)) {
 
             if (this.manifest.getContentTypes() != null && !this.manifest.getContentTypes().isEmpty()) {
                 for (String contentType : this.manifest.getContentTypes()) {
