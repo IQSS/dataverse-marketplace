@@ -11,6 +11,18 @@ interface CardDeckProps {
     link?: string | undefined;
 }
 
+export const MarketplaceLinkCard = ({ header, imageId, text, link, children }: CardDeckProps) => {
+  return (
+    <div className="col-12 col-sm-6 col-md-6 col-lg-3 mb-2 px-0">
+      <Link to={link} className="text-decoration-none">
+       <BaseCard header={header} imageId={imageId} text={text} link={link}>
+         {children}
+       </BaseCard>
+      </Link>
+    </div>
+  );
+}
+
 export const MarketplaceCard = ({ header, imageId, text, link, children }: CardDeckProps) => {
 
   return (
@@ -35,28 +47,27 @@ export const RowCard = ({ header, imageId, text, link, children }: CardDeckProps
 export const BaseCard = ({ header, imageId, text, link, children }: CardDeckProps) => {
   
   const { getImageUrl } = useMarketplaceApiRepo();
-  return (
-    <Card>
-        {header && (
-          <Card.Header>
-            <h5>{header}</h5>
-          </Card.Header>
-        )}
-        {imageId && (
-          <Card.Img variant="top" src={getImageUrl(imageId)} />
-        )}
-        <Card.Body>
-          {text && (
-            <Card.Text className="card-text">
-              {text.length > 100 ? `${text.substring(0, 100)}...` : text}
-            </Card.Text>
+  return (    
+    
+      <Card>
+          {header && (
+            <Card.Header>
+              <h5 className="text-center">{header}</h5>
+            </Card.Header>
           )}
-          {link && (
-            <Link to={link} className="btn btn-primary bi-arrow-bar-right"><span> View </span></Link>
+          {imageId && (
+            <Card.Img variant="top" src={getImageUrl(imageId)} className="rounded-5 p-1" />
           )}
-          {children}
-        </Card.Body>
-      </Card>
+          <Card.Body>
+            {text && (
+              <Card.Text className="card-text">
+                {text.length > 100 ? `${text.substring(0, 100)}...` : text}
+              </Card.Text>
+            )}
+            {children}
+          </Card.Body>
+        </Card>
+      
   );
 }
 
