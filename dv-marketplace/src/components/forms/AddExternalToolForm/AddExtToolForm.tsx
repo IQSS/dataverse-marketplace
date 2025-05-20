@@ -1,12 +1,18 @@
 import useAddExternalTool from './useAddExternalTool';
 import { Button } from "react-bootstrap";
 import { Link } from 'react-router-dom';
+import EditManifestForm from '../EditExternalToolForm/EditVersionForm/EditManifestForm';
+
 
 const AddExtToolForm = () => {
-    
+
 
     const {
         handleSubmit,
+        showManifestEdit,
+        setShowManifestEdit,
+        manifestForm,
+        setManifestForm
     } = useAddExternalTool();
 
     return (
@@ -24,7 +30,7 @@ const AddExtToolForm = () => {
                 <div className="mb-3">
                     <label htmlFor="version" className="form-label">Version</label>
                     <input type="text" className="form-control" id="version" name="version" />
-                </div>                
+                </div>
                 <div className="mb-3">
                     <label htmlFor="releaseNote" className="form-label">Release Note</label>
                     <textarea className="form-control" id="releaseNote" name="releaseNote" />
@@ -37,11 +43,33 @@ const AddExtToolForm = () => {
                     <label htmlFor="images" className="form-label">Images</label>
                     <input type="file" className="form-control" id="images" name="itemImages" multiple />
                 </div>
+
+                <p>Manifest Data:{" "}
+                    <button
+                        type="button"
+                        className="btn bi-pen px-0"
+                        onClick={() => {
+                            setShowManifestEdit(1);
+                        }}
+                    />
+
+                    <EditManifestForm
+                        show={showManifestEdit === 1}
+                        initialManifest={manifestForm ?? undefined}
+                        onSave={(newManifest) => {
+                            setManifestForm(newManifest);
+                            setShowManifestEdit(0);
+                        }}
+                        onCancel={() => setShowManifestEdit(0)}
+                    />
+                </p>
+
+
                 <button type="submit" className="btn btn-primary">Save</button>
                 <Button variant="outline-secondary" className="ms-2" as={Link as any} to={`/`}>
                     <span className="me-1"></span>Cancel
-                </Button>                
-            </form>    
+                </Button>
+            </form>
         </div>
     );
 };

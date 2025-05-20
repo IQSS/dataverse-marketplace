@@ -10,20 +10,27 @@ const EditManifestForm = ({
     show,
     onCancel,
     onSubmit,
+    onSave,
     initialManifest,
 }: {
     show: boolean;
     onCancel: () => void;
-    onSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
-    initialManifest: Manifest
+    onSubmit?: (e: React.FormEvent<HTMLFormElement>) => void;
+    onSave?: (manifest: Manifest) => void;
+    initialManifest?: Manifest
 }) => {
 
+    const isSubmitMode = typeof onSubmit === "function";
     const fileInputRef = useRef<HTMLInputElement>(null);
 
     const handleCancel = () => {
         onCancel();
     };
-
+    const handleSave = () => {
+        if (onSave) {
+            onSave(formManifest);
+        }
+    };
     const {
         scopes,
         httpMethods,
@@ -32,7 +39,7 @@ const EditManifestForm = ({
         handleJsonUpload,
         defaultManifest,
         formManifest,
-        setFormManifest        
+        setFormManifest
     } = useEditManifestForm(initialManifest, show);
 
     return (
@@ -62,8 +69,8 @@ const EditManifestForm = ({
 
                     <Button
                         variant="outline-secondary"
-onClick={() => setFormManifest(defaultManifest)}
- >
+                        onClick={() => setFormManifest(defaultManifest)}
+                    >
                         Reset
                     </Button>
                 </div>
@@ -71,9 +78,13 @@ onClick={() => setFormManifest(defaultManifest)}
             <Modal.Body>
 
                 <Form onSubmit={(e) => {
-                    onSubmit(e);
-                }}
-                >
+                    if (isSubmitMode) {
+                        onSubmit?.(e);
+                    } else {
+                        e.preventDefault(); // Prevent actual submit
+                    }
+                }}>
+
                     <Form.Group className="mb-3">
 
                         <FormInputTextField id="displayName" name="displayName"
@@ -155,7 +166,11 @@ onClick={() => setFormManifest(defaultManifest)}
                         />
                     </Form.Group>
 
-                    <Button variant="primary" type="submit">
+                    <Button
+                        variant="primary"
+                        type={isSubmitMode ? "submit" : "button"}
+                        onClick={!isSubmitMode ? handleSave : undefined}
+                    >
                         Save
                     </Button>
 
