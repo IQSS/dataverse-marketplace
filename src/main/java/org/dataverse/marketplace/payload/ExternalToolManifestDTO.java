@@ -142,7 +142,7 @@ public class ExternalToolManifestDTO implements Serializable {
         this.setTypes(manifestDTO.types);
         this.setToolParameters(manifestDTO.toolParameters);
         this.setAllowedApiCalls(manifestDTO.allowedApiCalls);
-        this.setReqirementsDTO(manifestDTO.requirements);
+        this.setRequirements(manifestDTO.requirements);
     }
 
     public void convertDTOtoEntity(ExternalToolVersion version) {
@@ -256,7 +256,7 @@ public class ExternalToolManifestDTO implements Serializable {
             }
         }
     }
-
+    @Schema(hidden = true)
     public boolean isValidManifest() {
         return !StringUtils.isBlank(toolUrl);
     }
@@ -355,7 +355,7 @@ public class ExternalToolManifestDTO implements Serializable {
         return this.requirements;
     }
 
-    public void setReqirementsDTO(RequirementsDTO requirements) {
+    public void setRequirements(RequirementsDTO requirements) {
         this.requirements = requirements;
     }
 
