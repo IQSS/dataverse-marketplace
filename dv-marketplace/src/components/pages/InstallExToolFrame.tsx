@@ -42,7 +42,7 @@ function InstallExToolFrame({
             <Modal.Body>
                 <Alert variant="info" className="text-center">
                     <span className="bi-info-circle">
-                        &nbsp; Your API key will only be sent to the specified Dataverse instance.
+                        &nbsp; Your API key will not be stored and will only be sent to the specified Dataverse instance.
                     </span>
                 </Alert>
                 <div id="installFrame">
