@@ -23,7 +23,7 @@ public class MarketplaceItem implements Serializable{
 
     @ManyToMany
     @JoinTable(
-        name = "item_tag",
+        name = "item_tags",
         joinColumns = @JoinColumn(name = "item_id"),
         inverseJoinColumns = @JoinColumn(name = "tag_id")
     )

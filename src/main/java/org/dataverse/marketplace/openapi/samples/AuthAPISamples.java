@@ -33,10 +33,6 @@ public abstract class AuthAPISamples {
     public static final String ROLES = """
         [
             {
-                "id": 2,
-                "name": "EDITOR"
-            },
-            {
                 "id": 1,
                 "name": "ADMIN"
             }

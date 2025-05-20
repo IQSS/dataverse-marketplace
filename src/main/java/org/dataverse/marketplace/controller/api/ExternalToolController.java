@@ -62,17 +62,6 @@ public class ExternalToolController {
     }
 
     /**
-     * Method to retrieve all external tools by owner_id
-     */
-    @GetMapping("/owner/{ownerId}")
-    @ExternalToolsAPIDocs.GetExternalToolByOwnerIdDoc
-    public ResponseEntity<?> getToolByOwnerId(@PathVariable("ownerId") Long ownerId) {
-
-        return ResponseEntity.ok(externalToolService.getAllToolsByOwnerId(ownerId));
-
-    }
-
-    /**
      * Methods to add a new external tool
      */
 
@@ -85,7 +74,7 @@ public class ExternalToolController {
         return addTool(addToolRequest);
     }
 
-    // with images (undocumented until we solve swagger issue TODO)
+    // with images (TODO: currently undocumented until can work in swagger)
     @PreAuthorize("isAuthenticated()")
     @PostMapping(path = "/with-images", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> addNewToolWithImages(
@@ -113,6 +102,9 @@ public class ExternalToolController {
         }
     }
 
+    /**
+     * Method to update an external tool
+     */
     @PreAuthorize(ApplicationRoles.ADMIN_ROLE
             + " or (" + "isAuthenticated()"
             + " and @externalToolService.getToolById(#toolId).getOwner().getId() == authentication.getPrincipal().getId)")
@@ -143,6 +135,61 @@ public class ExternalToolController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(messageResponse);
         }
     }
+
+    /**
+     * Method to delete an an external tool
+     */
+    @PreAuthorize(ApplicationRoles.ADMIN_ROLE
+            + " or (" + "isAuthenticated()"
+            + " and @externalToolService.getToolById(#toolId).getOwner().getId() == authentication.getPrincipal().getId)")
+    @DeleteMapping("/{toolId}")
+    @ExternalToolsAPIDocs.DeleteExternalToolDoc
+    public ResponseEntity<?> deleteTool(
+            @PathVariable("toolId") Long toolId) {
+
+        ExternalTool tool = externalToolService.getToolById(toolId);
+
+        if (tool == null) {
+            ServerMessageResponse messageResponse = new ServerMessageResponse(HttpStatus.NOT_FOUND,
+                    "Resource not found",
+                    String.format("The requested external tool with ID %d was not found.", toolId));
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(messageResponse);
+        }
+
+        try {
+            // first delete the images
+            for (MarketplaceItemImage image : tool.getImages()) {
+
+                resourceStorageService.deleteResourceContent(image.getStoredResource());
+                externalToolService.deleteToolImage(image);
+            }
+
+            // then versions; TODO consider cascade
+            for (ExternalToolVersion version : tool.getExternalToolVersions()) {
+
+                externalToolVersionService.deleteToolVersion(version);
+            }            
+
+            externalToolService.deleteTool(tool);
+
+            return ResponseEntity.ok(new ServerMessageResponse(HttpStatus.OK,
+                    "Tool deleted.",
+                    String.format("The tool with ID %d was deleted.", toolId)));
+
+        } catch (IOException e) {
+
+            ServerMessageResponse messageResponse = new ServerMessageResponse(HttpStatus.INTERNAL_SERVER_ERROR,
+                    "Error deleting tool",
+                    e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(messageResponse);
+        }
+    }
+
+
+
+
+
+
 
     /**
      * Method to retrieve the images of an external tool.

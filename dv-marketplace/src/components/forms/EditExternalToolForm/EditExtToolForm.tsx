@@ -10,6 +10,7 @@ const EditExtToolForm = () => {
 
     const {
         handleSubmit,
+        handleDelete,
         tool,
     } = useEditToolForm();
 
@@ -43,13 +44,32 @@ const EditExtToolForm = () => {
             <form onSubmit={handleSubmit} encType="multipart/form-data">
                 <FormInputTextField label="Tool Name" name="name" id="toolName" value={formData.name} onChange={handleToolChange} />
                 <FormInputTextArea label="Description" name="description" id="toolDescription" value={formData.description} onChange={handleToolChange} />
-                <Button variant="primary" type="submit">
-                    Update
-                </Button>
-                <Button variant="secondary" className="bi bi-arrow-bar-left ms-2"
-                    as={Link as any} to={`/view/${tool?.id}`}>
-                    <span className="me-1"></span>View
-                </Button>
+
+                <div className="d-flex align-items-center">
+                    <div>
+                        <Button variant="primary" type="submit">
+                            Update
+                        </Button>
+                        <Button
+                            variant="secondary"
+                            className="bi bi-arrow-bar-left ms-2"
+                            as={Link as any}
+                            to={`/view/${tool?.id}`}
+                        >
+                            <span className="me-1"></span>View
+                        </Button>
+                    </div>
+                    <div className="ms-auto">
+                        <Button
+                            variant="outline-secondary"
+                            className="bi bi-trash"
+                            onClick={handleDelete}
+                        >
+                            <span className="me-1"></span>Delete
+                        </Button>
+                    </div>
+                </div>
+
             </form>
 
             <hr />

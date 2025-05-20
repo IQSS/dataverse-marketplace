@@ -4,9 +4,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import org.dataverse.marketplace.model.*;
-import org.dataverse.marketplace.openapi.samples.AuthAPISamples;
 import org.dataverse.marketplace.openapi.samples.ExternalToolVersionSamples;
-import org.dataverse.marketplace.payload.auth.UserDTO;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 
@@ -35,17 +33,12 @@ public class ExternalToolDTO implements Serializable {
             example = "[1, 2, 3]")
     private List<MarketplaceItemImageDTO> images;
 
-    @Schema(description = "The owner of the external tool", 
-            implementation = UserDTO.class,
-            example = AuthAPISamples.USER)    
-    private UserDTO owner;
 
     public ExternalToolDTO() {
     }
 
     public ExternalToolDTO(ExternalTool externalTool) {
         id = externalTool.getId();
-        owner = new UserDTO(externalTool.getOwner());
         name = externalTool.getName();
         description = externalTool.getDescription();
 
@@ -105,16 +98,5 @@ public class ExternalToolDTO implements Serializable {
     public void setImages(List<MarketplaceItemImageDTO> images) {
         this.images = images;
     }
-
-    public UserDTO getOwner() {
-        return owner;
-    }
-
-    public void setOwner(UserDTO owner) {
-        this.owner = owner;
-    }
-
-
-    
-    
+            
 }

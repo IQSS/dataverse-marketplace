@@ -91,8 +91,14 @@ public class ExternalToolService {
         return tool;
     }
 
+    @CacheEvict(value = "externalTools", allEntries = true)
+    public void deleteTool(ExternalTool tool) {
+        externalToolRepo.delete(tool);
+    }    
 
-    // image related methods
+    /**
+     * image related methods
+     */
 
     @CacheEvict(value = "externalTools", allEntries = true)
     @Transactional

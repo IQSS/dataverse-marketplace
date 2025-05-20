@@ -12,10 +12,12 @@ import org.springframework.web.bind.annotation.*;
 
 import org.dataverse.marketplace.model.User;
 import org.dataverse.marketplace.openapi.annotations.AuthAPIDocs;
+import org.dataverse.marketplace.openapi.annotations.ExternalToolsAPIDocs;
 import org.dataverse.marketplace.payload.ServerMessageResponse;
 import org.dataverse.marketplace.payload.auth.UserDTO;
 import org.dataverse.marketplace.repository.UserRepo;
 import org.dataverse.marketplace.security.ApplicationRoles;
+import org.dataverse.marketplace.service.ExternalToolService;
 
 
 @RestController
@@ -24,6 +26,9 @@ public class UsersController {
 
     @Autowired
     UserRepo userRepository;
+
+    @Autowired
+    private ExternalToolService externalToolService;    
 
     @PreAuthorize(ApplicationRoles.ADMIN_ROLE)
     @GetMapping()
@@ -56,5 +61,17 @@ public class UsersController {
 
         return ResponseEntity.ok(userDTO);
     }
+
+
+    /**
+     * Method to retrieve all external tools by owner_id
+     */
+    @GetMapping("/{ownerId}/tools")
+    @ExternalToolsAPIDocs.GetExternalToolByOwnerIdDoc
+    public ResponseEntity<?> getToolByOwnerId(@PathVariable("ownerId") Long ownerId) {
+
+        return ResponseEntity.ok(externalToolService.getAllToolsByOwnerId(ownerId));
+
+    }    
 
 }

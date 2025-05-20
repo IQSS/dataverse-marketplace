@@ -131,6 +131,21 @@ public @interface ExternalToolsAPIDocs {
     @Retention(RetentionPolicy.RUNTIME)
     @Tag(name = "External Tools")
     @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "External Tool successfully deleted", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ServerMessageResponse.class), examples = @ExampleObject(GenericBusinessSamples.SERVER_MESSAGE_RESPONSE))),
+            @ApiResponse(responseCode = "400", description = "Bad request on External Tool delete", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ServerMessageResponse.class), examples = @ExampleObject(GenericBusinessSamples.SERVER_MESSAGE_RESPONSE))),
+            @ApiResponse(responseCode = "401", description = "Access Denied for External Tool delete", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ServerMessageResponse.class), examples = @ExampleObject(GenericBusinessSamples.SERVER_MESSAGE_RESPONSE))),
+            @ApiResponse(responseCode = "500", description = "Internal Server Error during External Tool delete", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ServerMessageResponse.class), examples = @ExampleObject(GenericBusinessSamples.SERVER_MESSAGE_RESPONSE)))
+    })
+    @Operation(summary = "Delete the specified external tool.", description = "This endpoint deletes the specified external tool.")
+    @Parameter(name = "toolId", description = "The id of the external tool to be deleted", required = true, in = ParameterIn.PATH, schema = @Schema(type = "integer"))
+    public @interface DeleteExternalToolDoc {
+    }   
+    
+
+    @Target({ ElementType.METHOD })
+    @Retention(RetentionPolicy.RUNTIME)
+    @Tag(name = "External Tools")
+    @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "External tools successfully retrieved", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ExternalToolDTO[].class), examples = @ExampleObject(ExternalToolSamples.EXTERNAL_TOOLS_LIST_SAMPLE))),
             @ApiResponse(responseCode = "400", description = "Bad request on External tools list retrieval", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ServerMessageResponse.class), examples = @ExampleObject(GenericBusinessSamples.SERVER_MESSAGE_RESPONSE))),
             @ApiResponse(responseCode = "401", description = "Bad credentials on External tools list retrieval", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ServerMessageResponse.class), examples = @ExampleObject(GenericBusinessSamples.SERVER_MESSAGE_RESPONSE))),

@@ -15,7 +15,7 @@ export default function useMarketplaceHome(onlyMine = false) {
         const fetchTools = async () => {
             try {
                 const url = onlyMine && userContext.user?.id
-                ? `${BASE_URL}/api/tools/owner/${userContext.user.id}`
+                ? `${BASE_URL}/api/users/${userContext.user.id}/tools`
                 : `${BASE_URL}/api/tools`; // fallback: all tools
 
                 const response = await axios.get(url);

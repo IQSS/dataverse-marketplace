@@ -1,17 +1,20 @@
 import { useEffect, useState } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 import axios from "axios";
-import { useParams } from "react-router-dom";
 import type { ExternalTool } from "../../../types/MarketplaceTypes";
 import useMarketplaceApiRepo from "../../../repositories/useMarketplaceApiRepo";
-import { toast } from "react-toastify";
 
 export default function useEditToolForm() {
 
 
     const [tool, setTool] = useState<ExternalTool | undefined>();
     const { id } = useParams();
+    const navigate = useNavigate();
 
-    const { putBodyRequest } = useMarketplaceApiRepo();
+    const { putBodyRequest,
+        deleteBodyRequest
+     } = useMarketplaceApiRepo();
 
     const { BASE_URL } = useMarketplaceApiRepo();
 
@@ -42,9 +45,18 @@ export default function useEditToolForm() {
         }
     };
 
+    const handleDelete = async (event: React.MouseEvent<HTMLButtonElement>) => {
+        event.preventDefault()
+        const data = await deleteBodyRequest(`/api/tools/${id}`);
+        if (data) {
+            navigate("/");      
+        } 
+    };    
+
 
     return {
         handleSubmit,
+        handleDelete,
         tool
     };
 
