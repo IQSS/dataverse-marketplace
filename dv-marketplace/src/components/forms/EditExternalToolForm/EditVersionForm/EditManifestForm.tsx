@@ -87,11 +87,15 @@ const EditManifestForm = ({
 
                     <Form.Group className="mb-3">
 
+                        <Form.Label as="h5" className="mt-4 mb-3">Presentation</Form.Label>
+
                         <FormInputTextField id="displayName" name="displayName"
                             label="Display Name" onChange={handleManifestChange} value={formManifest.displayName} />
 
                         <FormInputTextArea id="description" name="description"
                             label="Description" onChange={handleManifestChange} value={formManifest.description} />
+
+                        <Form.Label as="h5" className="mt-4 mb-3">Access</Form.Label>
 
                         <FormInputSelect
                             id="types" name="types" label="Types" multiple
@@ -109,8 +113,7 @@ const EditManifestForm = ({
                             onChange={handleManifestChange}
                         />  
 
-                        <hr />
-                        <Form.Label as="h5" className="mt-4 mb-3">Tool Parameters</Form.Label>
+                        <Form.Label as="h5" className="mt-4 mb-3">Configuration</Form.Label>
 
                         <FormInputTextField id="toolName" name="toolName" onChange={handleManifestChange}
                             label="Tool Name" value={formManifest.toolName} />
