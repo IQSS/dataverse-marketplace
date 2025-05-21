@@ -85,7 +85,7 @@ const MultiInputGroup = ({
 
         return (
           <Form.Group key={index} controlId={`${namePrefix}-${index}`}>
-            <Row className="mb-2 align-items-end flex-nowrap">
+            <Row className="mb-2 align-items-start flex-nowrap">
               {type === "string" && (
                 <Col md={10}>
                   <FormInputTextField
@@ -164,7 +164,8 @@ const MultiInputGroup = ({
                   );
                 })}
 
-              <Col md="auto">
+              <Col md="auto"
+                  style={type !== "string" ? { marginTop: "32px" } : undefined}>
                 <Button
                   type="button"
                   variant="link"
