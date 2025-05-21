@@ -1,7 +1,10 @@
 package org.dataverse.marketplace.payload;
 
 import java.io.Serializable;
+import java.util.Objects;
 
+import org.dataverse.marketplace.model.AllowedApiCall;
+import org.dataverse.marketplace.model.ExternalToolVersion;
 import org.dataverse.marketplace.model.enums.HttpMethod;
 
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -67,5 +70,28 @@ public class AllowedApiCallDTO implements Serializable {
                 ", timeOut=" + timeOut +
                 '}';
     }
+
+    public static EntitySyncUtil.EntityBuilder<AllowedApiCallDTO, AllowedApiCall> allowedApiCallBuilder(ExternalToolVersion version) {
+        return new EntitySyncUtil.EntityBuilder<>() {
+            @Override
+            public AllowedApiCall build(AllowedApiCallDTO allowedApiCallDTO) {
+                AllowedApiCall allowedApiCall = new AllowedApiCall();
+                allowedApiCall.setExternalToolVersion(version);
+                allowedApiCall.setName(allowedApiCallDTO.getName());
+                allowedApiCall.setHttpMethod(allowedApiCallDTO.getHttpMethod());
+                allowedApiCall.setUrlTemplate(allowedApiCallDTO.getUrlTemplate());
+                allowedApiCall.setTimeOut(allowedApiCallDTO.getTimeOut());
+                return allowedApiCall;
+            }
+
+            @Override
+            public boolean matches(AllowedApiCallDTO allowedApiCallDTO, AllowedApiCall allowedApiCall) {
+                return Objects.equals(allowedApiCallDTO.getName(), allowedApiCall.getName()) &&
+                       Objects.equals(allowedApiCallDTO.getHttpMethod(), allowedApiCall.getHttpMethod()) &&
+                       Objects.equals(allowedApiCallDTO.getUrlTemplate(), allowedApiCall.getUrlTemplate()) &&
+                       Objects.equals(allowedApiCallDTO.getTimeOut(), allowedApiCall.getTimeOut());
+            }
+        };
+    }  
 
 }

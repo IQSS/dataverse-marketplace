@@ -21,9 +21,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
-@Schema(
-    name = "ExternalToolManifest",
-    description = "External tool manifest")
+@Schema(name = "ExternalToolManifest", description = "External tool manifest")
 public class ExternalToolManifestDTO implements Serializable {
 
     // Manifest details
@@ -156,107 +154,41 @@ public class ExternalToolManifestDTO implements Serializable {
         version.setToolName(this.getToolName());
         version.setHttpMethod(this.getHttpMethod());
 
-        Set<ContentType> existingContentTypes = version.getContentTypes();
 
-        if (existingContentTypes != null) {
-            existingContentTypes.clear();
-        } else {
-            existingContentTypes = new HashSet<>();
-            version.setContentTypes(existingContentTypes);
-        }
-        if (this.getContentTypes() != null) {
-            for (String contentType : this.getContentTypes()) {
-                if (StringUtils.isNotBlank(contentType)) {
-                    ContentType newContentType = new ContentType();
-                    newContentType.setExternalToolVersion(version);
-                    newContentType.setContentType(contentType);
-                    existingContentTypes.add(newContentType);
-                }
-            }
-        }
+        // for the collections, we use a util that compares all the DTOs  
+        // and entities and keeps any entity that stays the same
+        EntitySyncUtil.syncEntities(
+                version.getContentTypes(),
+                this.getContentTypes(),
+                ExternalToolManifestDTO.contentTypeBuilder(version));
+
         // we are uploading a manifest that uses the single content type
-        if (existingContentTypes.isEmpty() && StringUtils.isNotBlank(this.getContentType())) {
+        if (version.getContentTypes().isEmpty() && StringUtils.isNotBlank(this.getContentType())) {
             ContentType newContentType = new ContentType();
             newContentType.setExternalToolVersion(version);
             newContentType.setContentType(this.getContentType());
-            existingContentTypes.add(newContentType);
-        }
+            version.getContentTypes().add(newContentType);
+        }                
+                
+        EntitySyncUtil.syncEntities(
+                version.getExternalToolTypes(),
+                this.getTypes(),
+                ExternalToolManifestDTO.ExternalToolTypeBuilder(version));
+                
+        EntitySyncUtil.syncEntities(
+                version.getQueryParameters(),
+                this.getToolParameters() != null ? this.getToolParameters().getQueryParameters() : null,
+                ExternalToolManifestDTO.queryParameterBuilder(version));                
 
-        Set<ExternalToolType> existingTypes = version.getExternalToolTypes();
+        EntitySyncUtil.syncEntities(
+                version.getAllowedApiCalls(),
+                this.getAllowedApiCalls(),
+                AllowedApiCallDTO.allowedApiCallBuilder(version));
 
-        if (existingTypes != null) {
-            existingTypes.clear();
-        } else {
-            existingTypes = new HashSet<>();
-            version.setExternalToolTypes(existingTypes);
-        }
-        if (this.getTypes() != null) {
-            for (ToolType type : this.getTypes()) {
-                ExternalToolType newType = new ExternalToolType();
-                newType.setExternalToolVersion(version);
-                newType.setType(type);
-                existingTypes.add(newType);
-            }
-        }
-
-        Set<QueryParameter> existingQueryParameters = version.getQueryParameters();
-
-        if (existingQueryParameters != null) {
-            existingQueryParameters.clear();
-        } else {
-            existingQueryParameters = new HashSet<>();
-            version.setQueryParameters(existingQueryParameters);
-        }
-        if (this.getToolParameters() != null &&
-                this.getToolParameters().getQueryParameters() != null
-                && !this.getToolParameters().getQueryParameters().isEmpty()) {
-            for (Map<String, String> qpMap : this.getToolParameters().getQueryParameters()) {
-                QueryParameter qp = new QueryParameter();
-                qp.setExternalToolVersion(version);
-                qp.setKey(qpMap.keySet().iterator().next());
-                qp.setValue(qpMap.get(qp.getKey()));
-                existingQueryParameters.add(qp);
-            }
-        }
-
-        Set<AllowedApiCall> existingAllowedApiCalls = version.getAllowedApiCalls();
-        if (existingAllowedApiCalls != null) {
-            existingAllowedApiCalls.clear();
-        } else {
-            existingAllowedApiCalls = new HashSet<>();
-            version.setAllowedApiCalls(existingAllowedApiCalls);
-        }
-        if (this.getAllowedApiCalls() != null) {
-            for (AllowedApiCallDTO allowedApiCallDTO : this.getAllowedApiCalls()) {
-                AllowedApiCall allowedApiCall = new AllowedApiCall();
-                allowedApiCall.setExternalToolVersion(version);
-                allowedApiCall.setName(allowedApiCallDTO.getName());
-                allowedApiCall.setHttpMethod(allowedApiCallDTO.getHttpMethod());
-                allowedApiCall.setUrlTemplate(allowedApiCallDTO.getUrlTemplate());
-                allowedApiCall.setTimeOut(allowedApiCallDTO.getTimeOut());
-                existingAllowedApiCalls.add(allowedApiCall);
-            }
-        }
-
-        Set<AuxFilesExist> existingAuxFileExists = version.getAuxFilesExist();
-
-        if (existingAuxFileExists != null) {
-            existingAuxFileExists.clear();
-        } else {
-            existingAuxFileExists = new HashSet<>();
-            version.setAuxFilesExist(existingAuxFileExists);
-        }
-        if (this.getRequirements() != null &&
-                this.getRequirements().getAuxFilesExist() != null
-                && !this.getRequirements().getAuxFilesExist().isEmpty()) {
-            for (AuxFilesExistDTO auxFileExistsDTO : this.getRequirements().getAuxFilesExist()) {
-                AuxFilesExist auxFileExists = new AuxFilesExist();
-                auxFileExists.setExternalToolVersion(version);
-                auxFileExists.setFormatTag(auxFileExistsDTO.getFormatTag());
-                auxFileExists.setFormatVersion(auxFileExistsDTO.getFormatVersion());
-                existingAuxFileExists.add(auxFileExists);
-            }
-        }
+        EntitySyncUtil.syncEntities(
+                version.getAuxFilesExist(),
+                this.getRequirements() != null ? this.getRequirements().getAuxFilesExist() : null,
+                AuxFilesExistDTO.auxFilesExistBuilder(version));
     }
 
     /* Getters and Setters */
@@ -377,9 +309,7 @@ public class ExternalToolManifestDTO implements Serializable {
     }
 
     // Inner class
-    @Schema(
-        name = "ToolParameter",
-        description = "Parameters of the tool")
+    @Schema(name = "ToolParameter", description = "Parameters of the tool")
     public class ToolParameterDTO implements Serializable {
         private Set<Map<String, String>> queryParameters;
 
@@ -401,9 +331,7 @@ public class ExternalToolManifestDTO implements Serializable {
     }
 
     // Inner class
-    @Schema(
-        name = "Requirements",
-        description = "Requirements of the tool")
+    @Schema(name = "Requirements", description = "Requirements of the tool")
     public class RequirementsDTO implements Serializable {
         private Set<AuxFilesExistDTO> auxFilesExist;
 
@@ -426,5 +354,63 @@ public class ExternalToolManifestDTO implements Serializable {
 
     public static boolean isValidManifest(ExternalToolManifestDTO manifestDTO) {
         return !StringUtils.isBlank(manifestDTO.getToolUrl());
-    }    
+    }
+
+    public static EntitySyncUtil.EntityBuilder<String, ContentType> contentTypeBuilder(ExternalToolVersion version) {
+        return new EntitySyncUtil.EntityBuilder<>() {
+            @Override
+            public ContentType build(String contentTypeDTO) {
+                ContentType contentType = new ContentType();
+                contentType.setExternalToolVersion(version);               
+                contentType.setContentType(contentTypeDTO);
+                return contentType;
+            }
+
+            @Override
+            public boolean matches(String contentTypeDTO, ContentType contentType) {
+                return contentTypeDTO.equals(contentType.getContentType());
+            }
+        };
+    }
+
+    public static EntitySyncUtil.EntityBuilder<ToolType, ExternalToolType> ExternalToolTypeBuilder(
+            ExternalToolVersion version) {
+        return new EntitySyncUtil.EntityBuilder<>() {
+            @Override
+            public ExternalToolType build(ToolType externalToolTypeDTO) {
+                ExternalToolType externalToolType = new ExternalToolType();
+                externalToolType.setExternalToolVersion(version);
+                externalToolType.setType(externalToolTypeDTO);
+                return externalToolType;
+            }
+
+            @Override
+            public boolean matches(ToolType externalToolTypeDTO, ExternalToolType externalToolType) {
+                return externalToolTypeDTO == externalToolType.getType();
+            }
+        };
+    }
+
+    public static EntitySyncUtil.EntityBuilder<Map<String, String>, QueryParameter> queryParameterBuilder(
+            ExternalToolVersion version) {
+        return new EntitySyncUtil.EntityBuilder<>() {
+            @Override
+            public QueryParameter build(Map<String, String> queryParameterDTO) {
+                QueryParameter queryParameter = new QueryParameter();
+                String key = queryParameterDTO.keySet().iterator().next();
+                queryParameter.setExternalToolVersion(version);
+                queryParameter.setKey(key);
+                queryParameter.setValue(queryParameterDTO.get(key));
+                return queryParameter;
+            }
+
+            @Override
+            public boolean matches(Map<String, String> queryParameterDTO, QueryParameter queryParameter) {
+                String key = queryParameterDTO.keySet().iterator().next();
+                return key.equals(queryParameter.getKey())
+                        && queryParameterDTO.get(key).equals(queryParameter.getValue());
+            }
+
+        };
+    }
 }
