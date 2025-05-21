@@ -10,7 +10,8 @@ public class EntitySyncUtil {
         boolean matches(D dto, E entity);
     }
 
-    public static <D, E> Set<E> syncEntities(Set<E> existing, Set<D> incomingDTOs, EntityBuilder<D, E> builder) {
+    // TODO: currently only work with not null existing (entities); consisder adding a Consumer to handle null
+    public static <D, E> void syncEntities(Set<E> existing, Set<D> incomingDTOs, EntityBuilder<D, E> builder) {
         Set<E> toKeep = new HashSet<>();
 
         if (incomingDTOs != null) {
@@ -32,8 +33,6 @@ public class EntitySyncUtil {
 
         existing.clear();
         existing.addAll(toKeep);        
-
-        return toKeep;
     }
    
 }
