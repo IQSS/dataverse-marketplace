@@ -71,7 +71,6 @@ const MultiInputGroup = ({
   return (
     <Form.Group className="mb-3">
       <Form.Label>{label}</Form.Label>
-      <Button type="button" variant="link" className="bi bi-plus px-1" onClick={handleAdd} />
 
       {values.map((item, index) => {
         const isObject = typeof item === "object" && !Array.isArray(item);
@@ -86,11 +85,11 @@ const MultiInputGroup = ({
 
         return (
           <Form.Group key={index} controlId={`${namePrefix}-${index}`}>
-            <Row className="mb-2 align-items-end">
+            <Row className="mb-2 align-items-end flex-nowrap">
               {type === "string" && (
                 <Col md={10}>
                   <FormInputTextField
-                    label={`Item ${index + 1}`}
+                    label={""}
                     name={`${namePrefix}[${index}]`}
                     id={`${namePrefix}-${index}`}
                     value={item}
@@ -127,7 +126,8 @@ const MultiInputGroup = ({
                   const fieldValue = item?.[field.name] ?? "";
 
                   return (
-                    <Col key={field.name} md={12 / objectSchema.length}>
+                    <Col key={field.name}  md style={{ minWidth: 0, flexGrow: 1 }}>
+
                       {field.type === "select" ? (
                         <FormInputSelect
                           label={field.label}
@@ -164,7 +164,7 @@ const MultiInputGroup = ({
                   );
                 })}
 
-              <Col md={1}>
+              <Col md="auto">
                 <Button
                   type="button"
                   variant="link"
@@ -176,6 +176,21 @@ const MultiInputGroup = ({
           </Form.Group>
         );
       })}
+
+        <Row>
+          <Col>
+            <Button
+              type="button"
+              variant="link"
+              className="bi bi-plus px-0"
+              onClick={handleAdd}
+              aria-label="Add new item"
+            />
+          </Col>
+        </Row>
+
+
+
     </Form.Group>
   );
 };

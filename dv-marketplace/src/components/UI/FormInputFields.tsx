@@ -28,7 +28,7 @@ type CheckBoxProps = FormInputFieldProps & {
 export const FormInputTextField = ({ label, name, id, value, onChange, datalist }: TextFieldProps) => {
     return (
         <div className="mb-3">
-            <label htmlFor={id} className="form-label">{label}</label>
+            {label && <label htmlFor={id} className="form-label">{label}</label>}
             <input type="text" className="form-control" id={id} name={name} value={value ?? ""} onChange={onChange} list={datalist} />
         </div>
     );

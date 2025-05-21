@@ -94,15 +94,37 @@ const EditManifestForm = ({
                             label="Description" onChange={handleManifestChange} value={formManifest.description} />
 
                         <FormInputSelect
+                            id="types" name="types" label="Types" multiple
+                            value={formManifest.types} onChange={handleManifestChange}
+                            options={toolTypes.map(toolType => ({
+                                value: toolType,
+                                label: toolType
+                            }))} />      
+
+                        <MultiInputGroup
+                            type="string"
+                            namePrefix="contentTypes"
+                            label="Content Types"
+                            values={formManifest.contentTypes || []}
+                            onChange={handleManifestChange}
+                        />  
+
+                        <hr />
+                        <Form.Label as="h5" className="mt-4 mb-3">Tool Parameters</Form.Label>
+
+                        <FormInputTextField id="toolName" name="toolName" onChange={handleManifestChange}
+                            label="Tool Name" value={formManifest.toolName} />
+
+                        <FormInput id="toolUrl" name="toolUrl" htmlType="url" onChange={handleManifestChange}
+                            label="Tool URL" value={formManifest.toolUrl} />
+
+                        <FormInputSelect
                             id="scope" name="scope" label="Scope"
                             value={formManifest.scope} onChange={handleManifestChange}
                             options={scopes.map(scope => ({
                                 value: scope,
                                 label: scope
-                            }))} />
-
-                        <FormInput id="toolUrl" name="toolUrl" htmlType="url" onChange={handleManifestChange}
-                            label="Tool URL" value={formManifest.toolUrl} />
+                            }))} />                            
 
                         <FormInputSelect
                             id="httpMethod" name="httpMethod" label="HTTP Method"
@@ -111,25 +133,6 @@ const EditManifestForm = ({
                                 value: httpMethod,
                                 label: httpMethod
                             }))} />
-
-                        <FormInputTextField id="toolName" name="toolName" onChange={handleManifestChange}
-                            label="Tool Name" value={formManifest.toolName} />
-
-                        <FormInputSelect
-                            id="types" name="types" label="Types" multiple
-                            value={formManifest.types} onChange={handleManifestChange}
-                            options={toolTypes.map(toolType => ({
-                                value: toolType,
-                                label: toolType
-                            }))} />
-
-                        <MultiInputGroup
-                            type="string"
-                            namePrefix="contentTypes"
-                            label="Content Types"
-                            values={formManifest.contentTypes || []}
-                            onChange={handleManifestChange}
-                        />
 
                         <MultiInputGroup
                             type="keyValue"
