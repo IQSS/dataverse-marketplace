@@ -178,9 +178,9 @@ public class ExternalToolsTest {
                 // Test put version
                 final String UPDATED = "UPDATED";
                 Map<String, String> putVersionBody = new HashMap<String, String>();
-                putVersionBody.put("version", UPDATED);
-                putVersionBody.put("releaseNote", UPDATED);
-                putVersionBody.put("dvMinVersion", UPDATED);
+                putVersionBody.put("versionName", UPDATED);
+                putVersionBody.put("versionNote", UPDATED);
+                putVersionBody.put("dataverseMinVersion", UPDATED);
 
                 adminHeaders.setContentType(MediaType.APPLICATION_JSON);
 
