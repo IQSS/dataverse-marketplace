@@ -1,5 +1,6 @@
 package org.dataverse.marketplace.model;
 
+import java.util.HashSet;
 import java.util.Set;
 
 import org.dataverse.marketplace.model.enums.HttpMethod;
@@ -40,19 +41,19 @@ public class ExternalToolVersion {
     private HttpMethod httpMethod;
 
     @OneToMany(mappedBy = "externalToolVersion", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<QueryParameter> queryParameters;    
+    private Set<QueryParameter> queryParameters = new HashSet<QueryParameter>();    
 
     @OneToMany(mappedBy = "externalToolVersion", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<ExternalToolType> externalToolTypes;
+    private Set<ExternalToolType> externalToolTypes = new HashSet<ExternalToolType>();    
 
     @OneToMany(mappedBy = "externalToolVersion", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<ContentType> contentTypes;
+    private Set<ContentType> contentTypes = new HashSet<ContentType>();    
     
     @OneToMany(mappedBy = "externalToolVersion", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<AllowedApiCall> allowedApiCalls;
+    private Set<AllowedApiCall> allowedApiCalls = new HashSet<AllowedApiCall>();    
 
     @OneToMany(mappedBy = "externalToolVersion", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<AuxFilesExist> auxFilesExist;
+    private Set<AuxFilesExist> auxFilesExist = new HashSet<AuxFilesExist>();    
 
 
     /* Getters and Setters */
