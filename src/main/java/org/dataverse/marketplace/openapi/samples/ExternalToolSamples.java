@@ -38,9 +38,9 @@ public abstract class ExternalToolSamples {
             {
                 "name": "Ask the Data",
                 "description": "Ask the Data is an experimental tool that allows you ask natural language questions about the data contained in Dataverse.",
-                "releaseNote": "This release includes a new feature that allows you to ask questions to an LLM.",
-                "version": "1.0",
-                "dvMinVersion": "6.0",
+                "versionNote": "This release includes a new feature that allows you to ask questions to an LLM.",
+                "versionName": "1.0",
+                "dataverseMinVersion": "6.0",
                 "manifest": {
                     "displayName": "Ask the Data",
                     "description": "A tool that allows you to ask questions about Dataverse tabular data.",
