@@ -157,18 +157,12 @@ public class ExternalToolController {
         }
 
         try {
-            // first delete the images
+            // first delete the images (
             for (MarketplaceItemImage image : tool.getImages()) {
 
                 resourceStorageService.deleteResourceContent(image.getStoredResource());
                 externalToolService.deleteToolImage(image);
             }
-
-            // then versions; TODO consider cascade
-            for (ExternalToolVersion version : tool.getExternalToolVersions()) {
-
-                externalToolVersionService.deleteToolVersion(version);
-            }            
 
             externalToolService.deleteTool(tool);
 
