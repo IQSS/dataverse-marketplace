@@ -1,6 +1,5 @@
 package org.dataverse.marketplace.model;
 
-import java.io.Serializable;
 import java.util.List;
 import java.util.Set;
 
@@ -8,7 +7,7 @@ import jakarta.persistence.*;
 
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
-public class MarketplaceItem implements Serializable{
+public class MarketplaceItem {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

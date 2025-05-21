@@ -1,6 +1,5 @@
 package org.dataverse.marketplace.model;
 
-import java.io.Serializable;
 import java.util.Set;
 
 import org.dataverse.marketplace.model.enums.HttpMethod;
@@ -9,7 +8,7 @@ import org.dataverse.marketplace.model.enums.Scope;
 import jakarta.persistence.*;
 
 @Entity
-public class ExternalToolVersion implements Serializable {
+public class ExternalToolVersion {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
