@@ -16,7 +16,8 @@
 }
 
 .header-logo span {
-	background: url("./assets/img/dv.xhtml");
+	background: url("./assets/img/logo.svg");
+	background-repeat: no-repeat;
 	margin-right: 8px;
 	width: 26px;
 	height: 32px;
