@@ -22,12 +22,6 @@ public class ExternalToolService {
     private ExternalToolRepo externalToolRepo;
 
     @Autowired
-    private ExternalToolVersionRepo externalToolVersionRepo;
-
-    @Autowired
-    private ExternalToolManifestRepo externalToolManifestRepo;
-
-    @Autowired
     private ExternalToolVersionService externalToolVersionService;
 
     @Autowired
@@ -46,7 +40,7 @@ public class ExternalToolService {
         return toolDTOs;
     }
 
-    public List<ExternalToolDTO> getAllToolsByOwnerId(Integer ownerId) {
+    public List<ExternalToolDTO> getAllToolsByOwnerId(Long ownerId) {
         List<ExternalTool> tools = externalToolRepo.findByOwnerId(ownerId);
         ArrayList<ExternalToolDTO> toolDTOs = new ArrayList<>();
         for (ExternalTool tool : tools) {
@@ -55,16 +49,8 @@ public class ExternalToolService {
         return toolDTOs;
     }    
 
-    public ExternalTool getToolById(Integer toolId) {
+    public ExternalTool getToolById(Long toolId) {
         return externalToolRepo.findById(toolId).orElse(null);
-    }
-
-    public ExternalToolVersion getToolVersionById(Integer toolId, Integer versionId) {
-        return externalToolVersionRepo.findByMkItemIdAndId(toolId, versionId);
-    }
-
-    public List<ExternalToolManifest> getToolManifests(Integer toolId, Integer versionId) {
-        return externalToolManifestRepo.findByMkItemIdAndVersionId(toolId, versionId);
     }
 
     @CacheEvict(value = "externalTools", allEntries = true)
@@ -78,14 +64,14 @@ public class ExternalToolService {
         externalToolRepo.save(newTool);
 
         AddVersionRequest addVersionRequest = new AddVersionRequest();
-        addVersionRequest.setVersion(addToolRequest.getVersion());
-        addVersionRequest.setReleaseNote(addToolRequest.getReleaseNote());
-        addVersionRequest.setDvMinVersion(addToolRequest.getDvMinVersion());
-        addVersionRequest.setJsonData(addToolRequest.getJsonData());
+        addVersionRequest.setVersionName(addToolRequest.getVersionName());
+        addVersionRequest.setVersionNote(addToolRequest.getVersionNote());
+        addVersionRequest.setDataverseMinVersion(addToolRequest.getDataverseMinVersion());
+        addVersionRequest.setManifest(addToolRequest.getManifest());
         
         List<ExternalToolVersion> versions = new ArrayList<ExternalToolVersion>();
         ExternalToolVersion newVersion =
-            externalToolVersionService.addToolVersion(addVersionRequest, newTool.getId());
+            externalToolVersionService.addToolVersion(addVersionRequest, newTool);
         versions.add(newVersion);
         newTool.setExternalToolVersions(versions);
         if(addToolRequest.getItemImages() != null){
@@ -106,6 +92,15 @@ public class ExternalToolService {
     }
 
     @CacheEvict(value = "externalTools", allEntries = true)
+    public void deleteTool(ExternalTool tool) {
+        externalToolRepo.delete(tool);
+    }    
+
+    /**
+     * image related methods
+     */
+
+    @CacheEvict(value = "externalTools", allEntries = true)
     @Transactional
     public List<MarketplaceItemImage> addItemImages(MarketplaceItem item, List<MultipartFile> images) throws IOException {
 
@@ -118,9 +113,7 @@ public class ExternalToolService {
                                         StoredResourceStorageTypeEnum.FILESYSTEM);
 
             MarketplaceItemImage newImage = new MarketplaceItemImage();
-            
             newImage.setMarketplaceItem(item);
-            newImage.setImageStoredResourceId(storedResource.getId());  
             newImage.setStoredResource(storedResource);          
             marketplaceItemImageRepo.save(newImage);
             newImages.add(newImage);
@@ -130,8 +123,8 @@ public class ExternalToolService {
         return newImages;
     }
 
-    public MarketplaceItemImage getItemImage(Integer imageId, Integer marketplaceItemId) {
-        return marketplaceItemImageRepo.findByMarketplaceItemId(imageId, marketplaceItemId);
+    public MarketplaceItemImage getItemImage(Long imageId) {
+        return marketplaceItemImageRepo.findById(imageId).orElse(null);
     }
 
     @CacheEvict(value = "externalTools", allEntries = true)

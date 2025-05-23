@@ -1,17 +1,23 @@
 import Container from 'react-bootstrap/Container';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
-import Search from './Search';
+import { useContext } from 'react';
+import { UserContext } from '../../../components/context/UserContextProvider';
 import ThemeSwitcher from './ThemeSwitcher/ThemeSwitcher';
 import LoginForm from '../../forms/LoginForm/LoginForm';
 import LoginButton from '../LoginButton/LoginButton';
 import NavOptions from './NavOptions';
+import { ToastContainer } from "react-toastify";
+import { Theme } from "../../../types/MarketplaceTypes";
 
 const NavigationBar = () => {
+
+    const userContext = useContext(UserContext);
 
     return (
         <>
             <Navbar expand="lg" className="bg-body-tertiary">
+            <ToastContainer theme={userContext.theme === Theme.DARK ? "dark" : "light"} />
                 <Container>
                     <Navbar.Brand href="/">
                         <span className='header-logo '>

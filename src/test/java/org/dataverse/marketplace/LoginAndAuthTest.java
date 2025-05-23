@@ -13,6 +13,8 @@ import org.dataverse.marketplace.payload.*;
 import org.dataverse.marketplace.payload.auth.request.*;
 import org.dataverse.marketplace.payload.auth.response.*;
 
+import static org.dataverse.marketplace.TestUtils.assertPresent;
+
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class LoginAndAuthTest {
@@ -100,34 +102,6 @@ public class LoginAndAuthTest {
             assertNotNull(rolesResponseWithToken.getBody());
         });
 
-        //Test for adding roles
-        RoleCreationRequest testNewRole = new RoleCreationRequest();
-        testNewRole.setRoleName("TST" + randomNumber);
-        
-        //Test for unauthorized creation of role, logged user not admin
-        assertThrows(HttpClientErrorException.Unauthorized.class, () -> {
-            
-            HttpEntity<RoleCreationRequest> request = new HttpEntity<>(testNewRole, testuserHeaders);
-            ResponseEntity<ServerMessageResponse> roleCreationResponse =
-                restTemplate.postForEntity(serverUrl + "/auth/roles", request, ServerMessageResponse.class);
-            assertNotNull(roleCreationResponse);
-        });
-
-        //Test for unauthorized creation of role, not logged user
-        assertThrows(HttpClientErrorException.class, () -> {
-            HttpEntity<String> request = new HttpEntity<>(testuserHeaders);
-            ResponseEntity<ServerMessageResponse> roleCreationResponse =
-                restTemplate.postForEntity(serverUrl + "/auth/roles", request, ServerMessageResponse.class);
-            assertNotNull(roleCreationResponse);
-        });
-
-        // Test for authorized creation of role
-        assertDoesNotThrow(() -> {
-            HttpEntity<RoleCreationRequest> request = new HttpEntity<>(testNewRole, adminHeaders);
-            ResponseEntity<RoleCreationResponse> roleCreationResponse = 
-                restTemplate.postForEntity(serverUrl + "/auth/roles", request, RoleCreationResponse.class);
-            assertNotNull(roleCreationResponse);
-        });
 
 
         //Test of new password and role assignement
@@ -141,7 +115,7 @@ public class LoginAndAuthTest {
             ResponseEntity<Role[]> systemRoles
                 = restTemplate.exchange(serverUrl + "/auth/roles", HttpMethod.GET, adminRequest, Role[].class);
             
-            assertTrue(systemRoles.getBody().length > testUserRoles.size());
+            assertTrue(assertPresent(systemRoles).length > testUserRoles.size());
 
             List<Role> systemRoleList = Arrays.asList(systemRoles.getBody());
 
@@ -161,10 +135,8 @@ public class LoginAndAuthTest {
             ResponseEntity<ServerMessageResponse> roleCreationResponse =
                 restTemplate.postForEntity(roleAssignmentRequest, 
                     adminRequest, ServerMessageResponse.class);
-
-            assertNotNull(roleCreationResponse);
             
-            assertEquals(roleCreationResponse.getBody().getCode(), HttpStatus.OK.value());
+            assertEquals(assertPresent(roleCreationResponse).getCode(), HttpStatus.OK.value());
             
         }); 
 

@@ -1,6 +1,6 @@
-import { Link, useParams } from "react-router-dom";
+import { Link } from "react-router-dom";
 import axios from "axios";
-import type { ExternalTool, Image } from "../../types/MarketplaceTypes";
+import type { ExternalTool, Manifest,Image } from "../../types/MarketplaceTypes";
 import { Alert } from "react-bootstrap";
 import { InnerCardDeck } from "../UI/CardDeck";
 import { RowCard, MarketplaceCard } from "../UI/MarketplaceCard";
@@ -22,6 +22,7 @@ const ViewExternalTool = () => {
         BASE_URL,
         toolToInstall,
         setToolToInstall,
+        downloadManifest
     } = useViewExternalTool();
 
     useEffect(() => {
@@ -46,8 +47,7 @@ const ViewExternalTool = () => {
                 <h1 className='col-6'>{tool?.name}:</h1>
                 <div className='col-6 d-flex justify-content-end align-items-center'>
                     {userContext.user && 
-                    ( userContext.user.roles.includes("ADMIN") ||
-                    (userContext.user.roles.includes("EDITOR")  && tool?.owner.id == userContext.user.id))  &&
+                    ( userContext.user.roles.includes("ADMIN") || tool?.ownerId == userContext.user.id)  &&
                         <Link to ={`/edit/${id}`} className="btn btn-secondary bi-pen" > Edit</Link>
                     }
                 </div>
@@ -63,47 +63,63 @@ const ViewExternalTool = () => {
             <Alert variant='light'>
                 <div className='container '>
                     <div className='row'>
-                    <h3 className='col-6'>Releases:</h3>
+                        <h3 className='col-6'>Releases:</h3>
                     </div>
                 </div>
             </Alert>
 
             <InnerCardDeck>
                 {tool?.versions.map((version) => (
-                    <RowCard key={version.id} header={`Version: ${version.version}`}>
-                        <p>Release Note : {version.releaseNote}</p>
-                        <p>DV Min Version : {version.dataverseMinVersion}</p>
+                    <RowCard key={version.id} header={`Version Name: ${version.versionName}`}>
+                        <p>Version Note : {version.versionNote}</p>
+                        <p>Dataverse Min Version : {version.dataverseMinVersion}</p>
                         <p>Manifests:</p>
                         <table className="table">
                             <tbody>
-                            {version.manifests.map((manifest) => (
-                                <tr key={manifest.manifestId}>
-                                    <td>{manifest.fileName}</td>
-                                    <td>
-                                        <button type="button" className="btn bi-download" onClick={() => {
-                                            setToolToInstall(manifest);
-                                            setShowModal(true);
-                                            }}> Install </button>
-                                        {/* <Link to={`/install/${tool?.id}`} className="btn bi-download" onClick={() => {}}> Install </Link> */}
-                                    </td>
-                                    </tr>
-                                
-                            ))}
-                            </tbody>                            
-                        </table>
-                        
-                    </RowCard>                        
-                ))}
-            </InnerCardDeck> 
+                                {(version.manifestSet ?? []).map((manifest: Manifest) => 
+                                        <tr key={version.id + "_" + manifest.contentType}>
+                                            <td>
+                                               {manifest.displayName}{manifest.contentType != null ? " (" + manifest.contentType + ")": ""}
+                                            </td>
+                                            <td>
+                                                <button
+                                                    type="button"
+                                                    className="btn bi-rocket-takeoff"
+                                                    onClick={() => {
+                                                        setToolToInstall(manifest);
+                                                        setShowModal(true);
+                                                    }}
+                                                >
+                                                    <span className="me-1"></span>Install
+                                                </button>
 
-            <br/>
+                                                <button
+                                                    type="button"
+                                                    className="btn bi-download"
+                                                    onClick={() => {
+                                                        downloadManifest(manifest);
+                                                    }}
+                                                >
+                                                   <span className="me-1"></span>Download
+                                                </button>
+                                            </td>
+                                        </tr>
+                                )}
+                            </tbody>
+                        </table>
+
+                    </RowCard>
+                ))}
+            </InnerCardDeck>
+
+            <br />
 
             <Alert variant='light'>
                 <div className='container '>
                     <div className='row'>
-                    <h3 className='col-6'>Images:</h3>
+                        <h3 className='col-6'>Images:</h3>
                         <div className='col-6 d-flex justify-content-end align-items-center'>
-                    </div>
+                        </div>
                     </div>
                 </div>
             </Alert>
@@ -114,15 +130,15 @@ const ViewExternalTool = () => {
                         key={image.imageId}
                         imageId={image.storedResourceId}>
                     </MarketplaceCard>
-                ))}  
+                ))}
             </InnerCardDeck>
 
-            <InstallExToolFrame manifest={toolToInstall} showModal={showModal} setShowModal={setShowModal}/>
-            
-                
+            <InstallExToolFrame manifest={toolToInstall} showModal={showModal} setShowModal={setShowModal} />
 
-            
-            
+
+
+
+
         </div>
     );
 };

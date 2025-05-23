@@ -1,20 +1,18 @@
 package org.dataverse.marketplace.model;
 
-
-import java.io.Serializable;
 import java.util.List;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.PrimaryKeyJoinColumn;
-import jakarta.persistence.Table;
+import jakarta.persistence.CascadeType;
+
 
 @Entity
-@Table(name = "external_tool")
 @PrimaryKeyJoinColumn(name = "mkt_item_id")
-public class ExternalTool extends MarketplaceItem implements Serializable {
+public class ExternalTool extends MarketplaceItem {
 
-    @OneToMany(mappedBy = "externalTool")
+    @OneToMany(mappedBy = "externalTool", cascade = CascadeType.ALL, orphanRemoval = true)
     List<ExternalToolVersion> externalToolVersions;
 
     public List<ExternalToolVersion> getExternalToolVersions() {

@@ -4,11 +4,13 @@ import java.io.Serializable;
 import org.dataverse.marketplace.model.MarketplaceItemImage;
 import io.swagger.v3.oas.annotations.media.Schema;
 
-@Schema(description = "Marketplace item image")
+@Schema(
+    name = "MarketplaceItemImage",
+    description = "Marketplace item image")
 public class MarketplaceItemImageDTO implements Serializable {
 
     @Schema(description = "The image ID", example = "1")
-    private Integer imageId;
+    private Long imageId;
 
     @Schema(description = "The stored resource ID", example = "1")
     private Long storedResourceId;
@@ -18,16 +20,16 @@ public class MarketplaceItemImageDTO implements Serializable {
 
     public MarketplaceItemImageDTO(MarketplaceItemImage marketplaceItemImage) {
         this.imageId = marketplaceItemImage.getId();
-        this.storedResourceId = marketplaceItemImage.getImageStoredResourceId();
+        this.storedResourceId = marketplaceItemImage.getStoredResource().getId();
     }
 
     /* Getters and Setters */
 
-    public Integer getImageId() {
+    public Long getImageId() {
         return this.imageId;
     }
 
-    public void setImageId(Integer imageId) {
+    public void setImageId(Long imageId) {
         this.imageId = imageId;
     }
 

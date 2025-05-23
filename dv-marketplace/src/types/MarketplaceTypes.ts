@@ -1,16 +1,42 @@
-
 export interface Version {
   id: number;
-  version: string;
-  releaseNote: string;
+  versionName: string;
+  versionNote: string;
   dataverseMinVersion: string;
-  manifests: Manifest[];
+  manifest: Manifest;
+  manifestSet: Manifest[];
 }
 
 export interface Manifest {
-  manifestId: number;
-  storedResourceId: number;
-  fileName: string;
+  displayName: string;
+  description: string;
+  scope: string;
+  toolUrl: string;
+  httpMethod: string;
+  toolName: string;
+  contentType: string;
+  contentTypes: string[];
+  types: string[];
+  toolParameters: {
+    queryParameters: { [key: string]: string }[];
+  };
+  allowedApiCalls: AllowedApiCall[];
+  requirements: {
+    auxFilesExist: AuxFilesExist[];
+  }
+
+}
+
+export interface AllowedApiCall {
+  name: string;
+  httpMethod: string;
+  urlTemplate: string;
+  timeOut: number;
+}
+
+export interface AuxFilesExist {
+  fileTag: string;
+  fileVersion: string;
 }
 
 export interface Image {
@@ -24,27 +50,36 @@ export interface ExternalTool {
   description: string;
   versions: Version[];
   images: Image[];
+  ownerId: number;
 }
 
 export type User = {
-    id: number;
-    username: string;
-    email: string;
-    roles: string[];
-    accessToken: string;
-    tokenType: string;
+  id: number;
+  username: string;
+  email: string;
+  roles: string[];
+  accessToken: string;
+  tokenType: string;
 };
 
 export type UserContextType = {
-    user: User | null;
-    setUser: (user: User | null) => void;
-    showLogin: boolean;
-    setShowLogin: (show: boolean) => void;
-    showMessage: boolean;
-    setShowMessage: (show: boolean) => void;
-    modalMessage: string;
-    setModalMessage: (message: string) => void;
-    modalTitle: string;
-    setModalTitle: (title: string) => void;
+  user: User | null;
+  setUser: (user: User | null) => void;
+  showLogin: boolean;
+  setShowLogin: (show: boolean) => void;
+  showMessage: boolean;
+  setShowMessage: (show: boolean) => void;
+  modalMessage: string;
+  setModalMessage: (message: string) => void;
+  modalTitle: string;
+  setModalTitle: (title: string) => void;
+  theme: Theme;
+  setTheme: (theme: Theme) => void;
 };
+
+export enum Theme {
+  LIGHT = "light",
+  DARK = "dark",
+  AUTO = "auto"
+}
 

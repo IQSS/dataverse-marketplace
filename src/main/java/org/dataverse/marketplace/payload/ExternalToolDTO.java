@@ -4,9 +4,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import org.dataverse.marketplace.model.*;
-import org.dataverse.marketplace.openapi.samples.AuthAPISamples;
 import org.dataverse.marketplace.openapi.samples.ExternalToolVersionSamples;
-import org.dataverse.marketplace.payload.auth.UserDTO;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 
@@ -16,7 +14,7 @@ public class ExternalToolDTO implements Serializable {
 
     @Schema(description = "The unique identifier of the external tool", 
             example = "1")
-    private Integer id;
+    private Long id;
 
     @Schema(description = "The name of the external tool", 
             example = "My External Tool")
@@ -35,17 +33,17 @@ public class ExternalToolDTO implements Serializable {
             example = "[1, 2, 3]")
     private List<MarketplaceItemImageDTO> images;
 
-    @Schema(description = "The owner of the external tool", 
-            implementation = UserDTO.class,
-            example = AuthAPISamples.USER)    
-    private UserDTO owner;
+    @Schema(description = "The id of the owner of the external tool", 
+            implementation = Long.class,
+            example = "1")    
+    private Long ownerId;
 
     public ExternalToolDTO() {
     }
 
     public ExternalToolDTO(ExternalTool externalTool) {
         id = externalTool.getId();
-        owner = new UserDTO(externalTool.getOwner());
+        ownerId = externalTool.getOwner().getId();
         name = externalTool.getName();
         description = externalTool.getDescription();
 
@@ -66,11 +64,11 @@ public class ExternalToolDTO implements Serializable {
 
     /* Getters and Setters */
 
-    public Integer getId() {
+    public Long getId() {
         return this.id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -106,12 +104,12 @@ public class ExternalToolDTO implements Serializable {
         this.images = images;
     }
 
-    public UserDTO getOwner() {
-        return owner;
+    public Long getOwnerId() {
+        return ownerId;
     }
 
-    public void setOwner(UserDTO owner) {
-        this.owner = owner;
+    public void setOwnerId(Long ownerId) {
+        this.ownerId = ownerId;
     }
 
 

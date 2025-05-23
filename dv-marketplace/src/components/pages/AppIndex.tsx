@@ -10,7 +10,11 @@ function ErrorFallback({ error, resetErrorBoundary }: { error: Error; resetError
 };
 
 const AppIndex = () => {
+
+  
+
   return (
+      
         <ErrorBoundary FallbackComponent={ErrorFallback}>
           <UserContextProvider>
             <Navigation />

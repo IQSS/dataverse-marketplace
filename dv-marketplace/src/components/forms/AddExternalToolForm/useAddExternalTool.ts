@@ -1,50 +1,72 @@
 import { useContext, useState } from "react";
-import { UserContext } from "../../context/UserContextProvider";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 import axios from "axios";
+import { UserContext } from "../../context/UserContextProvider";
 import useMarketplaceApiRepo from "../../../repositories/useMarketplaceApiRepo";
+import type { Manifest } from "../../../types/MarketplaceTypes";
 
 
 export default function useAddExternalTool() {
 
     const userContext = useContext(UserContext);
     const jwtToken = userContext.user ? userContext.user.accessToken : '';
-    const [modalIsOpen, setModalIsOpen] = useState(false);
-    const [modalMessage, setModalMessage] = useState('');
     const { BASE_URL } = useMarketplaceApiRepo();
+    const navigate = useNavigate();
+
+    const [showManifestEdit, setShowManifestEdit] = useState(0);
+    const [manifestForm, setManifestForm] = useState<Manifest | null>(null);
 
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-        const formData = new FormData(event.currentTarget);
 
-        try {
-            const response = await axios.post(`${BASE_URL}/api/tools`, formData, {
-                headers: {
-                    'Authorization': `Bearer ${jwtToken}`
-                }
-            });
-            console.log(response.data);
-            setModalMessage("Tool added successfully");
-        } catch (error) {
-            if (axios.isAxiosError(error)) {
-                setModalMessage(error.response?.data?.message || error.message);
-            } else {
-                setModalMessage(String(error));
+        const form = event.currentTarget;
+        const formData = new FormData();
+
+        const toolData = {
+            name: form.toolName.value,
+            description: form.description.value,
+            versionName: form.versionName.value,
+            versioneNote: form.versioneNote.value,
+            dataverseMinVersion: form.dataverseMinVersion.value,
+            manifest: manifestForm
+
+        };
+        formData.append("toolData", new Blob([JSON.stringify(toolData)], { type: "application/json" }));
+
+        // Append image files
+        const imageFiles = form.itemImages.files;
+        for (let i = 0; i < imageFiles.length; i++) {
+            formData.append("itemImages", imageFiles[i]);
+        }        
+
+        await axios.post(`${BASE_URL}/api/tools/with-images`, formData, {
+            headers: {
+                'Authorization': `Bearer ${jwtToken}`
             }
-        } finally {
-            setModalIsOpen(true);
-        }
+        }).then(() => {
+            toast.success("Tool added successfully");
+            navigate("/");
+        }).catch((error) => {
+            if (error.response.data.message) {
+                toast.error(error.response.data.message);
+            } else {
+                toast.error("An error occurred");
+            }
+        });
+
+       
     };
 
-    const closeModal = () => {
-        setModalIsOpen(false);
-    };
+   
 
     return {
         userContext,
         handleSubmit,
-        modalIsOpen,
-        modalMessage,
-        closeModal
+        showManifestEdit,
+        setShowManifestEdit,
+        manifestForm,
+        setManifestForm
     };
 
 }

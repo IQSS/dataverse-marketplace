@@ -1,14 +1,18 @@
-import Modal from 'react-bootstrap/Modal';
 import useAddExternalTool from './useAddExternalTool';
+import { Button } from "react-bootstrap";
+import { Link } from 'react-router-dom';
+import EditManifestForm from '../EditExternalToolForm/EditVersionForm/EditManifestForm';
+
 
 const AddExtToolForm = () => {
-    
+
 
     const {
         handleSubmit,
-        modalIsOpen,
-        modalMessage,
-        closeModal
+        showManifestEdit,
+        setShowManifestEdit,
+        manifestForm,
+        setManifestForm
     } = useAddExternalTool();
 
     return (
@@ -17,44 +21,55 @@ const AddExtToolForm = () => {
             <form onSubmit={handleSubmit} encType="multipart/form-data">
                 <div className="mb-3">
                     <label htmlFor="toolName" className="form-label">Tool Name</label>
-                    <input type="text" className="form-control" id="toolName" name="name" />
+                    <input type="text" className="form-control" id="toolName" name="toolName" />
                 </div>
                 <div className="mb-3">
                     <label htmlFor="toolDescription" className="form-label">Description</label>
                     <textarea className="form-control" id="toolDescription" name="description" />
                 </div>
                 <div className="mb-3">
-                    <label htmlFor="releaseNote" className="form-label">Release Note</label>
-                    <textarea className="form-control" id="releaseNote" name="releaseNote" />
+                    <label htmlFor="versionName" className="form-label">Version Name</label>
+                    <input type="text" className="form-control" id="versionName" name="versionName" />
                 </div>
                 <div className="mb-3">
-                    <label htmlFor="version" className="form-label">Version</label>
-                    <input type="text" className="form-control" id="version" name="version" />
+                    <label htmlFor="versioneNote" className="form-label">Version Note</label>
+                    <textarea className="form-control" id="versioneNote" name="versioneNote" />
                 </div>
                 <div className="mb-3">
                     <label htmlFor="dataverseMinVersion" className="form-label">Dataverse Min Version</label>
-                    <input type="text" className="form-control" id="dataverseMinVersion" name="dvMinVersion" />
-                </div>
-                <div className="mb-3">
-                    <label htmlFor="manifests" className="form-label">Manifests</label>
-                    <input type="file" className="form-control" id="manifests" name="jsonData" multiple />
+                    <input type="text" className="form-control" id="dataverseMinVersion" name="dataverseMinVersion" />
                 </div>
                 <div className="mb-3">
                     <label htmlFor="images" className="form-label">Images</label>
                     <input type="file" className="form-control" id="images" name="itemImages" multiple />
                 </div>
-                <button type="submit" className="btn btn-primary">Submit</button>
-            </form>    
 
-            <Modal show={modalIsOpen} onHide={closeModal}>
-                <Modal.Header closeButton>
-                    <Modal.Title>Response</Modal.Title>
-                </Modal.Header>
-                <Modal.Body>{modalMessage}</Modal.Body>
-                <Modal.Footer>
-                    <button type="button" className="btn btn-secondary" onClick={closeModal}>Close</button>
-                </Modal.Footer>
-            </Modal>
+                <p>Manifest Data:{" "}
+                    <button
+                        type="button"
+                        className="btn bi-pen px-0"
+                        onClick={() => {
+                            setShowManifestEdit(1);
+                        }}
+                    />
+
+                    <EditManifestForm
+                        show={showManifestEdit === 1}
+                        initialManifest={manifestForm ?? undefined}
+                        onSave={(newManifest) => {
+                            setManifestForm(newManifest);
+                            setShowManifestEdit(0);
+                        }}
+                        onCancel={() => setShowManifestEdit(0)}
+                    />
+                </p>
+
+
+                <button type="submit" className="btn btn-primary">Save</button>
+                <Button variant="outline-secondary" className="ms-2" as={Link as any} to={`/`}>
+                    <span className="me-1"></span>Cancel
+                </Button>
+            </form>
         </div>
     );
 };

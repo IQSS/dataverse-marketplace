@@ -1,6 +1,6 @@
 import { useState } from "react";
 import CardDeck from "../../UI/CardDeck";
-import { MarketplaceCard } from "../../UI/MarketplaceCard";
+import { MarketplaceLinkCard } from "../../UI/MarketplaceCard";
 import DvPromoCarrousel from "./DvPromoCarrousel";
 import useMarketplaceHome from "./useMarketplaceHome";
 function MarketplaceHome () {
@@ -37,7 +37,7 @@ function MarketplaceHome () {
 
             <CardDeck>
                 {tools.map(tool => (
-                    <MarketplaceCard key={tool.id}
+                    <MarketplaceLinkCard key={tool.id}
                     header={tool.name}
                     imageId={tool?.images[0]?.storedResourceId}
                     text={tool.description}

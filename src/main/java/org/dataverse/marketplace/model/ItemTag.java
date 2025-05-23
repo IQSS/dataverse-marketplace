@@ -3,26 +3,21 @@ package org.dataverse.marketplace.model;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "item_tag")
 public class ItemTag {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "mkt_item_tag_id_seq")    
-    @SequenceGenerator(
-        name = "mkt_item_tag_id_seq", 
-        sequenceName = "mkt_item_tag_id_seq", 
-        allocationSize = 1)
-    private Integer id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
     private String name;
 
     /* Getters & Setters */
 
-    public Integer getId() {
+    public Long getId() {
         return this.id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

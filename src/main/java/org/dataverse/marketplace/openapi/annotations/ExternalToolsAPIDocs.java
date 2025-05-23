@@ -12,7 +12,6 @@ import org.dataverse.marketplace.payload.MarketplaceItemImageDTO;
 import org.dataverse.marketplace.payload.ServerMessageResponse;
 import org.dataverse.marketplace.payload.UpdateToolRequest;
 import org.dataverse.marketplace.payload.auth.UserDTO;
-import org.springframework.web.multipart.MultipartFile;
 import org.dataverse.marketplace.openapi.samples.AuthAPISamples;
 import org.dataverse.marketplace.openapi.samples.ExternalToolSamples;
 
@@ -52,7 +51,7 @@ public @interface ExternalToolsAPIDocs {
             @ApiResponse(responseCode = "500", description = "Internal Server Error when adding a new external tool", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ServerMessageResponse.class), examples = @ExampleObject(GenericBusinessSamples.SERVER_MESSAGE_RESPONSE)))
     })
     @Operation(summary = "Adds a new external tool", description = "This endpoint will add a new external tool to the marketplace.")
-    @RequestBody(description = "The external tool creation request", required = true, content = @Content(mediaType = "multipart/form-data", schema = @Schema(implementation = AddToolRequest.class), examples = @ExampleObject(ExternalToolSamples.EXTERNAL_TOOL_MULTIPART_FORM_SAMPLE)))
+    @RequestBody(description = "The external tool creation request", required = true, content = @Content(mediaType = "application/json", schema = @Schema(implementation = AddToolRequest.class), examples = @ExampleObject(ExternalToolSamples.EXTERNAL_TOOL_MULTIPART_FORM_SAMPLE)))
     public @interface AddExternalToolsRequestDoc {
     }
 
@@ -66,7 +65,7 @@ public @interface ExternalToolsAPIDocs {
             @ApiResponse(responseCode = "500", description = "Internal Server Error during External Tool retrieval", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ServerMessageResponse.class), examples = @ExampleObject(GenericBusinessSamples.SERVER_MESSAGE_RESPONSE)))
     })
     @Operation(summary = "Retrieves the information from the specified external tool.", description = "This endpoint retrieves the information from the specified external tool by id.")
-    @Parameter(name = "toolId", description = "The id of the external tool to be retrieved", required = true, in = ParameterIn.PATH, schema = @Schema(type = "integer"))
+    @Parameter(name = "toolId", description = "The id of the external tool to be retrieved", required = true, in = ParameterIn.PATH, schema = @Schema(type = "integer", format = "int64"))
     public @interface GetExternalToolByIdDoc {
     }
 
@@ -132,10 +131,25 @@ public @interface ExternalToolsAPIDocs {
     @Retention(RetentionPolicy.RUNTIME)
     @Tag(name = "External Tools")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "External tools successfully retrieved", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ExternalToolDTO[].class), examples = @ExampleObject(ExternalToolSamples.EXTERNAL_TOOLS_LIST_SAMPLE))),
-            @ApiResponse(responseCode = "400", description = "Bad request on External tools list retrieval", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ServerMessageResponse.class), examples = @ExampleObject(GenericBusinessSamples.SERVER_MESSAGE_RESPONSE))),
-            @ApiResponse(responseCode = "401", description = "Bad credentials on External tools list retrieval", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ServerMessageResponse.class), examples = @ExampleObject(GenericBusinessSamples.SERVER_MESSAGE_RESPONSE))),
-            @ApiResponse(responseCode = "500", description = "Internal Server Error during External tools list retrieval", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ServerMessageResponse.class), examples = @ExampleObject(GenericBusinessSamples.SERVER_MESSAGE_RESPONSE)))
+            @ApiResponse(responseCode = "200", description = "External Tool successfully deleted", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ServerMessageResponse.class), examples = @ExampleObject(GenericBusinessSamples.SERVER_MESSAGE_RESPONSE))),
+            @ApiResponse(responseCode = "400", description = "Bad request on External Tool delete", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ServerMessageResponse.class), examples = @ExampleObject(GenericBusinessSamples.SERVER_MESSAGE_RESPONSE))),
+            @ApiResponse(responseCode = "401", description = "Access Denied for External Tool delete", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ServerMessageResponse.class), examples = @ExampleObject(GenericBusinessSamples.SERVER_MESSAGE_RESPONSE))),
+            @ApiResponse(responseCode = "500", description = "Internal Server Error during External Tool delete", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ServerMessageResponse.class), examples = @ExampleObject(GenericBusinessSamples.SERVER_MESSAGE_RESPONSE)))
+    })
+    @Operation(summary = "Delete the specified external tool.", description = "This endpoint deletes the specified external tool.")
+    @Parameter(name = "toolId", description = "The id of the external tool to be deleted", required = true, in = ParameterIn.PATH, schema = @Schema(type = "integer"))
+    public @interface DeleteExternalToolDoc {
+    }   
+    
+
+    @Target({ ElementType.METHOD })
+    @Retention(RetentionPolicy.RUNTIME)
+    @Tag(name = "External Tools")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Success on GetExternalToolByOwner", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ExternalToolDTO[].class), examples = @ExampleObject(ExternalToolSamples.EXTERNAL_TOOLS_LIST_SAMPLE))),
+            @ApiResponse(responseCode = "400", description = "Bad request on GetExternalToolByOwner", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ServerMessageResponse.class), examples = @ExampleObject(GenericBusinessSamples.SERVER_MESSAGE_RESPONSE))),
+            @ApiResponse(responseCode = "401", description = "Bad credentials on tools on GetExternalToolByOwner", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ServerMessageResponse.class), examples = @ExampleObject(GenericBusinessSamples.SERVER_MESSAGE_RESPONSE))),
+            @ApiResponse(responseCode = "500", description = "Internal Server Error on GetExternalToolByOwner ", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ServerMessageResponse.class), examples = @ExampleObject(GenericBusinessSamples.SERVER_MESSAGE_RESPONSE)))
     })
     @Operation(summary = "Returns a list of all external tools by owner id", description = "This endpoint will return a list of all external tools owned by a specific user.")
     public @interface GetExternalToolByOwnerIdDoc {

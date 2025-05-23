@@ -5,10 +5,8 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import org.dataverse.marketplace.openapi.samples.AuthAPISamples;
 import org.dataverse.marketplace.openapi.samples.GenericBusinessSamples;
 import org.dataverse.marketplace.payload.ServerMessageResponse;
-import org.dataverse.marketplace.payload.auth.response.JwtResponse;
 import org.springframework.core.io.Resource;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -39,6 +37,11 @@ public @interface ResourceStorageAPIDocs {
                         examples = @ExampleObject(GenericBusinessSamples.SERVER_MESSAGE_RESPONSE))),
         @ApiResponse(responseCode = "401", 
                         description = "Bad credentials on retrieving resource",
+                        content = @Content(mediaType = "application/json",
+                        schema = @Schema(implementation = ServerMessageResponse.class),
+                        examples = @ExampleObject(GenericBusinessSamples.SERVER_MESSAGE_RESPONSE))),
+        @ApiResponse(responseCode = "400",
+                        description = "Bad request on retrieving resource",
                         content = @Content(mediaType = "application/json",
                         schema = @Schema(implementation = ServerMessageResponse.class),
                         examples = @ExampleObject(GenericBusinessSamples.SERVER_MESSAGE_RESPONSE))),
