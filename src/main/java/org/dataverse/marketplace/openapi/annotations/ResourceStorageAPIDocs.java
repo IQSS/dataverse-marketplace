@@ -31,7 +31,7 @@ public @interface ResourceStorageAPIDocs {
                         schema = @Schema(implementation = Resource.class),
                         examples = @ExampleObject("SGVsbG8sIFdvcmxkIQ=="))),
         @ApiResponse(responseCode = "404", 
-                        description = "Bad request on retrieving resource",
+                        description = "Resource not found when trying to retrieve resource",
                         content = @Content(mediaType = "application/json",
                         schema = @Schema(implementation = ServerMessageResponse.class),
                         examples = @ExampleObject(GenericBusinessSamples.SERVER_MESSAGE_RESPONSE))),
