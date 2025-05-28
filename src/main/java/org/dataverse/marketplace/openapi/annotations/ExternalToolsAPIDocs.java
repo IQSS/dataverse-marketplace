@@ -65,7 +65,7 @@ public @interface ExternalToolsAPIDocs {
                         @ApiResponse(responseCode = "500", description = "Internal Server Error during External Tool retrieval", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ServerMessageResponse.class), examples = @ExampleObject(GenericBusinessSamples.SERVER_MESSAGE_RESPONSE)))
         })
         @Operation(summary = "Retrieves the information from the specified external tool.", description = "This endpoint retrieves the information from the specified external tool by id.")
-        @Parameter(name = "toolId", description = "The id of the external tool to be retrieved", required = true, in = ParameterIn.PATH, schema = @Schema(type = "integer", format
+        @Parameter(name = "toolId", description = "The id of the external tool to be retrieved", required = true, in = ParameterIn.PATH, schema = @Schema(type = "integer", format = "int64"))
     public @interface GetExternalToolByIdDoc {
     }
 
@@ -94,7 +94,7 @@ public @interface ExternalToolsAPIDocs {
     })
     @Operation(summary = "Adds a new image to the specified external tool.", description = "This endpoint adds a new image to the specified external tool by id.")
     @Parameter(name = "toolId", description = "the id of the external tool to add the image", required = true, in = ParameterIn.PATH, schema = @Schema(type = "integer"))        
-    @RequestBody(description = "The add tool image body")
+    @RequestBody(description = "The add tool image body request")
     public @interface AddToolImagesDoc {
     }
 
