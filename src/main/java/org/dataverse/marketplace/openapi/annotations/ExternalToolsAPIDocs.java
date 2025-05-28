@@ -94,7 +94,7 @@ public @interface ExternalToolsAPIDocs {
     })
     @Operation(summary = "Adds a new image to the specified external tool.", description = "This endpoint adds a new image to the specified external tool by id.")
     @Parameter(name = "toolId", description = "the id of the external tool to add the image", required = true, in = ParameterIn.PATH, schema = @Schema(type = "integer"))        
-    @RequestBody(description = "The add tool image body request")
+    @RequestBody(description = "The add tool image body")
     public @interface AddToolImagesDoc {
     }
 
