@@ -8,20 +8,20 @@ import jakarta.validation.constraints.NotEmpty;
 @Schema(description = "Request to add a new version of an existing external tool")
 public class AddVersionRequest implements Serializable{
 
-    @Schema(description = "Version descriptor of the new version of the existing external tool", 
+    @Schema(description = "Version name for the new version of the external tool.", 
         example = "\"1.0\"")
     String versionName;
 
-    @Schema(description = "A brief note about this version of the external tool.", 
+    @Schema(description = "Version note for the new version of the external tool.", 
         example = "This version includes a new feature that allows you to ask questions to an LLM.")
     String versionNote;
     
-    @Schema(description = "Minimum version of Dataverse that this version of the existing external tool is compatible with", 
+    @Schema(description = "Version minimum Dataverse version for the new version of the external tool.", 
         example = "\"6.0\"")
     @NotEmpty
     private String dataverseMinVersion;
 
-    @Schema(description = "Manifest metadata for this version")
+    @Schema(description = "Manifest metadata for this new version")
     private ExternalToolManifestDTO manifest;
 
     /* Getters and Setters */

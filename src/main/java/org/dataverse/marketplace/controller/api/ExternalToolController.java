@@ -24,6 +24,10 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
+import io.swagger.v3.oas.annotations.media.Schema;
+
 @RestController
 @RequestMapping("/api/tools")
 public class ExternalToolController {
@@ -220,6 +224,7 @@ public class ExternalToolController {
     @ExternalToolsAPIDocs.AddToolImagesDoc
     public ResponseEntity<?> addToolImages(
             @PathVariable("toolId") Long toolId,
+            @Parameter(name = "images", description = "The images to be added to the external tool", required = true, in = ParameterIn.DEFAULT, schema = @Schema(type = "string", format = "binary", example = "['image.png']"))
             @RequestPart("images") List<MultipartFile> images) throws IOException {
 
         ExternalTool tool = externalToolService.getToolById(toolId);

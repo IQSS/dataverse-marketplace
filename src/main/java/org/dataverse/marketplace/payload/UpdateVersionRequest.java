@@ -6,15 +6,15 @@ import jakarta.validation.constraints.NotEmpty;
 @Schema(description = "A representation of the update tool version request")
 public class UpdateVersionRequest {
 
-    @Schema(description = "Version descriptor of the new version of the existing external tool", 
+    @Schema(description = "Version name to be updated", 
         example = "\"1.0\"")
     String versionName;
 
-    @Schema(description = "A brief note about this version of the external tool.", 
+    @Schema(description = "Version note to be updated", 
         example = "This version includes a new feature that allows you to ask questions to an LLM.")
     String versionNote;
     
-    @Schema(description = "Minimum version of Dataverse that the external tool is compatible with", 
+    @Schema(description = "Minimum Dataverse version to be updated", 
         example = "\"6.0\"")
     @NotEmpty
     String dataverseMinVersion;
