@@ -16,7 +16,7 @@ public class AddVersionRequest implements Serializable{
         example = "This version includes a new feature that allows you to ask questions to an LLM.")
     String versionNote;
     
-    @Schema(description = "Version minimum Dataverse version for the new version of the external tool.", 
+    @Schema(description = "Minimum Dataverse version compatible with this version of the tool.", 
         example = "\"6.0\"")
     @NotEmpty
     private String dataverseMinVersion;
