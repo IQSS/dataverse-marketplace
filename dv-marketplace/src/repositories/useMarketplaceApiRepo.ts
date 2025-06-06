@@ -4,12 +4,13 @@ import axios from "axios";
 import { toast } from "react-toastify";
 
 const BASE_URL = 'http://localhost:8081';
+// Change this for deployment
+// const BASE_URL = '';
 
 export default function useMarketplaceApiRepo() {
 
     const userContext = useContext(UserContext);
-    // Change this for deployment
-    // const BASE_URL = '';
+    
     
     const jwtToken = userContext.user ? userContext.user.accessToken : '';
 

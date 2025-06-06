@@ -3,7 +3,7 @@ import axios from "axios";
 import type { ExternalTool, Manifest,Image } from "../../types/MarketplaceTypes";
 import { Alert } from "react-bootstrap";
 import { InnerCardDeck } from "../UI/CardDeck";
-import { RowCard, MarketplaceCard } from "../UI/MarketplaceCard";
+import { RowCard, MarketplaceCard, BaseCard } from "../UI/MarketplaceCard";
 import InstallExToolFrame from "./InstallExToolFrame";
 import useViewExternalTool from "./useViewExternalTool";
 import { useEffect } from "react";
@@ -39,34 +39,42 @@ const ViewExternalTool = () => {
 
     return (
         <div className="container" style={{ marginTop: "120px" }}>
-
-
-        <Alert variant='light'>
-        <div className='container '>
-            <div className='row'>
-                <h1 className='col-6'>{tool?.name}:</h1>
-                <div className='col-6 d-flex justify-content-end align-items-center'>
-                    {userContext.user && 
+         
+        {userContext.user && 
                     ( userContext.user.roles.includes("ADMIN") || tool?.ownerId == userContext.user.id)  &&
-                        <Link to ={`/edit/${id}`} className="btn btn-secondary bi-pen" > Edit</Link>
-                    }
+        <Alert variant='light' className="d-flex justify-content-end">
+            <Link to ={`/edit/${id}`} className="btn btn-secondary bi-pen" > Edit</Link>
+        </Alert>
+        }       
+
+             <div className="container-fluid" style={{display: 'flex', flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'left'}}>
+                <div className='row col-12'>
+                    <div className='col-3'>
+                    <BaseCard
+                    header={tool?.name}
+                    imageId={tool?.images[0]?.imageId}
+                    />
+                    </div>
+                    <p className="col-9 mb-2 py-10" style={{padding: '10px'}}>
+                        {tool?.description}
+                    </p>
                 </div>
             </div>
-        </div>
-        </Alert>
-
+            
             <div>
                 <p className='col-12 d-flex '>
-                    {tool?.description}
+                   
                 </p>
             </div>
-            <Alert variant='light'>
-                <div className='container '>
+            {/* <Alert variant='light'> */}
+
+                <div className='container'>
+                    <hr />
                     <div className='row'>
-                        <h3 className='col-6'>Releases:</h3>
+                        <h3 className='col-6'>Releases</h3>
                     </div>
                 </div>
-            </Alert>
+            {/* </Alert> */}
 
             <InnerCardDeck>
                 {tool?.versions.map((version) => (
@@ -114,15 +122,15 @@ const ViewExternalTool = () => {
 
             <br />
 
-            <Alert variant='light'>
                 <div className='container '>
+                    <hr />
                     <div className='row'>
-                        <h3 className='col-6'>Images:</h3>
+                        <h3 className='col-6'>Images</h3>
                         <div className='col-6 d-flex justify-content-end align-items-center'>
                         </div>
                     </div>
+                    
                 </div>
-            </Alert>
             <InnerCardDeck>
 
                 {tool?.images.map((image: Image) => (

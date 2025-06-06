@@ -6,13 +6,7 @@ export const UserContext = createContext<UserContextType>({
     user: null,
     setUser: () => {},
     showLogin: false,
-    setShowLogin: () => {},
-    showMessage: false,
-    setShowMessage: () => {},
-    modalMessage: '',
-    setModalMessage: () => {},
-    modalTitle: '',
-    setModalTitle: () => {},
+    setShowLogin: () => {},   
     theme: Theme.AUTO,
     setTheme: () => {}
 
@@ -23,7 +17,7 @@ const UserContextProvider = ({ children }: { children: React.ReactNode }) => {
     const [user, setUser] = useState<User | null>(null);
     const [showLogin, setShowLogin] = useState(false);
     //App message dialog    
-    const [theme, setTheme] = useState<Theme>();
+    const [theme, setTheme] = useState<Theme>(Theme.AUTO);
 
     useEffect((): void => {
         const user = localStorage.getItem('user');
