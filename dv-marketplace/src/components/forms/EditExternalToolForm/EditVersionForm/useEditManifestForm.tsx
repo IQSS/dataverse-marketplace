@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import type { Manifest } from "../../../../types/MarketplaceTypes";
 import { createFormChangeHandler } from "../../../UI/FormInputFields";
+import useMarketplaceApiRepo from "../../../../repositories/useMarketplaceApiRepo";
 
 
 export default function useEditManifestForm(initialManifest?: Manifest, show?: boolean) {
@@ -34,7 +35,7 @@ export default function useEditManifestForm(initialManifest?: Manifest, show?: b
     const handleManifestChange = createFormChangeHandler(setFormManifest);
 
 
-    const BASE_URL = 'http://localhost:8081';
+    const { BASE_URL } = useMarketplaceApiRepo();
 
 
     const [scopes, setScopes] = useState<string[]>([]);
