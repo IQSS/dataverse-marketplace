@@ -14,7 +14,7 @@ export default function useAddExternalTool() {
     const { BASE_URL } = useMarketplaceApiRepo();
     const navigate = useNavigate();
 
-    const [showManifestEdit, setShowManifestEdit] = useState(0);
+    const [showManifestForm, setShowManifestForm] = useState(false);
     const [manifestForm, setManifestForm] = useState<Manifest | null>(null);
 
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -63,8 +63,8 @@ export default function useAddExternalTool() {
     return {
         userContext,
         handleSubmit,
-        showManifestEdit,
-        setShowManifestEdit,
+        showManifestForm,
+        setShowManifestForm,
         manifestForm,
         setManifestForm
     };
