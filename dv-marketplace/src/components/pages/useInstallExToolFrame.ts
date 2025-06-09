@@ -25,7 +25,7 @@ export default function useInstallExToolFrame(
         );
         setHostnames(fetchedHostnames);
       } catch (error) {
-        console.error("Error fetching hostnames:", error);
+        toast.error("Error fetching hostnames: " + error);
       }
       setHostnames((prevHostnames) => ["localhost:8080", ...prevHostnames]);
     };
@@ -54,7 +54,7 @@ export default function useInstallExToolFrame(
         handleClose();
       })
       .catch((error) => {
-        console.error("Error installing external tool:", error);
+        toast.error(`Error installing External Tool: ${error.response?.data?.message || error.message}`);        
       });
 
   }

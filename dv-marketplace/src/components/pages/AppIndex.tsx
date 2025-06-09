@@ -3,7 +3,6 @@ import UserContextProvider from "../context/UserContextProvider";
 import ErrorView from "../UI/ErrorView";
 import { Outlet } from "react-router-dom";
 import Navigation from '../UI/Navigation/NavigationBar';
-import AppMessageDialog from "../UI/AppMessageDialog";
 
 function ErrorFallback({ error, resetErrorBoundary }: { error: Error; resetErrorBoundary: () => void }) {
   return <ErrorView error={error} resetErrorBoundary={resetErrorBoundary} />;
@@ -21,7 +20,6 @@ const AppIndex = () => {
             <ErrorBoundary FallbackComponent={ErrorFallback}>
               <Outlet />            
             </ErrorBoundary>
-            <AppMessageDialog />
           </UserContextProvider>
         </ErrorBoundary>
   );

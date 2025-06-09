@@ -8,21 +8,26 @@ export default function useThemeSwitcher() {
     const userContext = useContext(UserContext);
     const [themeClass, setThemeClass] = useState("bi bi-circle-half");
 
-    const handleThemeChange = (newTheme: Theme) => {
-       userContext.setTheme(newTheme);
-    };
+    const handleThemeChange = (newTheme: Theme) => {   
 
-    
+        userContext.setTheme(newTheme as Theme);
+
+        document.documentElement.setAttribute("data-bs-theme", userContext.theme || "auto");
+
+        if (newTheme === Theme.AUTO) {
+            setThemeClass("bi bi-circle-half");
+        } else if (newTheme === Theme.LIGHT) {
+            setThemeClass("bi bi-sun");
+        } else if (newTheme === Theme.DARK) {
+            setThemeClass("bi bi-moon");
+        }
+
+        localStorage.setItem("theme", newTheme);
+    };
 
     useEffect(() => {
         
         document.documentElement.setAttribute("data-bs-theme", userContext.theme || "auto");
-        const savedTheme = localStorage.getItem("theme") as Theme;
-
-        if (savedTheme !== userContext.theme && userContext.theme !== undefined) {
-            console.log("Theme changed to: ", userContext.theme);
-            localStorage.setItem("theme", userContext.theme);
-        }
 
         if (userContext.theme === Theme.AUTO) {
             setThemeClass("bi bi-circle-half");

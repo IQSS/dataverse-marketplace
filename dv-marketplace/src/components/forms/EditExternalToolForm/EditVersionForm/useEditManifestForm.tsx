@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import type { Manifest } from "../../../../types/MarketplaceTypes";
 import { createFormChangeHandler } from "../../../UI/FormInputFields";
+import useMarketplaceApiRepo from "../../../../repositories/useMarketplaceApiRepo";
+import { toast } from "react-toastify";
 
 
 export default function useEditManifestForm(initialManifest?: Manifest, show?: boolean) {
@@ -34,7 +36,7 @@ export default function useEditManifestForm(initialManifest?: Manifest, show?: b
     const handleManifestChange = createFormChangeHandler(setFormManifest);
 
 
-    const BASE_URL = 'http://localhost:8081';
+    const { BASE_URL } = useMarketplaceApiRepo();
 
 
     const [scopes, setScopes] = useState<string[]>([]);
@@ -77,7 +79,7 @@ export default function useEditManifestForm(initialManifest?: Manifest, show?: b
                 setFormManifest(data);
 
             } catch (err) {
-                console.error("Invalid JSON file", err);
+                toast.error("Invalid JSON file format. Please upload a valid manifest JSON file.");
             }
         };
 
