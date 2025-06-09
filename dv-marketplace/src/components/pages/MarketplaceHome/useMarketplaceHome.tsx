@@ -3,6 +3,7 @@ import type { ExternalTool } from '../../../types/MarketplaceTypes';
 import axios from "axios";
 import useMarketplaceApiRepo from "../../../repositories/useMarketplaceApiRepo";
 import { UserContext } from "../../context/UserContextProvider";
+import { toast } from "react-toastify";
 
 export default function useMarketplaceHome(onlyMine = false) {
 
@@ -21,7 +22,7 @@ export default function useMarketplaceHome(onlyMine = false) {
                 const response = await axios.get(url);
                 setTools(response.data);
             } catch (error) {
-                console.error('Error fetching tools:', error);
+                toast.error(`Error fetching tools:`);
             }
         };
 
