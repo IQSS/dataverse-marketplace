@@ -5,7 +5,7 @@ import { toast } from "react-toastify";
 
 //const BASE_URL = 'http://localhost:8081';
 // Change this for deployment
-const BASE_URL = '';
+const BASE_URL = 'http://localhost:8081';
 
 export default function useMarketplaceApiRepo() {
 
