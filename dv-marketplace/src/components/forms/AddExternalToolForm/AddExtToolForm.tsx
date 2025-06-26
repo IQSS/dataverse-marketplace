@@ -21,11 +21,11 @@ const AddExtToolForm = () => {
     } = useAddExternalTool();
 
     const manifest: Manifest = {
-        displayName: 'asd',
+        displayName: '',
         description: '',
         scope: '',
         toolUrl: '',
-        httpMethod: 'GET',
+        httpMethod: '',
         contentType: '',
         toolParameters: { queryParameters: [] },
         toolName: '',

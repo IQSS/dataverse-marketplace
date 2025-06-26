@@ -1,6 +1,6 @@
-import { useState, forwardRef, useImperativeHandle } from "react";
+import { forwardRef, useImperativeHandle } from "react";
 import { Button, Form, Modal } from "react-bootstrap";
-import { FormInputTextField, FormInput, FormInputTextArea, FormInputSelect, MultiValueInput, KeyPairInput, SingleMultiValueInput } from "../../../UI/FormInputFieldsRefactor";
+import { FormInputTextField, FormInput, FormInputTextArea, FormInputSelect, KeyPairInput, SingleMultiValueInput } from "../../../UI/FormInputFieldsRefactor";
 import type { Manifest } from "../../../../types/MarketplaceTypes";
 import useEditManifestFormRefactor from "./useEditManifestFormRefactor";
 
@@ -15,47 +15,25 @@ type EditManifestFormRefactorProps = {
 
 const EditManifestFormRefactor = forwardRef<ModalRef, EditManifestFormRefactorProps>(({ manifest }, ref) => {
 
-    const [show, setShow] = useState(false);
+    const {
+        toolTypes,
+        scopes,
+        httpMethods,
+        show,
+        handleClose,
+        handleShow,
+        handleSave,
+        handleReset,
+        formManifest,
+    } = useEditManifestFormRefactor(manifest);
 
-    const handleClose = () => setShow(false);
-    const handleShow = () => setShow(true);
-    const handleSave = () => {
-        
-        const displayNameInput = document.getElementById("displayName") as HTMLInputElement;
-        manifest.displayName = displayNameInput?.value;
-        const form = document.getElementById("manifestForm") as HTMLFormElement;
-        if (form) {
-            const formData = new FormData(form);
-            const formJson: Record<string, any> = {};
-            formData.forEach((value, key) => {
-                // Handle multiple values for the same key (e.g., multi-select)
-                if (formJson[key]) {
-                    if (Array.isArray(formJson[key])) {
-                        formJson[key].push(value);
-                    } else {
-                        formJson[key] = [formJson[key], value];
-                    }
-                } else {
-                    formJson[key] = value;
-                }
-            });
-            // Print the JSON stringified version
-            console.log(JSON.stringify(formJson, null, 2));
-        }
-        setShow(false);
-    };
 
     useImperativeHandle(ref, () => ({
         open: handleShow,
         close: handleClose,
     }));
 
-   const {
-        toolTypes,
-        scopes,
-        httpMethods,
-   } = useEditManifestFormRefactor();
-
+   
     return (
         <Modal show={show} onHide={handleClose} size="lg" centered backdrop="static">
             <Modal.Header closeButton>
@@ -64,7 +42,7 @@ const EditManifestFormRefactor = forwardRef<ModalRef, EditManifestFormRefactorPr
                     <button type="button" className="btn btn-primary">
                         Upload JSON
                     </button>
-                    <button type="button" className="btn btn-secondary">
+                    <button type="button" className="btn btn-secondary" onClick={handleReset}>
                         Reset
                     </button>
                 </div>
@@ -73,14 +51,14 @@ const EditManifestFormRefactor = forwardRef<ModalRef, EditManifestFormRefactorPr
                 <Form id="manifestForm" >
                 <Form.Group className="mb-3">
                     <Form.Label as="h5" className="mt-4 mb-3">Presentation</Form.Label>
-                    <FormInputTextField id="displayName" name="displayName" label="Display Name" value={manifest?.displayName} />
-                    <FormInputTextArea id="description" name="description" label="Description" value={manifest?.description} />
+                    <FormInputTextField id="displayName" name="displayName" label="Display Name" value={formManifest?.displayName} />
+                    <FormInputTextArea id="description" name="description" label="Description" value={formManifest?.description} />
 
                     <Form.Label as="h5" className="mt-4 mb-3">Access</Form.Label>
 
                     <FormInputSelect id="types" name="types" label="Types"
                         options={toolTypes.map(type => ({ value: type, label: type }))}
-                        multiple={true} value={manifest?.types} />
+                        multiple={true} value={formManifest?.types} />
 
                     <SingleMultiValueInput label="Content Types" id="contentTypes" />
 
@@ -89,10 +67,10 @@ const EditManifestFormRefactor = forwardRef<ModalRef, EditManifestFormRefactorPr
                     <FormInput id="toolUrl" name="toolUrl" label="Tool URL" htmlType="url" />
                     <FormInputSelect id="scope" name="scope" label="Scope"
                         options={scopes.map(scope => ({ value: scope, label: scope }))}
-                        value={manifest?.scope} />
+                        value={formManifest?.scope} />
                     <FormInputSelect id="httpMethod" name="httpMethod" label="HTTP Method"
                         options={httpMethods.map(method => ({ value: method, label: method }))}
-                        value={manifest?.httpMethod} />
+                        value={formManifest?.httpMethod} />
 
                     <KeyPairInput label="Query Parameters" id="queryParams" />
 
