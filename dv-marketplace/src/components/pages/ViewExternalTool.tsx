@@ -6,7 +6,9 @@ import { InnerCardDeck } from "../UI/CardDeck";
 import { RowCard, MarketplaceCard, BaseCard } from "../UI/MarketplaceCard";
 import InstallExToolFrame from "./InstallExToolFrame";
 import useViewExternalTool from "./useViewExternalTool";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
+import ImagesCarrouselView, { ModalRef } from "./ImagesCarrouselView";
+import { toast } from "react-toastify";
 
 
 
@@ -31,11 +33,17 @@ const ViewExternalTool = () => {
                 const response = await axios.get(`${BASE_URL}/api/tools/${id}`);
                 setTool(response.data as ExternalTool);
             } catch (error) {
-                console.error("Error fetching the tool:", error);
+                toast.error(`Error fetching tool`);
             }
         };
         fetchTool();
     }, [id, BASE_URL, setTool]);
+
+    const modalRef = useRef<ModalRef>(null);
+
+    const openModal = (selected: number) => {
+        modalRef.current?.open(selected);
+    }
 
     return (
         <div className="container" style={{ marginTop: "120px" }}>
@@ -131,18 +139,24 @@ const ViewExternalTool = () => {
                     </div>
                     
                 </div>
+            <ImagesCarrouselView ref={modalRef} images={tool?.images} selected={0} />
             <InnerCardDeck>
-
-                {tool?.images.map((image: Image) => (
-                    <MarketplaceCard
-                        key={image.imageId}
-                        imageId={image.storedResourceId}>
-                    </MarketplaceCard>
+                
+                {tool?.images.map((image: Image, idx: number) => (
+                    <>
+                    {/* <div onClick={() => openModal(idx)} style={{ cursor: "pointer" }}> */}
+                        <MarketplaceCard
+                            key={image.imageId}
+                            imageId={image.storedResourceId}
+                            onClick={() => openModal(idx)}>
+                        </MarketplaceCard>
+                    {/* </div> */}
+                    </>
                 ))}
             </InnerCardDeck>
 
             <InstallExToolFrame manifest={toolToInstall} showModal={showModal} setShowModal={setShowModal} />
-
+            
 
 
 

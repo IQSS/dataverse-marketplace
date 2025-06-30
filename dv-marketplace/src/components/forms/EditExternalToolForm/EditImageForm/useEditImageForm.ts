@@ -22,9 +22,7 @@ export default function useEditImageForm({ tool }: { tool: ExternalTool | undefi
     const handleImageSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         const formData = new FormData(event.currentTarget);
-        console.log("FormData: ", formData);
         const data = await postFormRequest(`/api/tools/${tool?.id}/images`, formData);
-        console.log("Data: ", data);
         if (Array.isArray(data)) {
             for (const item of data) {
                 images.push(item);

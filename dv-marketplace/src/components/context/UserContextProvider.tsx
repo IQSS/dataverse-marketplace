@@ -7,7 +7,7 @@ export const UserContext = createContext<UserContextType>({
     setUser: () => {},
     showLogin: false,
     setShowLogin: () => {},   
-    theme: Theme.AUTO,
+
     setTheme: () => {}
 
 });
@@ -31,9 +31,6 @@ const UserContextProvider = ({ children }: { children: React.ReactNode }) => {
         } else {
            setTheme(Theme.AUTO);
         }
-
-        console.log(savedTheme)
-
     }, []);
 
     useEffect((): void => {

@@ -67,7 +67,7 @@ export type UserContextType = {
   setUser: (user: User | null) => void;
   showLogin: boolean;
   setShowLogin: (show: boolean) => void; 
-  theme: Theme;
+  theme?: Theme;
   setTheme: (theme: Theme) => void;
 };
 
@@ -76,4 +76,5 @@ export enum Theme {
   DARK = "dark",
   AUTO = "auto"
 }
+
 

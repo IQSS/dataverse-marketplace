@@ -3,9 +3,9 @@ import { UserContext } from "../components/context/UserContextProvider";
 import axios from "axios";
 import { toast } from "react-toastify";
 
-const BASE_URL = 'http://localhost:8081';
+//const BASE_URL = 'http://localhost:8081';
 // Change this for deployment
-// const BASE_URL = '';
+const BASE_URL = '';
 
 export default function useMarketplaceApiRepo() {
 
@@ -183,7 +183,7 @@ export async function fetchFromApi<T>(url: string): Promise<T> {
         const response = await axios.get(`${BASE_URL}${url}`);
         return response.data as T;
     } catch (error) {
-        console.error('Error fetching data:', error);
+        toast.error(`Error fetching data from ${url}: ${error}`);
         throw error;
     }    
 }
