@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import useMarketplaceApiRepo from "../../../../repositories/useMarketplaceApiRepo";
 import type { Manifest, AuxFilesExist } from "../../../../types/MarketplaceTypes";
-
+import { toast } from "react-toastify";
+ 
 export default function useEditManifestFormRefactor(manifest: Manifest) {
 
     const [show, setShow] = useState(false);
@@ -23,8 +24,6 @@ export default function useEditManifestFormRefactor(manifest: Manifest) {
         allowedApiCalls: [],
         requirements: { auxFilesExist: [] as AuxFilesExist[] }
     });
-        
-
 
     const { BASE_URL } = useMarketplaceApiRepo();
 
@@ -66,10 +65,11 @@ export default function useEditManifestFormRefactor(manifest: Manifest) {
     };
 
     const handleSave = () => {
-        
+        /*
         const displayNameInput = document.getElementById("displayName") as HTMLInputElement;
-        manifest.displayName = displayNameInput?.value;
-
+        manifest.displayName = displayNameInput?.value;*/
+        manifest.displayName = formManifest.displayName;
+        manifest.toolName = formManifest.toolName;
 
         const form = document.getElementById("manifestForm") as HTMLFormElement;
         if (form) {
@@ -87,8 +87,6 @@ export default function useEditManifestFormRefactor(manifest: Manifest) {
                     formJson[key] = value;
                 }
             });
-            // Print the JSON stringified version
-            //console.log(JSON.stringify(formJson, null, 2));
         }
         console.log("Manifest saved:", manifest);
         setShow(false);
@@ -113,7 +111,34 @@ export default function useEditManifestFormRefactor(manifest: Manifest) {
                     
         const form = document.getElementById("manifestForm") as HTMLFormElement;
         form?.reset();
-    }
+    };
+
+    const handleJsonUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const file = event.target.files?.[0];
+        if (!file) return;
+
+        const reader = new FileReader();
+
+        reader.onload = (e) => {
+            const result = e.target?.result as string;
+            try {
+                const data = JSON.parse(result) as Manifest;
+
+                console.log("Parsed JSON data:", data);
+                console.log(data.toolName);
+                if (data.contentType && !data.contentTypes) {
+                    data.contentTypes = [data.contentType];
+                }
+
+                setFormManifest(data);
+
+            } catch (err) {
+                toast.error("Invalid JSON file format. Please upload a valid manifest JSON file.");
+            }
+        };
+
+        reader.readAsText(file);
+    };
 
     return {
         show,
@@ -129,6 +154,7 @@ export default function useEditManifestFormRefactor(manifest: Manifest) {
         handleSave,
         handleReset,
         formManifest,
-        setFormManifest
+        setFormManifest,
+        handleJsonUpload,
     };
 }

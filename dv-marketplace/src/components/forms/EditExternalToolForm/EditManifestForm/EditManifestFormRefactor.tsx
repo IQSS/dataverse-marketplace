@@ -1,4 +1,4 @@
-import { forwardRef, useImperativeHandle } from "react";
+import { forwardRef, useImperativeHandle, useRef } from "react";
 import { Button, Form, Modal } from "react-bootstrap";
 import { FormInputTextField, FormInput, FormInputTextArea, FormInputSelect, KeyPairInput, SingleMultiValueInput } from "../../../UI/FormInputFieldsRefactor";
 import type { Manifest } from "../../../../types/MarketplaceTypes";
@@ -25,6 +25,7 @@ const EditManifestFormRefactor = forwardRef<ModalRef, EditManifestFormRefactorPr
         handleSave,
         handleReset,
         formManifest,
+        handleJsonUpload,
     } = useEditManifestFormRefactor(manifest);
 
 
@@ -33,15 +34,31 @@ const EditManifestFormRefactor = forwardRef<ModalRef, EditManifestFormRefactorPr
         close: handleClose,
     }));
 
+    const fileInputRef = useRef<HTMLInputElement>(null);
+    
+
    
     return (
         <Modal show={show} onHide={handleClose} size="lg" centered backdrop="static">
             <Modal.Header closeButton>
                 <Modal.Title>Manifest</Modal.Title>
                 <div className="d-flex ms-auto gap-2">
-                    <button type="button" className="btn btn-primary">
+                    <button type="button" className="btn btn-primary"
+                        onClick={() => {
+                            if (fileInputRef.current) {
+                                fileInputRef.current.click();
+                            }
+                        }}>
                         Upload JSON
                     </button>
+                    <input
+                        type="file"
+                        accept=".json"
+                        ref={fileInputRef}
+                        style={{ display: 'none' }}
+                        onChange={(e) => {
+                           handleJsonUpload(e)
+                        }} />
                     <button type="button" className="btn btn-secondary" onClick={handleReset}>
                         Reset
                     </button>
