@@ -31,7 +31,7 @@ public class ExternalToolManifestDTO implements Serializable {
     @Schema(description = "The manifest's description", example = "This is a description for na installed external tool.")
     private String description;
 
-    @Schema(description = "The manifest's scope", example = "Dataset")
+    @Schema(description = "The manifest's scope", example = "dataset")
     private Scope scope;
 
     @Schema(description = "The manifest's tool URL", example = "https://example.com/tool")
