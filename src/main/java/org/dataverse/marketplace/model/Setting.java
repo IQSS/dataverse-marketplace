@@ -4,8 +4,8 @@ import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "app_settings")
-public class AppSetting {
+@Table(name = "settings")
+public class Setting {
 
     @Id
     @Column(name = "setting_key", length = 100)
@@ -17,22 +17,22 @@ public class AppSetting {
     @Column(length = 500)
     private String description;
 
-    @Column(name = "updated_at")
-    private LocalDateTime updatedAt;
+    @Column(name = "last_update_time")
+    private LocalDateTime lastUpdateTime;
 
-    public AppSetting() {
+    public Setting() {
     }
 
-    public AppSetting(String key, String value, String description) {
+    public Setting(String key, String value, String description) {
         this.key = key;
         this.value = value;
         this.description = description;
-        this.updatedAt = LocalDateTime.now();
+        this.lastUpdateTime = LocalDateTime.now();
     }
 
     @PreUpdate
     public void preUpdate() {
-        this.updatedAt = LocalDateTime.now();
+        this.lastUpdateTime = LocalDateTime.now();
     }
 
     public String getKey() {
@@ -59,11 +59,11 @@ public class AppSetting {
         this.description = description;
     }
 
-    public LocalDateTime getUpdatedAt() {
-        return updatedAt;
+    public LocalDateTime getLastUpdateTime() {
+        return lastUpdateTime;
     }
 
-    public void setUpdatedAt(LocalDateTime updatedAt) {
-        this.updatedAt = updatedAt;
+    public void setLastUpdateTime(LocalDateTime lastUpdateTime) {
+        this.lastUpdateTime = lastUpdateTime;
     }
 }

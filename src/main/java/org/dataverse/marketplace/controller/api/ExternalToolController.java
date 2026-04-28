@@ -393,6 +393,7 @@ public class ExternalToolController {
      */
     @PreAuthorize(ApplicationRoles.ADMIN_ROLE)
     @PutMapping("/{toolId}/publish")
+    @ExternalToolsAPIDocs.PublishToolDoc
     public ResponseEntity<?> publishTool(@PathVariable("toolId") Long toolId) {
         try {
             externalToolService.makeToolPublic(toolId);
@@ -416,6 +417,7 @@ public class ExternalToolController {
      */
     @PreAuthorize(ApplicationRoles.ADMIN_ROLE)
     @PutMapping("/{toolId}/unpublish")
+    @ExternalToolsAPIDocs.UnpublishToolDoc
     public ResponseEntity<?> unpublishTool(@PathVariable("toolId") Long toolId) {
         try {
             externalToolService.makeToolDraft(toolId);

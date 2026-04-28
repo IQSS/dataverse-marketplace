@@ -11,8 +11,8 @@ export default function useSignupButton() {
     useEffect(() => {
         const fetchRegistrationStatus = async () => {
             try {
-                const response = await axios.get(`${BASE_URL}/api/auth/registration-status`);
-                setRegistrationEnabled(response.data.enabled);
+                const response = await axios.get(`${BASE_URL}/api/settings/registration_enabled`);
+                setRegistrationEnabled(response.data.value === 'true');
             } catch (error) {
                 console.warn("Could not fetch registration status:", error);
                 // Default to enabled if fetch fails

@@ -21,7 +21,7 @@ import org.dataverse.marketplace.payload.auth.response.*;
 import org.dataverse.marketplace.repository.*;
 import org.dataverse.marketplace.security.*;
 import org.dataverse.marketplace.security.jwt.JwtUtils;
-import org.dataverse.marketplace.service.AppSettingService;
+import org.dataverse.marketplace.service.SettingService;
 
 
 /**
@@ -47,7 +47,7 @@ public class AuthController {
     JwtUtils jwtUtils;
 
     @Autowired
-    AppSettingService appSettingService;
+    SettingService settingService;
 
     @PostMapping("/login")
     @AuthAPIDocs.Login
@@ -80,7 +80,7 @@ public class AuthController {
     public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest signUpRequest) {
 
         // Check registration flag first (most common case: enabled)
-        if (!appSettingService.isRegistrationEnabled()) {
+        if (!settingService.isRegistrationEnabled()) {
             // Only check admin status if registration is disabled
             Authentication auth = SecurityContextHolder.getContext().getAuthentication();
             boolean isAdmin = auth != null
@@ -238,22 +238,6 @@ public class AuthController {
         }
 
         return ResponseEntity.ok(rolesDTO);
-    }
-
-    @GetMapping("/registration-status")
-    public ResponseEntity<?> getRegistrationStatus() {
-        Map<String, Boolean> response = new HashMap<>();
-        response.put("enabled", appSettingService.isRegistrationEnabled());
-        return ResponseEntity.ok(response);
-    }
-
-    @PreAuthorize(ApplicationRoles.ADMIN_ROLE)
-    @PutMapping("/registration-status")
-    public ResponseEntity<?> setRegistrationStatus(@RequestParam("enabled") boolean enabled) {
-        appSettingService.setRegistrationEnabled(enabled);
-        return ResponseEntity.ok(new ServerMessageResponse(HttpStatus.OK,
-                "Registration status updated.",
-                String.format("Public registration is now %s.", enabled ? "enabled" : "disabled")));
     }
 
 }

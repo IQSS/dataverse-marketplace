@@ -37,7 +37,7 @@ public @interface ExternalToolsAPIDocs {
                         @ApiResponse(responseCode = "401", description = "Bad credentials on External tools list retrieval", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ServerMessageResponse.class), examples = @ExampleObject(GenericBusinessSamples.SERVER_MESSAGE_RESPONSE))),
                         @ApiResponse(responseCode = "500", description = "Internal Server Error during External tools list retrieval", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ServerMessageResponse.class), examples = @ExampleObject(GenericBusinessSamples.SERVER_MESSAGE_RESPONSE)))
         })
-        @Operation(summary = "Returns a list of all external tools", description = "This endpoint will return a list of all external tools available in the marketplace.")
+        @Operation(summary = "Returns a list of all external tools", description = "This endpoint will return a list of all external tools available in the marketplace. Results can be filtered by scope, type, and status (admin only) using query parameters.")
         public @interface ExternalToolsListDoc {
         }
 
@@ -154,6 +154,32 @@ public @interface ExternalToolsAPIDocs {
     })
     @Operation(summary = "Returns a list of all external tools by owner id", description = "This endpoint will return a list of all external tools owned by a specific user.")
     public @interface GetExternalToolByOwnerIdDoc {
+    }
+
+    @Target({ ElementType.METHOD })
+    @Retention(RetentionPolicy.RUNTIME)
+    @Tag(name = "External Tools")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Tool successfully published", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ServerMessageResponse.class), examples = @ExampleObject(GenericBusinessSamples.SERVER_MESSAGE_RESPONSE))),
+            @ApiResponse(responseCode = "401", description = "Access Denied - Admin role required", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ServerMessageResponse.class), examples = @ExampleObject(GenericBusinessSamples.SERVER_MESSAGE_RESPONSE))),
+            @ApiResponse(responseCode = "500", description = "Internal Server Error during tool publish", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ServerMessageResponse.class), examples = @ExampleObject(GenericBusinessSamples.SERVER_MESSAGE_RESPONSE)))
+    })
+    @Operation(summary = "Publish an external tool (Admin only)", description = "This endpoint changes an external tool's status from draft to public, making it visible to all users.")
+    @Parameter(name = "toolId", description = "The id of the external tool to publish", required = true, in = ParameterIn.PATH, schema = @Schema(type = "integer", format = "int64"))
+    public @interface PublishToolDoc {
+    }
+
+    @Target({ ElementType.METHOD })
+    @Retention(RetentionPolicy.RUNTIME)
+    @Tag(name = "External Tools")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Tool successfully reverted to draft", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ServerMessageResponse.class), examples = @ExampleObject(GenericBusinessSamples.SERVER_MESSAGE_RESPONSE))),
+            @ApiResponse(responseCode = "401", description = "Access Denied - Admin role required", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ServerMessageResponse.class), examples = @ExampleObject(GenericBusinessSamples.SERVER_MESSAGE_RESPONSE))),
+            @ApiResponse(responseCode = "500", description = "Internal Server Error during tool unpublish", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ServerMessageResponse.class), examples = @ExampleObject(GenericBusinessSamples.SERVER_MESSAGE_RESPONSE)))
+    })
+    @Operation(summary = "Unpublish an external tool (Admin only)", description = "This endpoint changes an external tool's status from public to draft, making it visible only to admins and the owner.")
+    @Parameter(name = "toolId", description = "The id of the external tool to revert to draft", required = true, in = ParameterIn.PATH, schema = @Schema(type = "integer", format = "int64"))
+    public @interface UnpublishToolDoc {
     }
 
 }
