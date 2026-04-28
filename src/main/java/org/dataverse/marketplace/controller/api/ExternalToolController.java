@@ -49,9 +49,47 @@ public class ExternalToolController {
      */
     @GetMapping()
     @ExternalToolsAPIDocs.ExternalToolsListDoc
-    public ResponseEntity<?> getAllTools() {
+    public ResponseEntity<?> getAllTools(
+            @RequestParam(required = false) String scope,
+            @RequestParam(required = false) String type,
+            @RequestParam(required = false) String status) {
 
-        return ResponseEntity.ok(externalToolService.getAllTools());
+        org.dataverse.marketplace.model.enums.Scope scopeEnum = null;
+        if (scope != null && !scope.isEmpty()) {
+            try {
+                scopeEnum = org.dataverse.marketplace.model.enums.Scope.valueOf(scope.toUpperCase());
+            } catch (IllegalArgumentException e) {
+                // Invalid scope value, ignore
+            }
+        }
+
+        org.dataverse.marketplace.model.enums.ToolType typeEnum = null;
+        if (type != null && !type.isEmpty()) {
+            try {
+                typeEnum = org.dataverse.marketplace.model.enums.ToolType.valueOf(type.toUpperCase());
+            } catch (IllegalArgumentException e) {
+                // Invalid type value, ignore
+            }
+        }
+
+        org.dataverse.marketplace.model.enums.ItemStatus statusEnum = null;
+        if (status != null && !status.isEmpty()) {
+            try {
+                statusEnum = org.dataverse.marketplace.model.enums.ItemStatus.valueOf(status.toUpperCase());
+            } catch (IllegalArgumentException e) {
+                // Invalid status value, ignore
+            }
+        }
+
+        String authenticatedUsername = SecurityContextHolder.getContext()
+            .getAuthentication().getName();
+        User currentUser = "anonymousUser".equals(authenticatedUsername)
+            ? null
+            : userRepository.findByUsername(authenticatedUsername).orElse(null);
+
+        return ResponseEntity.ok(
+            externalToolService.getFilteredTools(scopeEnum, typeEnum, statusEnum, currentUser)
+        );
     }
 
     /**
@@ -348,6 +386,52 @@ public class ExternalToolController {
         }
 
         return ResponseEntity.ok(versions);
+    }
+
+    /**
+     * Method to make a tool public
+     */
+    @PreAuthorize(ApplicationRoles.ADMIN_ROLE)
+    @PutMapping("/{toolId}/publish")
+    public ResponseEntity<?> publishTool(@PathVariable("toolId") Long toolId) {
+        try {
+            externalToolService.makeToolPublic(toolId);
+            return ResponseEntity.ok(new ServerMessageResponse(
+                HttpStatus.OK,
+                "Tool published",
+                String.format("Tool with ID %d is now public.", toolId)
+            ));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(new ServerMessageResponse(
+                    HttpStatus.INTERNAL_SERVER_ERROR,
+                    "Error publishing tool",
+                    e.getMessage()
+                ));
+        }
+    }
+
+    /**
+     * Method to revert a tool to draft
+     */
+    @PreAuthorize(ApplicationRoles.ADMIN_ROLE)
+    @PutMapping("/{toolId}/unpublish")
+    public ResponseEntity<?> unpublishTool(@PathVariable("toolId") Long toolId) {
+        try {
+            externalToolService.makeToolDraft(toolId);
+            return ResponseEntity.ok(new ServerMessageResponse(
+                HttpStatus.OK,
+                "Tool reverted to draft",
+                String.format("Tool with ID %d is now a draft.", toolId)
+            ));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(new ServerMessageResponse(
+                    HttpStatus.INTERNAL_SERVER_ERROR,
+                    "Error reverting tool to draft",
+                    e.getMessage()
+                ));
+        }
     }
 
 }

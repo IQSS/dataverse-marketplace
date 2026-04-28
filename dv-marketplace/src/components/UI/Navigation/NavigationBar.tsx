@@ -6,6 +6,8 @@ import { UserContext } from '../../../components/context/UserContextProvider';
 import ThemeSwitcher from './ThemeSwitcher/ThemeSwitcher';
 import LoginForm from '../../forms/LoginForm/LoginForm';
 import LoginButton from '../LoginButton/LoginButton';
+import SignupButton from '../SignupButton/SignupButton';
+import SignupForm from '../../forms/SignupForm/SignupForm';
 import NavOptions from './NavOptions';
 import { ToastContainer } from "react-toastify";
 import { Theme } from "../../../types/MarketplaceTypes";
@@ -29,6 +31,7 @@ const NavigationBar = () => {
                         <Nav className="nav-options ">
                             <NavOptions />
                             {/* <Search /> */}
+                            <SignupButton />
                             <LoginButton />
                             <ThemeSwitcher />
                         </Nav>
@@ -36,6 +39,7 @@ const NavigationBar = () => {
                 </Container>
             </Navbar>
             <LoginForm />
+            <SignupForm />
         </>
     );
 }

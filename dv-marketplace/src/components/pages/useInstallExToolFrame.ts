@@ -16,6 +16,7 @@ export default function useInstallExToolFrame(
       try {
         const response = await axios.get(
           "https://hub.dataverse.org/api/installation",
+          { timeout: 5000 } // 5 second timeout
         );
         interface Installation {
           hostname: string;
@@ -23,11 +24,12 @@ export default function useInstallExToolFrame(
         const fetchedHostnames = response.data.map(
           (installation: Installation) => installation.hostname,
         );
-        setHostnames(fetchedHostnames);
+        setHostnames((prevHostnames) => [...fetchedHostnames, "localhost:8080", ...prevHostnames]);
       } catch (error) {
-        toast.error("Error fetching hostnames: " + error);
+        console.warn("Could not fetch hostnames from hub.dataverse.org:", error);
+        // Silently fail - just use localhost as default
+        setHostnames(["localhost:8080"]);
       }
-      setHostnames((prevHostnames) => ["localhost:8080", ...prevHostnames]);
     };
 
     fetchHostnames();

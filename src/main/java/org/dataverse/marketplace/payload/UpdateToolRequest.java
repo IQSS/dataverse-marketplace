@@ -11,9 +11,8 @@ public class UpdateToolRequest {
     @NotEmpty
     private String name;
 
-    @Schema(description = "Description of the external tool to be updated", 
-        example = "Ask the Data is an experimental tool that allows you ask natural language questions about the data contained in Dataverse.")    
-    @NotEmpty
+    @Schema(description = "Description of the external tool to be updated",
+        example = "Ask the Data is an experimental tool that allows you ask natural language questions about the data contained in Dataverse.")
     private String description;
 
     /* Getters and Setters */

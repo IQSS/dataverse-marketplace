@@ -21,6 +21,7 @@ import org.dataverse.marketplace.payload.auth.response.*;
 import org.dataverse.marketplace.repository.*;
 import org.dataverse.marketplace.security.*;
 import org.dataverse.marketplace.security.jwt.JwtUtils;
+import org.dataverse.marketplace.service.AppSettingService;
 
 
 /**
@@ -44,6 +45,9 @@ public class AuthController {
 
     @Autowired
     JwtUtils jwtUtils;
+
+    @Autowired
+    AppSettingService appSettingService;
 
     @PostMapping("/login")
     @AuthAPIDocs.Login
@@ -70,11 +74,29 @@ public class AuthController {
                         roles));
     }
 
-    
-    @PreAuthorize(ApplicationRoles.ADMIN_ROLE)
+
     @PostMapping("/signup")
     @AuthAPIDocs.Signup
     public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest signUpRequest) {
+
+        // Check registration flag first (most common case: enabled)
+        if (!appSettingService.isRegistrationEnabled()) {
+            // Only check admin status if registration is disabled
+            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+            boolean isAdmin = auth != null
+                && auth.isAuthenticated()
+                && !(auth instanceof AnonymousAuthenticationToken)
+                && auth.getAuthorities().stream()
+                    .anyMatch(a -> "ADMIN".equals(a.getAuthority()));
+
+            if (!isAdmin) {
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).body(
+                    new ServerMessageResponse(HttpStatus.FORBIDDEN,
+                        "Registration disabled",
+                        "Public registration is currently disabled.")
+                );
+            }
+        }
 
         ServerMessageResponse messageResponse = null;
 
@@ -218,6 +240,20 @@ public class AuthController {
         return ResponseEntity.ok(rolesDTO);
     }
 
-   
+    @GetMapping("/registration-status")
+    public ResponseEntity<?> getRegistrationStatus() {
+        Map<String, Boolean> response = new HashMap<>();
+        response.put("enabled", appSettingService.isRegistrationEnabled());
+        return ResponseEntity.ok(response);
+    }
+
+    @PreAuthorize(ApplicationRoles.ADMIN_ROLE)
+    @PutMapping("/registration-status")
+    public ResponseEntity<?> setRegistrationStatus(@RequestParam("enabled") boolean enabled) {
+        appSettingService.setRegistrationEnabled(enabled);
+        return ResponseEntity.ok(new ServerMessageResponse(HttpStatus.OK,
+                "Registration status updated.",
+                String.format("Public registration is now %s.", enabled ? "enabled" : "disabled")));
+    }
 
 }

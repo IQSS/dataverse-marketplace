@@ -10,13 +10,14 @@ interface CardDeckProps {
     text?: string | undefined;
     link?: string | undefined;
     onClick?: () => void | undefined;
+    status?: 'draft' | 'public' | undefined;
 }
 
-export const MarketplaceLinkCard = ({ header, imageId, text, link, children }: CardDeckProps) => {
+export const MarketplaceLinkCard = ({ header, imageId, text, link, status, children }: CardDeckProps) => {
   return (
     <div className="col-12 col-sm-6 col-md-6 col-lg-3 mb-2 px-0">
       <Link to={link ?? ""} className="text-decoration-none">
-       <BaseCard header={header} imageId={imageId} text={text} link={link}>
+       <BaseCard header={header} imageId={imageId} text={text} link={link} status={status}>
          {children}
        </BaseCard>
       </Link>
@@ -46,15 +47,22 @@ export const RowCard = ({ header, imageId, text, link, children }: CardDeckProps
     );
 }
 
-export const BaseCard = ({ header, imageId, text, children }: CardDeckProps) => {
-  
+export const BaseCard = ({ header, imageId, text, link, status, children }: CardDeckProps) => {
+
   const { getImageUrl } = useMarketplaceApiRepo();
-  return (    
-    
+  return (
+
       <Card>
           {header && (
             <Card.Header>
-              <h5 className="tumbnail-title">{header}</h5>
+              <h5 className="tumbnail-title">
+                {header}
+                {status === 'draft' && (
+                  <span className="badge bg-warning text-dark ms-2" style={{ fontSize: '0.5em', verticalAlign: 'middle' }}>
+                    DRAFT
+                  </span>
+                )}
+              </h5>
             </Card.Header>
           )}
           {imageId && (
@@ -74,7 +82,7 @@ export const BaseCard = ({ header, imageId, text, children }: CardDeckProps) => 
             {children}
           </Card.Body>
         </Card>
-      
+
   );
 }
 

@@ -9,6 +9,16 @@
     margin-left: 1rem;
 }
 
+#signupButton {
+	background-color: #0d6efd;
+    color: white;
+    padding: 7px;
+    border-radius: 0.2rem;
+    border: 1px solid lightgray;
+    margin-bottom: 1rem;
+    margin-left: 1rem;
+}
+
 .header-logo {
 	align-items: center;
 	display: flex;

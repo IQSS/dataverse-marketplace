@@ -11,7 +11,10 @@ const EditExtToolForm = () => {
     const {
         handleSubmit,
         handleDelete,
+        handlePublish,
+        handleUnpublish,
         tool,
+        userContext
     } = useEditToolForm();
 
     const [formData, setToolData] = React.useState({ name: '', description: '' });
@@ -37,7 +40,32 @@ const EditExtToolForm = () => {
             <Alert variant='light'>
                 <div className='container '>
                     <div className='row'>
-                        <h1 className='col-6'>{tool?.name}:</h1>
+                        <h1 className='col-6'>
+                            {tool?.name}
+                            {tool?.status === 'draft' && (
+                                <span className="badge bg-warning text-dark ms-2" style={{ fontSize: '0.35em', verticalAlign: 'middle' }}>
+                                    DRAFT
+                                </span>
+                            )}
+                        </h1>
+                        <div className='col-6 d-flex justify-content-end align-items-center gap-2'>
+                            {userContext.user?.roles.includes("ADMIN") && tool?.status === 'draft' && (
+                                <Button
+                                    variant="success"
+                                    onClick={handlePublish}
+                                >
+                                    Make Public
+                                </Button>
+                            )}
+                            {userContext.user?.roles.includes("ADMIN") && tool?.status === 'public' && (
+                                <Button
+                                    variant="warning"
+                                    onClick={handleUnpublish}
+                                >
+                                    Revert to Draft
+                                </Button>
+                            )}
+                        </div>
                     </div>
                 </div>
             </Alert>

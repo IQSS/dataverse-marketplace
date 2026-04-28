@@ -3,6 +3,8 @@ package org.dataverse.marketplace.model;
 import java.util.List;
 import java.util.Set;
 
+import org.dataverse.marketplace.model.enums.ItemStatus;
+
 import jakarta.persistence.*;
 
 @Entity
@@ -16,6 +18,10 @@ public class MarketplaceItem {
     private String name;
 
     private String description;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private ItemStatus status = ItemStatus.DRAFT;
 
     @OneToMany(mappedBy = "marketplaceItem")
     private List<MarketplaceItemImage> images;
@@ -80,6 +86,14 @@ public class MarketplaceItem {
     
     public void setOwner(User owner) {
         this.owner = owner;
-    }    
-    
+    }
+
+    public ItemStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(ItemStatus status) {
+        this.status = status;
+    }
+
 }

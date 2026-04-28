@@ -3,9 +3,9 @@ import { UserContext } from "../components/context/UserContextProvider";
 import axios from "axios";
 import { toast } from "react-toastify";
 
-//const BASE_URL = 'http://localhost:8081';
+const BASE_URL = 'http://localhost:8081';
 // Change this for deployment
-const BASE_URL = '';
+// const BASE_URL = '';
 
 export default function useMarketplaceApiRepo() {
 

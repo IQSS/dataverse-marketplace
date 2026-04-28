@@ -48,6 +48,7 @@ export interface ExternalTool {
   id: number;
   name: string;
   description: string;
+  status: 'draft' | 'public';
   versions: Version[];
   images: Image[];
   ownerId: number;
@@ -66,7 +67,9 @@ export type UserContextType = {
   user: User | null;
   setUser: (user: User | null) => void;
   showLogin: boolean;
-  setShowLogin: (show: boolean) => void; 
+  setShowLogin: (show: boolean) => void;
+  showSignup: boolean;
+  setShowSignup: (show: boolean) => void;
   theme?: Theme;
   setTheme: (theme: Theme) => void;
 };

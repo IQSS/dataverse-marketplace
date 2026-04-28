@@ -40,6 +40,61 @@ public class ExternalToolService {
         return toolDTOs;
     }
 
+    public List<ExternalToolDTO> getFilteredTools(org.dataverse.marketplace.model.enums.Scope scope, org.dataverse.marketplace.model.enums.ToolType type) {
+        List<ExternalTool> tools = (scope == null && type == null)
+            ? externalToolRepo.findAll()
+            : externalToolRepo.findByFilters(scope, type);
+
+        ArrayList<ExternalToolDTO> toolDTOs = new ArrayList<>();
+        for (ExternalTool tool : tools) {
+            toolDTOs.add(new ExternalToolDTO(tool));
+        }
+        return toolDTOs;
+    }
+
+    public List<ExternalToolDTO> getFilteredTools(
+            org.dataverse.marketplace.model.enums.Scope scope,
+            org.dataverse.marketplace.model.enums.ToolType type,
+            org.dataverse.marketplace.model.enums.ItemStatus status,
+            User currentUser) {
+
+        boolean isAdmin = currentUser != null &&
+                          currentUser.getRoles().stream()
+                              .anyMatch(role -> "ADMIN".equals(role.getName()));
+
+        Long userId = currentUser != null ? currentUser.getId() : null;
+
+        List<ExternalTool> tools = externalToolRepo.findByFiltersAndVisibility(
+            isAdmin,
+            userId,
+            scope,
+            type,
+            status
+        );
+
+        ArrayList<ExternalToolDTO> toolDTOs = new ArrayList<>();
+        for (ExternalTool tool : tools) {
+            toolDTOs.add(new ExternalToolDTO(tool));
+        }
+        return toolDTOs;
+    }
+
+    @CacheEvict(value = "externalTools", allEntries = true)
+    public void makeToolPublic(Long toolId) {
+        ExternalTool tool = externalToolRepo.findById(toolId)
+            .orElseThrow(() -> new RuntimeException("Tool not found"));
+        tool.setStatus(org.dataverse.marketplace.model.enums.ItemStatus.PUBLIC);
+        externalToolRepo.save(tool);
+    }
+
+    @CacheEvict(value = "externalTools", allEntries = true)
+    public void makeToolDraft(Long toolId) {
+        ExternalTool tool = externalToolRepo.findById(toolId)
+            .orElseThrow(() -> new RuntimeException("Tool not found"));
+        tool.setStatus(org.dataverse.marketplace.model.enums.ItemStatus.DRAFT);
+        externalToolRepo.save(tool);
+    }
+
     public List<ExternalToolDTO> getAllToolsByOwnerId(Long ownerId) {
         List<ExternalTool> tools = externalToolRepo.findByOwnerId(ownerId);
         ArrayList<ExternalToolDTO> toolDTOs = new ArrayList<>();

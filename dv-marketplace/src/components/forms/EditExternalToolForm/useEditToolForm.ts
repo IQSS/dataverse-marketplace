@@ -1,9 +1,10 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import axios from "axios";
 import type { ExternalTool } from "../../../types/MarketplaceTypes";
 import useMarketplaceApiRepo from "../../../repositories/useMarketplaceApiRepo";
+import { UserContext } from "../../context/UserContextProvider";
 
 export default function useEditToolForm() {
 
@@ -11,6 +12,7 @@ export default function useEditToolForm() {
     const [tool, setTool] = useState<ExternalTool | undefined>();
     const { id } = useParams();
     const navigate = useNavigate();
+    const userContext = useContext(UserContext);
 
     const { putBodyRequest,
         deleteBodyRequest
@@ -21,14 +23,17 @@ export default function useEditToolForm() {
     useEffect(() => {
         const fetchTool = async () => {
             try {
-                const response = await axios.get(`${BASE_URL}/api/tools/${id}`);
+                const headers = userContext.user?.accessToken
+                    ? { Authorization: `Bearer ${userContext.user.accessToken}` }
+                    : {};
+                const response = await axios.get(`${BASE_URL}/api/tools/${id}`, { headers });
                 setTool(response.data as ExternalTool);
             } catch (error) {
                 toast.error("Error fetching the tool");
             }
         };
         fetchTool();
-    }, [id, BASE_URL]);
+    }, [id, BASE_URL, userContext.user?.accessToken]);
 
 
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -49,15 +54,48 @@ export default function useEditToolForm() {
         event.preventDefault()
         const data = await deleteBodyRequest(`/api/tools/${id}`);
         if (data) {
-            navigate("/");      
-        } 
-    };    
+            navigate("/");
+        }
+    };
+
+    const handlePublish = async () => {
+        try {
+            const headers = userContext.user?.accessToken
+                ? { Authorization: `Bearer ${userContext.user.accessToken}` }
+                : {};
+            await axios.put(`${BASE_URL}/api/tools/${id}/publish`, {}, { headers });
+            const response = await axios.get(`${BASE_URL}/api/tools/${id}`, { headers });
+            setTool(response.data as ExternalTool);
+            toast.success("Tool is now public");
+        } catch (error) {
+            toast.error("Error publishing tool");
+            console.error("Error publishing tool:", error);
+        }
+    };
+
+    const handleUnpublish = async () => {
+        try {
+            const headers = userContext.user?.accessToken
+                ? { Authorization: `Bearer ${userContext.user.accessToken}` }
+                : {};
+            await axios.put(`${BASE_URL}/api/tools/${id}/unpublish`, {}, { headers });
+            const response = await axios.get(`${BASE_URL}/api/tools/${id}`, { headers });
+            setTool(response.data as ExternalTool);
+            toast.success("Tool reverted to draft");
+        } catch (error) {
+            toast.error("Error reverting tool to draft");
+            console.error("Error reverting tool to draft:", error);
+        }
+    };
 
 
     return {
         handleSubmit,
         handleDelete,
-        tool
+        handlePublish,
+        handleUnpublish,
+        tool,
+        userContext
     };
 
 }

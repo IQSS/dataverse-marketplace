@@ -6,8 +6,9 @@ export const UserContext = createContext<UserContextType>({
     user: null,
     setUser: () => {},
     showLogin: false,
-    setShowLogin: () => {},   
-
+    setShowLogin: () => {},
+    showSignup: false,
+    setShowSignup: () => {},
     setTheme: () => {}
 
 });
@@ -16,7 +17,8 @@ const UserContextProvider = ({ children }: { children: React.ReactNode }) => {
     
     const [user, setUser] = useState<User | null>(null);
     const [showLogin, setShowLogin] = useState(false);
-    //App message dialog    
+    const [showSignup, setShowSignup] = useState(false);
+    //App message dialog
     const [theme, setTheme] = useState<Theme>(Theme.AUTO);
 
     useEffect((): void => {
@@ -44,11 +46,13 @@ const UserContextProvider = ({ children }: { children: React.ReactNode }) => {
     
 
     return (
-        <UserContext.Provider value={{ 
-                user, 
-                setUser, 
-                showLogin, 
-                setShowLogin,              
+        <UserContext.Provider value={{
+                user,
+                setUser,
+                showLogin,
+                setShowLogin,
+                showSignup,
+                setShowSignup,
                 theme,
                 setTheme
                 }}>

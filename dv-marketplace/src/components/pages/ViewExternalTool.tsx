@@ -30,14 +30,17 @@ const ViewExternalTool = () => {
     useEffect(() => {
         const fetchTool = async () => {
             try {
-                const response = await axios.get(`${BASE_URL}/api/tools/${id}`);
+                const headers = userContext.user?.accessToken
+                    ? { Authorization: `Bearer ${userContext.user.accessToken}` }
+                    : {};
+                const response = await axios.get(`${BASE_URL}/api/tools/${id}`, { headers });
                 setTool(response.data as ExternalTool);
             } catch (error) {
                 toast.error(`Error fetching tool`);
             }
         };
         fetchTool();
-    }, [id, BASE_URL, setTool]);
+    }, [id, BASE_URL, setTool, userContext.user?.accessToken]);
 
     const modalRef = useRef<ModalRef>(null);
 
@@ -47,13 +50,13 @@ const ViewExternalTool = () => {
 
     return (
         <div className="container" style={{ marginTop: "120px" }}>
-         
-        {userContext.user && 
-                    ( userContext.user.roles.includes("ADMIN") || tool?.ownerId == userContext.user.id)  &&
+
+        {userContext.user &&
+        ( userContext.user.roles.includes("ADMIN") || tool?.ownerId == userContext.user.id)  &&
         <Alert variant='light' className="d-flex justify-content-end">
             <Link to ={`/edit/${id}`} className="btn btn-secondary bi-pen" > Edit</Link>
         </Alert>
-        }       
+        }
 
              <div className="container-fluid" style={{display: 'flex', flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'left'}}>
                 <div className='row col-12'>
@@ -61,6 +64,7 @@ const ViewExternalTool = () => {
                     <BaseCard
                     header={tool?.name}
                     imageId={tool?.images[0]?.imageId}
+                    status={tool?.status}
                     />
                     </div>
                     <p className="col-9 mb-2 py-10" style={{padding: '10px'}}>
@@ -68,13 +72,12 @@ const ViewExternalTool = () => {
                     </p>
                 </div>
             </div>
-            
+
             <div>
                 <p className='col-12 d-flex '>
-                   
+
                 </p>
             </div>
-            {/* <Alert variant='light'> */}
 
                 <div className='container'>
                     <hr />
@@ -82,7 +85,6 @@ const ViewExternalTool = () => {
                         <h3 className='col-6'>Releases</h3>
                     </div>
                 </div>
-            {/* </Alert> */}
 
             <InnerCardDeck>
                 {tool?.versions.map((version) => (
