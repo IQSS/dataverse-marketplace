@@ -54,21 +54,6 @@ jobs:
           sleep 1
         done
 
-    # Ensure PostgreSQL is configured to accept TCP/IP connections
-    - name: Configure PostgreSQL for TCP/IP connections
-      run: |
-        docker exec ${{ job.services.postgres.id }} bash -c "echo \"listen_addresses = '*'\" >> /var/lib/postgresql/data/postgresql.conf"
-        docker exec ${{ job.services.postgres.id }} bash -c "echo \"host all all 0.0.0.0/0 md5\" >> /var/lib/postgresql/data/pg_hba.conf"
-        docker restart ${{ job.services.postgres.id }}
-
-    # Check PostgreSQL service status
-    - name: Check PostgreSQL service status
-      run: docker exec ${{ job.services.postgres.id }} bash -c "pg_isready -U admin -d dv_mkt_pg"
-
-    # Print PostgreSQL logs
-    - name: Print PostgreSQL logs
-      run: docker logs ${{ job.services.postgres.id }}
-
     # Build with Maven
     - name: Build with Maven
       run: mvn -B package --file pom.xml
