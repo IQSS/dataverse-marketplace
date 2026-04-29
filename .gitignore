@@ -78,6 +78,8 @@ _site/
 ######################
 *.log
 *.sql
+# Allow migration SQL files
+!src/main/resources/db/migration/*.sql
 *.sqlite
 
 # OS generated files #
