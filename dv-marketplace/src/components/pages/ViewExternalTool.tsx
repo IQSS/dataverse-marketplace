@@ -27,16 +27,11 @@ const ViewExternalTool = () => {
         downloadManifest
     } = useViewExternalTool();
 
-    const fetchKeyRef = useRef<string>('');
     const [notFound, setNotFound] = useState(false);
 
     useEffect(() => {
         const fetchTool = async () => {
             if (!id) return;
-
-            const currentFetchKey = `${id}-${userContext.user?.accessToken || 'no-token'}`;
-            if (fetchKeyRef.current === currentFetchKey) return;
-            fetchKeyRef.current = currentFetchKey;
 
             try {
                 const headers = userContext.user?.accessToken
