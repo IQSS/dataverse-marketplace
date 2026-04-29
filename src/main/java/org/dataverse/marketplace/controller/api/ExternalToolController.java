@@ -20,9 +20,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.http.*;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.dataverse.marketplace.security.UserDetailsImpl;
 
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
@@ -100,6 +103,35 @@ public class ExternalToolController {
     public ResponseEntity<?> getToolById(@PathVariable("toolId") Long toolId) {
 
         ExternalTool tool = externalToolService.getToolById(toolId);
+
+        boolean canSee = tool != null;
+
+        if (canSee && tool.getStatus() == org.dataverse.marketplace.model.enums.ItemStatus.DRAFT) {
+            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+            boolean isAuthenticated = auth != null && auth.isAuthenticated()
+                && !(auth instanceof AnonymousAuthenticationToken);
+
+            if (isAuthenticated) {
+                boolean isAdmin = auth.getAuthorities().stream()
+                    .anyMatch(a -> "ADMIN".equals(a.getAuthority()));
+                if (!isAdmin) {
+                    UserDetailsImpl userDetails = (UserDetailsImpl) auth.getPrincipal();
+                    canSee = tool.getOwner().getId().equals(userDetails.getId());
+                }
+            } else {
+                canSee = false;
+            }
+        }
+
+        if (!canSee) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body(new ServerMessageResponse(
+                    HttpStatus.NOT_FOUND,
+                    "Tool not found",
+                    String.format("Tool with ID %d not found.", toolId)
+                ));
+        }
+
         return ResponseEntity.ok(new ExternalToolDTO(tool));
     }
 

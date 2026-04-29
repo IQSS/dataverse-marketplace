@@ -6,7 +6,7 @@ import { InnerCardDeck } from "../UI/CardDeck";
 import { RowCard, MarketplaceCard, BaseCard } from "../UI/MarketplaceCard";
 import InstallExToolFrame from "./InstallExToolFrame";
 import useViewExternalTool from "./useViewExternalTool";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import ImagesCarrouselView, { ModalRef } from "./ImagesCarrouselView";
 import { toast } from "react-toastify";
 
@@ -27,22 +27,48 @@ const ViewExternalTool = () => {
         downloadManifest
     } = useViewExternalTool();
 
+    const fetchKeyRef = useRef<string>('');
+    const [notFound, setNotFound] = useState(false);
+
     useEffect(() => {
         const fetchTool = async () => {
+            if (!id) return;
+
+            const currentFetchKey = `${id}-${userContext.user?.accessToken || 'no-token'}`;
+            if (fetchKeyRef.current === currentFetchKey) return;
+            fetchKeyRef.current = currentFetchKey;
+
             try {
                 const headers = userContext.user?.accessToken
                     ? { Authorization: `Bearer ${userContext.user.accessToken}` }
                     : {};
                 const response = await axios.get(`${BASE_URL}/api/tools/${id}`, { headers });
                 setTool(response.data as ExternalTool);
+                setNotFound(false);
             } catch (error) {
-                toast.error(`Error fetching tool`);
+                if (axios.isAxiosError(error) && error.response?.status === 404) {
+                    setNotFound(true);
+                } else {
+                    toast.error(`Error fetching tool`);
+                }
             }
         };
         fetchTool();
-    }, [id, BASE_URL, setTool, userContext.user?.accessToken]);
+    }, [id, BASE_URL, userContext.user?.accessToken]);
 
     const modalRef = useRef<ModalRef>(null);
+
+    if (notFound) {
+        return (
+            <div className="container" style={{ marginTop: "120px" }}>
+                <Alert variant="warning">
+                    <h4>Tool Not Found</h4>
+                    <p>The tool you're looking for doesn't exist or you don't have permission to view it.</p>
+                    <Link to="/" className="btn btn-primary">Return to Home</Link>
+                </Alert>
+            </div>
+        );
+    }
 
     const openModal = (selected: number) => {
         modalRef.current?.open(selected);

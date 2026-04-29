@@ -90,9 +90,11 @@ public class ExternalToolsTest {
 
                 String newToolPostUrl = toolsUrl + assertPresent(postToolResponse).getId();
 
-                // Get tool by ID test
-                ResponseEntity<ExternalToolDTO> getToolsByIdResponse = restTemplate.getForEntity(newToolPostUrl,
-                                ExternalToolDTO.class);
+                // Get tool by ID test (with admin headers since tool is draft by default)
+                HttpHeaders getHeaders = new HttpHeaders();
+                getHeaders.setBearerAuth(adminLogin.getAccessToken());
+                ResponseEntity<ExternalToolDTO> getToolsByIdResponse = restTemplate.exchange(newToolPostUrl,
+                                HttpMethod.GET, new HttpEntity<>(getHeaders), ExternalToolDTO.class);
                 assertEquals(getToolsByIdResponse.getStatusCode(), HttpStatus.OK);
 
 
